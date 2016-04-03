@@ -1,0 +1,14 @@
+[server]
+listen = 0.0.0.0
+port = 5281
+state_dir = /var/lib/jerrybuild/
+
+#
+# Example project: ansible-cmdb
+#
+#[project:ansible-cmdb]
+#url = /project/ansible-cmdb
+#provider = github
+#secret = SECRET_TOKEN_HERE
+#run = /home/build/ansible-cmdb/run_tests.sh
+

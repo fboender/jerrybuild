@@ -1,0 +1,135 @@
+#!/usr/bin/python
+
+import os
+import sys
+import logging
+import ConfigParser
+import bottle
+import wsgi_server
+from bottle import route, run, post, template, request, abort
+from build_queue import BuildQueue
+
+
+class DepInjector:
+    """
+    Dependency injector plugin for the Bottle framework.
+    """
+    name = 'depinject'
+    api = 2
+
+    def __init__(self):
+        self._deps = {}
+
+    def add_dep(self, name, dep):
+        self._deps[name] = dep
+
+    def apply(self, callback, route):
+        def wrapper(*args, **kwargs):
+            request.deps = self._deps
+            body = callback(*args, **kwargs)
+            return body
+        return wrapper
+
+
+def load_providers(paths):
+    providers = {}
+    for path in paths:
+        for fname in os.listdir(path):
+            if not fname.endswith('.py'):
+                continue
+            try:
+                mod_path = path
+                mod_name = os.path.splitext(fname)[0]
+                sys.path.insert(0, mod_path)
+                try:
+                    module = __import__(mod_name)
+                finally:
+                    sys.path.pop(0)
+                providers[mod_name] = module
+            except Exception as err:
+                logging.exception(err)
+    return providers
+
+def make_req_handler(provider, project_name):
+    def handle():
+        build_queue = request.deps['build_queue']
+        config = request.deps['config']
+        logging.info("Received event for project '{}'".format(project_name))
+        config_section = 'project:{}'.format(project_name)
+        env = provider.normalize(request, config)
+        run = config.get(config_section, 'run')
+        if not run.startswith('/'):
+            run = os.path.realpath(run)
+
+        job_id = build_queue.put(project_name, env, run)
+        logging.info("Build for '{}' scheduled with ID '{}'".format(project_name, job_id))
+        return {
+            'job_id': job_id
+        }
+
+    return handle
+
+@route('/status/project/<project>')
+def status_project(project):
+    build_queue = request.deps['build_queue']
+    job_status = build_queue.get_project_status(project)
+    if not job_status:
+        abort(404, "No latest status found for project '{}'".format(project))
+    return job_status
+
+@route('/status/job/<job_id>')
+def status_job(job_id):
+    build_queue = request.deps['build_queue']
+    job_status = build_queue.get_job_status(job_id)
+    if not job_status:
+        abort(404, "No job found with id '{}'".format(job_id))
+    return job_status
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s:%(levelname)s:%(message)s')
+
+    config = ConfigParser.RawConfigParser()
+    config.read('jerrybuild.cfg')
+
+    state_dir = config.get('server', 'state_dir')
+    build_queue = BuildQueue(state_dir)
+    build_queue.start()
+
+    providers = load_providers(['providers'])
+
+    dep_inject = DepInjector()
+    dep_inject.add_dep('build_queue', build_queue)
+    dep_inject.add_dep('config', config)
+
+    wsgiapp = bottle.default_app()
+    wsgiapp.install(dep_inject)
+
+    for section_name in config.sections():
+        if section_name.startswith('project:'):
+            project_name = section_name.split(':', 1)[1]
+            url = config.get(section_name, 'url')
+            provider_name = config.get(section_name, 'provider')
+            if not provider_name in providers:
+                logging.error("Invalid provider specified: {}".format(provider_name))
+                sys.exit(1)
+            provider = providers[provider_name]
+            run = config.get(section_name, 'run')
+            if not os.path.isfile(run):
+                logging.error("Project '{}': '{}': No such file or directory".format(project_name, run))
+                sys.exit(1)
+            req_handler = make_req_handler(provider, project_name)
+            wsgiapp.route(path=url, callback=req_handler, bar='bar')
+            logging.info("Project '{}' listening on '{}'".format(project_name, url))
+
+    httpd_listen = '0.0.0.0'
+    httpd_port = 5281
+    if config.has_section('server'):
+        if config.has_option('server', 'listen'):
+            httpd_listen = config.get('server', 'listen')
+        if config.has_option('server', 'port'):
+            httpd_port = config.get('server', 'port')
+
+    httpd = wsgi_server.WSGIServer(wsgiapp, listen=httpd_listen, port=httpd_port)
+    logging.info("Server listening on {}:{}".format(httpd_listen, httpd_port))
+    httpd.serve_forever()
