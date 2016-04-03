@@ -139,7 +139,7 @@ if __name__ == "__main__":
         if config.has_option('server', 'listen'):
             httpd_listen = config.get('server', 'listen')
         if config.has_option('server', 'port'):
-            httpd_port = config.get('server', 'port')
+            httpd_port = int(config.get('server', 'port'))
 
     httpd = wsgi_server.WSGIServer(wsgiapp, listen=httpd_listen, port=httpd_port)
     logging.info("Server listening on {}:{}".format(httpd_listen, httpd_port))
