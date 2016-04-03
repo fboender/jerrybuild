@@ -86,11 +86,22 @@ def status_job(job_id):
     return job_status
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s:%(levelname)s:%(message)s')
+    if len(sys.argv) < 2:
+        sys.stderr.write("Usage: {} <config.ini>\n".format(sys.argv[0]))
+        sys.exit(1)
 
     config = ConfigParser.RawConfigParser()
-    config.read('jerrybuild.cfg')
+    config.read(sys.argv[1])
+    log_level = logging.INFO
+    if config.has_option('server', 'log_level'):
+        log_level_str = config.get('server', 'log_level')
+        log_level_int = getattr(logging, log_level_str.upper(), None)
+        if not isinstance(log_level_int, int):
+            raise ValueError('Invalid log level: %s' % log_level_str)
+        log_level = log_level_int
+
+    logging.basicConfig(level=log_level,
+                        format='%(asctime)s:%(levelname)s:%(message)s')
 
     state_dir = config.get('server', 'state_dir')
     build_queue = BuildQueue(state_dir)

@@ -1,6 +1,15 @@
 [server]
+
+# Address to listen on
 listen = 0.0.0.0
+
+# Port to listen on
 port = 5281
+
+# Logging level. Possible values: DEBUG, INFO
+log_level = INFO
+
+# Directory to keep job status files and such in.
 state_dir = /var/lib/jerrybuild/
 
 #
