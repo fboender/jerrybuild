@@ -5,3 +5,4 @@ README.html
 *.deb
 *.tar.gz
 *.zip
+src/jerrybuild.ini
