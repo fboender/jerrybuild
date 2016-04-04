@@ -9,6 +9,7 @@ import json
 import subprocess
 from tools import mkdir_p
 
+
 class Job:
     def __init__(self, project, env, cmd, work_dir=None, id=None):
         self.project = project
@@ -115,10 +116,10 @@ class BuildQueue(threading.Thread):
         job.run()
 
         job.set_status('done')
-        self.write_job_status(job)
+        self.write_job_status(job, link_latest=True)
         logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
 
-    def write_job_status(self, job):
+    def write_job_status(self, job, link_latest=False):
         job_dir = os.path.join(self.status_dir, 'jobs')
         job_path = os.path.join(job_dir, job.id)
         project_dir = os.path.join(self.status_dir, 'projects', job.project)
@@ -130,6 +131,12 @@ class BuildQueue(threading.Thread):
             json.dump(status, f)
         if not os.path.exists(project_path):
             os.symlink(job_path, project_path)
+
+        if link_latest:
+            latest_path = os.path.join(project_dir, 'latest')
+            if os.path.exists(latest_path):
+                os.unlink(latest_path)
+            os.symlink(job_path, latest_path)
 
     def get_job_status(self, job_id):
         job_dir = os.path.join(self.status_dir, 'jobs')
