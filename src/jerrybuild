@@ -8,6 +8,7 @@ import bottle
 import wsgi_server
 from bottle import route, run, post, template, request, abort
 import build_queue as bq
+from job import Job
 
 
 class DepInjector:
@@ -86,6 +87,7 @@ def status_job(job_id):
     if not job_status:
         abort(404, "No job found with id '{}'".format(job_id))
     return job_status
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
