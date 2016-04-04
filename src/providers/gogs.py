@@ -22,4 +22,9 @@ def normalize(request, project_name, config):
     env['ref'] = body['ref']
     env['commit'] = body['after']
 
+    mail_to = []
+    mail_to.append(body['repository']['owner']['email'])
+    mail_to.append(body['pusher']['email'])
+    env['mail_to'] = ', '.join(mail_to)
+
     return env

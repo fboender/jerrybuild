@@ -8,7 +8,7 @@ import subprocess
 
 
 class Job:
-    def __init__(self, project, env, cmd, work_dir=None, id=None):
+    def __init__(self, project, env, cmd, work_dir=None, id=None, mail_to=[]):
         self.project = project
         self.env = env
         self.set_cmd(cmd, work_dir)
@@ -16,6 +16,7 @@ class Job:
             self.id = id
         else:
             self.id = uuid.uuid4().hex
+        self.mail_to = mail_to
         self.status = None
         self.exit_code = None
         self.stdout = None

@@ -7,6 +7,7 @@ import Queue
 import json
 from tools import mkdir_p
 from job import Job
+from mail import mail
 
 
 class BuildQueue(threading.Thread):
@@ -55,6 +56,12 @@ class BuildQueue(threading.Thread):
         self.write_job_status(job, link_latest=True)
         logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
 
+        if job.exit_code != 0:
+            # Send email
+            logging.info("{}: failed. Sending emails".format(job))
+            self.send_fail_mail(job)
+            logging.info("{}: Emails sent".format(job))
+
     def write_job_status(self, job, link_latest=False):
         job_dir = os.path.join(self.status_dir, 'jobs')
         job_path = os.path.join(job_dir, job.id)
@@ -73,6 +80,13 @@ class BuildQueue(threading.Thread):
             if os.path.exists(latest_path):
                 os.unlink(latest_path)
             os.symlink(job_path, latest_path)
+
+    def send_fail_mail(self, job):
+        subject = "Build job '{}' for project '{}' failed with exit code {}'".format(job.id, job.project, job.exit_code)
+        msg = "Exit code = {}.\n\n" \
+              "STDOUT\n======\n\n{}\n\n" \
+              "STDERR\n======\n\n{}\n\n".format(job.exit_code, job.stdout, job.stderr)
+        mail(job.mail_to, subject, msg)
 
     def get_job_status(self, job_id):
         job_dir = os.path.join(self.status_dir, 'jobs')

@@ -55,15 +55,27 @@ def make_req_handler(provider, project_name):
     def handle():
         build_queue = request.deps['build_queue']
         config = request.deps['config']
+
         logging.info("Received event for project '{}'".format(project_name))
         config_section = 'project:{}'.format(project_name)
+
         env = provider.normalize(request, project_name, config)
+
+        mail_to = []
+        if config.has_option('server', 'mail_to'):
+            mail_to.extend([m.strip() for m in config.get('server', 'mail_to').split(',')])
+        if config.has_option(config_section, 'mail_to'):
+            mail_to.extend([m.strip() for m in config.get(config_section, 'mail_to').split(',')])
+        if 'mail_to' in env:
+            mail_to.extend([m.strip() for m in env['mail_to'].split(',')])
+        mail_to = list(set(mail_to)) # Remove duplicates
+
         work_dir = None
         if config.has_option(config_section, 'work_dir'):
             work_dir = config.get(config_section, 'work_dir')
         cmd = config.get(config_section, 'cmd')
 
-        job = bq.Job(project_name, env, cmd, work_dir=work_dir)
+        job = bq.Job(project_name, env, cmd, work_dir=work_dir, mail_to=mail_to)
         job_id = build_queue.put(job)
         logging.info("Build for '{}' scheduled with ID '{}'".format(project_name, job_id))
         return {
