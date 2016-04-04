@@ -57,7 +57,7 @@ def make_req_handler(provider, project_name):
         config = request.deps['config']
         logging.info("Received event for project '{}'".format(project_name))
         config_section = 'project:{}'.format(project_name)
-        env = provider.normalize(request, config)
+        env = provider.normalize(request, project_name, config)
         work_dir = None
         if config.has_option(config_section, 'work_dir'):
             work_dir = config.get(config_section, 'work_dir')

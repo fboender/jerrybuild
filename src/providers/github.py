@@ -4,7 +4,7 @@ import hmac
 import hashlib
 
 
-def normalize(request, config):
+def normalize(request, project_name, config):
     # Verify hash signature
     body = request.body.read()
     print body
