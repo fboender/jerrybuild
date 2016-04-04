@@ -131,7 +131,7 @@ if __name__ == "__main__":
             provider = providers[provider_name]
             cmd = config.get(section_name, 'cmd')
             req_handler = make_req_handler(provider, project_name)
-            wsgiapp.route(path=url, callback=req_handler, bar='bar')
+            wsgiapp.route(path=url, callback=req_handler, method=['GET', 'POST'])
             logging.info("Project '{}' listening on '{}'".format(project_name, url))
 
     httpd_listen = '0.0.0.0'
