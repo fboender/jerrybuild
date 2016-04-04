@@ -31,12 +31,13 @@ class BuildQueue(threading.Thread):
             job = self.queue.get()
             self.build(job)
 
-    def put(self, project, env, run):
+    def put(self, project, env, cmd, work_dir=None):
         job = {
             'project': project,
             'id': uuid.uuid4().hex,
             'env': env,
-            'run': run,
+            'cmd': cmd,
+            'work_dir': work_dir,
         }
         self.write_job_status(job, 'queued')
         self.queue.put(job)
@@ -50,11 +51,27 @@ class BuildQueue(threading.Thread):
         logging.info("job {}: starting".format(job_id))
         for k, v in job['env'].items():
             logging.debug('job {}: env: {}={}'.format(job_id, k, v))
-        logging.debug("job {}: executing '{}'".format(job_id, job['run']))
+        logging.debug("job {}: executing '{}'".format(job_id, job['cmd']))
 
         self.write_job_status(job, 'building')
-        cmd = job['run']
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+
+        if job['work_dir'] is not None:
+            cwd = os.path.realpath(job['work_dir'])
+            if job['cmd'].startswith('/'):
+                cmd = os.path.realpath(job['cmd'])
+            else:
+                cmd = os.path.realpath(os.path.join(cwd, job['cmd']))
+        else:
+            if job['cmd'].startswith('/'):
+                cwd = os.path.realpath(os.path.dirname(job['cmd']))
+                cmd = os.path.realpath(job['cmd'])
+            else:
+                cwd = os.path.realpath(os.curdir)
+                cmd = os.path.realpath(os.path.join(cwd, job['cmd']))
+
+        print cwd, cmd
+
+        p = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, env=job['env'])
         stdout, stderr = p.communicate(input)
         self.write_job_status(job, 'finished', exit_code=p.returncode,
