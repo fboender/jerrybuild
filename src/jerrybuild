@@ -120,7 +120,10 @@ if __name__ == "__main__":
                         format='%(asctime)s:%(levelname)s:%(message)s')
 
     state_dir = config.get('server', 'state_dir')
-    build_queue = bq.BuildQueue(state_dir)
+    smtp_server = '127.0.0.1'
+    if config.has_option('server', 'smtp_server'):
+        smtp_server = config.get('server', 'smtp_server')
+    build_queue = bq.BuildQueue(state_dir, smtp_server=smtp_server)
     build_queue.start()
 
     providers = load_providers(['providers'])

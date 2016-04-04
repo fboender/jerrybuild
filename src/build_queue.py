@@ -13,9 +13,10 @@ from mail import mail
 class BuildQueue(threading.Thread):
     daemon = True
 
-    def __init__(self, status_dir):
+    def __init__(self, status_dir, smtp_server='127.0.0.1'):
         self.status_dir = status_dir
         self.make_status_dir()
+        self.smtp_server = smtp_server
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
 
