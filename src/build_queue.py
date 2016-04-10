@@ -59,10 +59,10 @@ class BuildQueue(threading.Thread):
         self.write_job_status(job, link_latest=True)
         logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
 
-        if job.exit_code != 0:
+        if job.exit_code != 0 and job.jobspec.mail_to:
             # Send email
             logging.info("{}: failed. Sending emails".format(job))
-            self.send_fail_mail(job)
+            print job.jobspec.mail_to
             logging.info("{}: Emails sent".format(job))
 
     def write_job_status(self, job, link_latest=False):
