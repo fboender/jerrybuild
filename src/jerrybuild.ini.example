@@ -6,14 +6,20 @@ listen = 0.0.0.0
 # Port to listen on
 port = 5281
 
-# Logging level. Possible values: DEBUG, INFO
+# Logging level. Possible values: DEBUG, INFO, WARN, ERROR,
+# FATAL
 log_level = INFO
 
 # Directory to keep job status files and such in.
 state_dir = /var/lib/jerrybuild/
 
-# Always send mail to...
-#mail_to = dev@example.com
+# Always send mail to recipients on build failure (optional).
+# Multiple addresses should be separated by a comma. You
+# can add additional addresses in each jobspec section.
+mail_to = dev@example.com
+
+# Default working directory for jobs (optional).
+# work_dir = 
 
 #
 # Example project: ansible-cmdb

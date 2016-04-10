@@ -6,7 +6,6 @@ import logging
 import Queue
 import json
 from tools import mkdir_p
-from job import Job
 from mail import mail
 
 
@@ -39,8 +38,11 @@ class BuildQueue(threading.Thread):
     def handle_queue(self):
         logging.info("Build queue running")
         while True:
-            job = self.queue.get()
-            self.build(job)
+            try:
+                job = self.queue.get()
+                self.build(job)
+            except Exception as err:
+                logging.exception(err)
 
     def build(self, job):
         job.set_status('running')
@@ -49,7 +51,7 @@ class BuildQueue(threading.Thread):
 
         for k, v in job.env.items():
             logging.debug('{}: env: {}={}'.format(job, k, v))
-        logging.debug("{}: executing '{}'".format(job, job.cmd))
+        logging.debug("{}: executing.".format(job))
 
         job.run()
 
@@ -66,7 +68,7 @@ class BuildQueue(threading.Thread):
     def write_job_status(self, job, link_latest=False):
         job_dir = os.path.join(self.status_dir, 'jobs')
         job_path = os.path.join(job_dir, job.id)
-        project_dir = os.path.join(self.status_dir, 'projects', job.project)
+        project_dir = os.path.join(self.status_dir, 'projects', job.jobspec.name)
         project_path = os.path.join(project_dir, job.id)
         mkdir_p(project_dir)
 
@@ -83,7 +85,7 @@ class BuildQueue(threading.Thread):
             os.symlink(job_path, latest_path)
 
     def send_fail_mail(self, job):
-        subject = "Build job '{}' for project '{}' failed with exit code {}'".format(job.id, job.project, job.exit_code)
+        subject = "Build job '{}' for project '{}' failed with exit code {}'".format(job.id, job.jobspec.name, job.exit_code)
         msg = "Exit code = {}.\n\n" \
               "STDOUT\n======\n\n{}\n\n" \
               "STDERR\n======\n\n{}\n\n".format(job.exit_code, job.stdout, job.stderr)

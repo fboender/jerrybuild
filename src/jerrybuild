@@ -4,11 +4,13 @@ import os
 import sys
 import logging
 import ConfigParser
-import bottle
-import wsgi_server
-from bottle import route, run, post, template, request, abort
+
 import build_queue as bq
-from job import Job
+import jobspecmanager
+import bottle
+from bottle import route, request, abort
+import wsgi_server
+import routes
 
 
 class DepInjector:
@@ -51,56 +53,6 @@ def load_providers(paths):
                 logging.exception(err)
     return providers
 
-def make_req_handler(provider, project_name):
-    def handle():
-        build_queue = request.deps['build_queue']
-        config = request.deps['config']
-
-        logging.info("Received event for project '{}'".format(project_name))
-        config_section = 'project:{}'.format(project_name)
-
-        env = provider.normalize(request, project_name, config)
-
-        mail_to = []
-        if config.has_option('server', 'mail_to'):
-            mail_to.extend([m.strip() for m in config.get('server', 'mail_to').split(',')])
-        if config.has_option(config_section, 'mail_to'):
-            mail_to.extend([m.strip() for m in config.get(config_section, 'mail_to').split(',')])
-        if 'mail_to' in env:
-            mail_to.extend([m.strip() for m in env['mail_to'].split(',')])
-        mail_to = list(set(mail_to)) # Remove duplicates
-
-        work_dir = None
-        if config.has_option(config_section, 'work_dir'):
-            work_dir = config.get(config_section, 'work_dir')
-        cmd = config.get(config_section, 'cmd')
-
-        job = bq.Job(project_name, env, cmd, work_dir=work_dir, mail_to=mail_to)
-        job_id = build_queue.put(job)
-        logging.info("Build for '{}' scheduled with ID '{}'".format(project_name, job_id))
-        return {
-            'job_id': job_id
-        }
-
-    return handle
-
-@route('/status/project/<project>')
-def status_project(project):
-    build_queue = request.deps['build_queue']
-    job_status = build_queue.get_project_status(project)
-    if not job_status:
-        abort(404, "No latest status found for project '{}'".format(project))
-    return job_status
-
-@route('/status/job/<job_id>')
-def status_job(job_id):
-    build_queue = request.deps['build_queue']
-    job_status = build_queue.get_job_status(job_id)
-    if not job_status:
-        abort(404, "No job found with id '{}'".format(job_id))
-    return job_status
-
-
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.stderr.write("Usage: {} <config.ini>\n".format(sys.argv[0]))
@@ -119,6 +71,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=log_level,
                         format='%(asctime)s:%(levelname)s:%(message)s')
 
+    # Start the build queue
     state_dir = config.get('server', 'state_dir')
     smtp_server = '127.0.0.1'
     if config.has_option('server', 'smtp_server'):
@@ -126,28 +79,20 @@ if __name__ == "__main__":
     build_queue = bq.BuildQueue(state_dir, smtp_server=smtp_server)
     build_queue.start()
 
+    # Initialize the Jobspec manager
+    jobspec_manager = jobspecmanager.JobSpecManager(sys.argv[1])
+
+    # Load the providers
     providers = load_providers(['providers'])
 
     dep_inject = DepInjector()
     dep_inject.add_dep('build_queue', build_queue)
+    dep_inject.add_dep('jobspec_manager', jobspec_manager)
     dep_inject.add_dep('config', config)
+    dep_inject.add_dep('providers', providers)
 
     wsgiapp = bottle.default_app()
     wsgiapp.install(dep_inject)
-
-    for section_name in config.sections():
-        if section_name.startswith('project:'):
-            project_name = section_name.split(':', 1)[1]
-            url = config.get(section_name, 'url')
-            provider_name = config.get(section_name, 'provider')
-            if not provider_name in providers:
-                logging.error("Invalid provider specified: {}".format(provider_name))
-                sys.exit(1)
-            provider = providers[provider_name]
-            cmd = config.get(section_name, 'cmd')
-            req_handler = make_req_handler(provider, project_name)
-            wsgiapp.route(path=url, callback=req_handler, method=['GET', 'POST'])
-            logging.info("Project '{}' listening on '{}'".format(project_name, url))
 
     httpd_listen = '0.0.0.0'
     httpd_port = 5281
