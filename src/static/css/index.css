@@ -1,0 +1,69 @@
+/* Generic elements */
+body {
+    font-family: sans-serif;
+    color: #303030;
+}
+h1, h2, h3, h4, h5, h6, h7 {
+    font-weight: bold;
+    line-height: 1.4em;
+}
+a {
+    text-decoration: none;
+}
+pre {
+    font-family: monospace;
+    background-color: #F8F8F8;
+    padding: 10px;
+}
+b {
+    font-weight: bold;
+}
+
+/* UI elements */
+header h1 {
+    display: block;
+    font-size: 2.2em;
+    background-color: #1B3F39;
+    color: #FFFFFF;
+    padding-left: 16px;
+    margin-bottom: 32px;
+}
+main {
+    padding-left: 16px;
+    margin-bottom: 64px; /* bottom gap */
+}
+main h2 {
+    font-size: 1.8em;
+    margin-top: 24px; margin-bottom: 24px;
+}
+h3 {
+    margin-top: 24px; margin-bottom: 12px;
+}
+.button {
+    padding: 4px 8px 4px 8px;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+.green { background-color: #5cb85c; color: #FFFFFF; }
+.red { background-color: #d9534f; color: #FFFFFF; }
+.gray { background-color: #505050; color: #FFFFFF; }
+
+/* Job status elements */
+ul#job-status li {
+    line-height: 32px;
+}
+ul#job-status .job-name {
+    font-weight: bold;
+}
+ul#job-status .job-latest {
+    margin-left: 32px;
+}
+ul#job-status-summary {
+    margin-top: 24px;
+}
+
+main#job-result pre {
+    margin-left: 32px;
+    margin-right: 32px;
+}
