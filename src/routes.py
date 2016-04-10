@@ -19,7 +19,7 @@ def status_job(job_id):
         abort(404, "No job found with id '{}'".format(job_id))
     return job_status
 
-@route('/<:re:.*>')
+@route('/<:re:.*>', method=['GET', 'POST'])
 def generic_handler():
     jobspec_manager = request.deps['jobspec_manager']
     build_queue = request.deps['build_queue']
