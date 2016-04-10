@@ -1,4 +1,11 @@
 % rebase('base.tpl', title='Job')
+% import datetime
+% import time
+% import duration
+<%
+time_start_str = time.strftime("%Y-%m-%dT%H:%M:%S", datetime.datetime.fromtimestamp(job_status['time_start']).timetuple())
+time_end_str = time.strftime("%Y-%m-%dT%H:%M:%S", datetime.datetime.fromtimestamp(job_status['time_end']).timetuple())
+%>
 <main id="job-result">
 <h2>{{ jobspec.name }} ({{ job_status['id'] }})</h2>
 
@@ -12,6 +19,9 @@
     <li><b>ID</b>: {{ job_status['id'] }}</li>
     <li><b>Status</b>: {{ job_status['status'] }}</li>
     <li><b>Exit-code</b>: {{ job_status['exit_code'] }}</li>
+    <li><b>Started</b>: {{ time_start_str }}</li>
+    <li><b>Ended</b>: {{ time_end_str }}</li>
+    <li><b>Build time</b>: {{ duration.duration(job_status['time_end'] - job_status['time_start']) }}</li>
 </ul>
 
 <h3>Output</h3>
