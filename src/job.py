@@ -15,8 +15,7 @@ class Job:
         self.default_work_dir = default_work_dir
         self.status = None
         self.exit_code = None
-        self.stdout = None
-        self.stderr = None
+        self.output = None
 
     #def set_cmd(self, cmd, work_dir=None):
     #    if work_dir is not None:
@@ -52,9 +51,9 @@ class Job:
                              cwd=work_dir,
                              shell=True,
                              stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
+                             stderr=subprocess.STDOUT,
                              env=self.env)
-        self.stdout, self.stderr = p.communicate(input)
+        self.output, ignore = p.communicate(input)
         self.exit_code = p.returncode
 
     def to_dict(self):
@@ -64,8 +63,7 @@ class Job:
             'id': self.id,
             'status': self.status,
             'exit_code': self.exit_code,
-            'stdout': self.stdout,
-            'stderr': self.stderr,
+            'output': self.output,
         }
         return d
 
