@@ -4,6 +4,7 @@ import os
 import logging
 import uuid
 import subprocess
+import time
 
 
 class Job:
@@ -16,6 +17,8 @@ class Job:
         self.status = None
         self.exit_code = None
         self.output = None
+        self.time_start = None
+        self.time_end = None
 
     #def set_cmd(self, cmd, work_dir=None):
     #    if work_dir is not None:
@@ -47,6 +50,7 @@ class Job:
 
         logging.info("Running '{}' with command '{}' in working dir '{}'".format(self, cmd, work_dir))
 
+        self.time_start = time.time()
         p = subprocess.Popen(cmd,
                              cwd=work_dir,
                              shell=True,
@@ -54,6 +58,7 @@ class Job:
                              stderr=subprocess.STDOUT,
                              env=self.env)
         self.output, ignore = p.communicate(input)
+        self.time_end = time.time()
         self.exit_code = p.returncode
 
     def to_dict(self):
@@ -64,6 +69,8 @@ class Job:
             'status': self.status,
             'exit_code': self.exit_code,
             'output': self.output,
+            'time_start': self.time_start,
+            'time_end': self.time_end
         }
         return d
 
