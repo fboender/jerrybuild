@@ -24,6 +24,16 @@ time_end_str = time.strftime("%Y-%m-%dT%H:%M:%S", datetime.datetime.fromtimestam
     <li><b>Build time</b>: {{ duration.duration(job_status['time_end'] - job_status['time_start']) }}</li>
 </ul>
 
+<h3>Environment</h3>
+<table id="job-status-env">
+    % for k, v in job_status['env'].items():
+        <tr>
+            <td><b>{{ k }}</b></td>
+            <td>{{ v }}</td>
+        </tr>
+    % end
+</table>
+
 <h3>Output</h3>
 <pre>{{ job_status['output'] }}</pre>
 
