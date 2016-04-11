@@ -1,6 +1,8 @@
 jerrybuild
 ==========
 
+![Status: Unstable](https://img.shields.io/badge/status-unstable-red.svg)
+
 A lightweight build / CI (Continues Integration) server.
 
 ## About
