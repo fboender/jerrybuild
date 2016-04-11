@@ -6,3 +6,4 @@ README.html
 *.tar.gz
 *.zip
 src/jerrybuild.ini
+src/jerrybuild.cfg
