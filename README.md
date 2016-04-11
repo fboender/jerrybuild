@@ -11,6 +11,7 @@ plugins for Github and Gogs.
 
 Features:
 
+* Easy to set up.
 * Consumes only 16 Mb of memory.
 * Written in Python (v2.7+, v3+) with zero other dependencies.
 * Webhook plugins for Github, Gogs and generic web hooks.
@@ -23,7 +24,9 @@ features found in other CI servers:
 
 * Jerrybuild does not understand your version control system. Updating clones
   and checking out the correct branches should be handled in your build
-  script. #FIXME: Examples.
+  script. The Github, Gogs and other providers will pass environment values to
+  your script containing information on which repo/commit to build. #FIXME:
+  Examples.
 * The job build queue can currently only build one job at a time. If this is a
   problem for you, please submit a Github issue requesting this functionality.
 * There is no scheduling mechanism. You can use Cron to do scheduled builds.
@@ -96,6 +99,11 @@ configuration file to be used as the first parameter:
     2016-04-05 08:11:23,284:INFO:Project 'ansible-test' listening on '/project/ansible-test'
     2016-04-05 08:11:23,285:INFO:Server listening on 0.0.0.0:5281
 
+If you configure a new webhook in Github with
+`http://yourhost.example.com/project/ansible-cmdb` as the callback URL and
+`SECRET_TOKEN_HERE` as the secret token, Github will call Jerrybuild on each
+commit (or other action) and the `run_tests.sh` script will be called.
+
 # Providers
 
 Providers are like plugins that understand how to parse webhook callbacks from
@@ -106,4 +114,29 @@ are:
 * Github (https://www.github.com)
 * Gogs (https://www.gogs.io FIXME)
 
+Providers inspect the webhook HTTP request and extract useful information from
+them. This information is passed on to your build script through the
+environment. The providers may also perform authentication and authorization.
 
+## Github
+
+## Gogs
+
+Gogs is a lightweight Github clone written in Go.
+
+Unlike Github, Gogs does not use HMAC signing with the secret key on the body.
+It simply passes the secret in the body of the request. The Gogs provider
+verifies this secret, but you really should run Jerrybuild behind a HTTPS
+connection.
+
+The following environment variables are currently passed to scripts when using
+the Gogs provider:
+
+    event = push
+    repo_type = git
+    repo_url_ssh = git@git.electricmonk.nl:fboender/ansible-test.git
+    repo_url = http://git.electricmonk.nl/fboender/ansible-test.git
+    repo_url_http = http://git.electricmonk.nl/fboender/ansible-test.git
+    ref = refs/heads/master
+    commit = 1f41a02e9f47b7a9dcc66d1d559c495c7df1fd34
+    mail_to = user@example.com, user2@example.com
