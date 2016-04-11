@@ -60,6 +60,7 @@ td {
 .green { background-color: #5cb85c; color: #FFFFFF; }
 .red { background-color: #d9534f; color: #FFFFFF; }
 .gray { background-color: #505050; color: #FFFFFF; }
+.blue { background-color: #0065FF; color: #FFFFFF; }
 
 /* Job status elements */
 ul#job-status li {

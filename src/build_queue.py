@@ -65,7 +65,7 @@ class BuildQueue(threading.Thread):
             print job.jobspec.mail_to
             logging.info("{}: Emails sent".format(job))
 
-    def write_job_status(self, job, link_latest=False):
+    def write_job_status(self, job, link_latest=True):
         job_dir = os.path.join(self.status_dir, 'jobs')
         job_path = os.path.join(job_dir, job.id)
         project_dir = os.path.join(self.status_dir, 'projects', job.jobspec.name)
