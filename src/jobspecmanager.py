@@ -52,7 +52,7 @@ class JobSpecManager:
 
     def get_jobspec_from_url(self, url):
         for name, jobspec_inst in self.jobspecs.items():
-            if jobspec_inst.url == url:
+            if jobspec_inst.url.rstrip('/') == url.rstrip('/'):
                 return jobspec_inst
         return None
 
