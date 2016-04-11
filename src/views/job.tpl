@@ -7,7 +7,7 @@ time_start_str = time.strftime("%Y-%m-%dT%H:%M:%S", datetime.datetime.fromtimest
 time_end_str = time.strftime("%Y-%m-%dT%H:%M:%S", datetime.datetime.fromtimestamp(job_status['time_end']).timetuple())
 %>
 <main id="job-result">
-<h2>{{ jobspec.name }} ({{ job_status['id'] }})</h2>
+<h2><a href="/jobspec/{{ jobspec.name }}">{{ jobspec.name }}</a> ({{ job_status['id'] }})</h2>
 
 % if job_status['exit_code'] == 0:
     <span class="button green">Passed</span>

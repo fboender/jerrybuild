@@ -9,6 +9,10 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 a {
     text-decoration: none;
+    border-bottom: 1px solid #D0D0D0;
+}
+a:visited {
+    color: #000000;
 }
 pre {
     font-family: monospace;
@@ -37,12 +41,20 @@ main h2 {
     margin-top: 24px; margin-bottom: 24px;
 }
 h3 {
+    font-size: 1.6em;
+    color: #505050;
     margin-top: 24px; margin-bottom: 12px;
+}
+li {
+    line-height: 1.2em;
 }
 .button {
     padding: 4px 8px 4px 8px;
     border-radius: 3px;
     font-size: 16px;
+}
+td {
+    padding-right: 12px;
 }
 
 .green { background-color: #5cb85c; color: #FFFFFF; }
@@ -66,4 +78,8 @@ ul#job-status-summary {
 main#job-result pre {
     margin-left: 32px;
     margin-right: 32px;
+}
+
+ul#job-spec {
+    margin-top: 24px;
 }

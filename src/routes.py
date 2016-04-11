@@ -19,6 +19,15 @@ def index():
 
     return template('index.tpl', job_status=job_status)
 
+@route('/jobspec/<job_name>')
+def jobspec(job_name):
+    jobspec_manager = request.deps['jobspec_manager']
+    build_queue = request.deps['build_queue']
+
+    jobspec = jobspec_manager.get_jobspec(job_name)
+    job_status = build_queue.get_project_status(job_name)
+    return template('jobspec.tpl', jobspec=jobspec, job_status=job_status)
+
 @route('/job/<job_id>')
 def job(job_id):
     jobspec_manager = request.deps['jobspec_manager']
