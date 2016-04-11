@@ -15,7 +15,6 @@ def index():
     job_status = {}
     for name, jobspec in jobspecs.items():
         jobspec_status = build_queue.get_project_status(name)
-        print jobspec_status
         job_status[name] = jobspec_status
 
     return template('index.tpl', job_status=job_status)
