@@ -20,24 +20,6 @@ class Job:
         self.time_start = None
         self.time_end = None
 
-    #def set_cmd(self, cmd, work_dir=None):
-    #    if work_dir is not None:
-    #        work_dir = os.path.realpath(work_dir)
-    #        if cmd.startswith('/'):
-    #            cmd = os.path.realpath(cmd)
-    #        else:
-    #            cmd = os.path.realpath(os.path.join(work_dir, cmd))
-    #    else:
-    #        if cmd.startswith('/'):
-    #            work_dir = os.path.realpath(os.path.dirname(cmd))
-    #            cmd = os.path.realpath(cmd)
-    #        else:
-    #            work_dir = os.path.realpath(os.curdir)
-    #            cmd = os.path.realpath(os.path.join(work_dir, cmd))
-
-    #    self.work_dir = work_dir
-    #    self.cmd = cmd
-
     def set_status(self, status):
         self.status = status
 
