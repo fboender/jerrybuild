@@ -2,25 +2,29 @@
 
 import hmac
 import hashlib
+import json
 
 
 def normalize(request, project_name, config):
     env = {}
-    body = request.body.read()
+    raw_body = request.body.read()
+    body = json.load(request.body)
     config_section = 'project:{}'.format(project_name)
-    secret = config.get(project_name, 'secret')
+    secret = bytes(config.get(config_section, 'secret').strip())
 
     if request.headers['X-Github-Event'] != 'push':
         raise NotImplementedError("Only push events are currently supported")
 
     # Verify hash signature
-    hashtype, signature = self.headers['X-Hub-Signature'].split('=', 1)
+    hashtype, signature = request.headers['X-Hub-Signature'].split('=', 1)
     if hashtype != 'sha1':
         raise ValueError("Invalid hashtype received")
 
-    mac = hmac.new(secret, msg=data, digestmod=hashlib.sha1)
-    match = hmac.compare_digest(mac.hexdigest(), signature)
-    if not match:
+    res = hmac.new(secret, msg=raw_body, digestmod=hashlib.sha1)
+    # Python <2.7 doesn't have a secure compare for hmac, so we just compare
+    # manually. This leaves this code vulnerable to timing attacks,
+    # unfortunately.
+    if str(res.hexdigest()) != str(signature):
         raise ValueError("Invalid secret")
 
     env["event"] = request.headers['X-Github-Event']
