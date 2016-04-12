@@ -1,13 +1,14 @@
 #!/usr/bin/python
 
 class JobSpec:
-    def __init__(self, name, desc, url, provider, cmd, work_dir=None,
+    def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
                  mail_to=[], custom_params={}):
         self.name = name
         self.desc = desc
         self.url = url
         self.provider = provider
         self.cmd = cmd
+        self.env = env
         self.work_dir = work_dir
         self.mail_to = mail_to
         self.custom_params = custom_params
@@ -23,6 +24,7 @@ def from_config(config, section_name):
         'url': None,
         'provider': 'generic',
         'cmd': None,
+        'env': {},
         'work_dir': None,
         'mail_to': [],
         'custom_params': {},
@@ -41,6 +43,10 @@ def from_config(config, section_name):
             params['work_dir'] = config.get(section_name, 'work_dir')
         elif option == 'mail_to':
             params['mail_to'] = [s.strip() for s in config.get(section_name, 'mail_to').split(',')]
+        elif option.startswith('env_'):
+            env_name = option[4:].strip()
+            env_value = config.get(section_name, option).strip()
+            params['env'][env_name] = env_value
         else:
             params['custom_params'][option] = config.get(section_name, option)
 

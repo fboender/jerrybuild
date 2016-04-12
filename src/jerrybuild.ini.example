@@ -30,4 +30,5 @@ mail_to = dev@example.com
 #provider = github
 #secret = SECRET_TOKEN_HERE
 #cmd = /home/build/ansible-cmdb/run_tests.sh
+#env_run_coverage = 0
 
