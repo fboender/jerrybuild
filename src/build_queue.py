@@ -65,6 +65,7 @@ class BuildQueue(threading.Thread):
             # Send email
             logging.info("{}: failed. Sending emails".format(job))
             print job.jobspec.mail_to
+            self.send_fail_mail(job)
             logging.info("{}: Emails sent".format(job))
 
     def write_job_status(self, job, link_latest=True):
