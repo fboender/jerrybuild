@@ -5,8 +5,7 @@ import os
 import logging
 import Queue
 import json
-from tools import mkdir_p
-from mail import mail
+from tools import mkdir_p, mail
 
 
 class BuildQueue(threading.Thread):
