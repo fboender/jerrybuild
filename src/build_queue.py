@@ -43,6 +43,8 @@ class BuildQueue(threading.Thread):
                 self.build(job)
             except Exception as err:
                 logging.exception(err)
+                job.set_status("internal_error")
+                self.write_job_status(job)
 
     def build(self, job):
         job.set_status('running')
