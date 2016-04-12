@@ -42,7 +42,7 @@ end
 
 <h3>Environment</h3>
 <table id="job-status-env">
-    % for k, v in job_status['env'].items():
+    % for k, v in sorted(job_status['env'].items()):
         <tr>
             <td><b>{{ k }}</b></td>
             <td>{{ v }}</td>
