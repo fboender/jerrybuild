@@ -14,7 +14,6 @@ class JobSpecManager:
         self.config = None
         self.config_file = None
         self.default_work_dir = None
-        self.mail_to = []
         self.load(config_file)
 
         if self.config is None or self.config_file is None:
@@ -25,13 +24,10 @@ class JobSpecManager:
         config = None
         config_file = config_file
         default_work_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
-        mail_to = []
 
         config = ConfigParser.RawConfigParser()
         config.read(config_file)
 
-        if config.has_option('server', 'mail_to'):
-            mail_to.extend([m.strip() for m in config.get('server', 'mail_to').split(',')])
         if config.has_option('server', 'work_dir'):
             default_work_dir = config.get('server', 'work_dir')
 
@@ -45,7 +41,6 @@ class JobSpecManager:
         self.config = config
         self.config_file = config_file
         self.default_work_dir = default_work_dir
-        self.mail_to = mail_to
 
     def get_jobspec(self, name):
         return self.jobspecs[name]
@@ -61,11 +56,5 @@ class JobSpecManager:
 
     def make_job(self, name, body, env):
         jobspec = self.jobspecs[name]
-
-        mail_to = [] + self.mail_to
-        if 'mail_to' in env:
-            mail_to.extend([m.strip() for m in env['mail_to'].split(',')])
-        mail_to = list(set(mail_to)) # Remove duplicates
-
-        job = Job(jobspec, body, env, mail_to=mail_to, default_work_dir=self.default_work_dir)
+        job = Job(jobspec, body, env, default_work_dir=self.default_work_dir)
         return job

@@ -8,13 +8,12 @@ import time
 
 
 class Job:
-    def __init__(self, jobspec, body, env, mail_to=[], default_work_dir=None):
+    def __init__(self, jobspec, body, env, default_work_dir=None):
         self.jobspec = jobspec
         self.env = env
         self.env.update(self.jobspec.env)
         self.body = body
         self.id = uuid.uuid4().hex
-        self.mail_to = mail_to
         self.default_work_dir = default_work_dir
         self.status = None
         self.exit_code = None
