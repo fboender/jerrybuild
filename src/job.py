@@ -33,15 +33,19 @@ class Job:
         logging.info("Running '{}' with command '{}' in working dir '{}'".format(self, cmd, work_dir))
 
         self.time_start = time.time()
-        p = subprocess.Popen(cmd,
-                             cwd=work_dir,
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT,
-                             env=self.env)
-        self.output, ignore = p.communicate(input)
+        try:
+            p = subprocess.Popen(cmd,
+                                 cwd=work_dir,
+                                 shell=True,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT,
+                                 env=self.env)
+            self.output, ignore = p.communicate(input)
+            self.exit_code = p.returncode
+        except OSError as err:
+            self.exit_code = 127
+            self.output = str(err)
         self.time_end = time.time()
-        self.exit_code = p.returncode
 
     def to_dict(self):
         d = {
