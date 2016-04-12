@@ -1,6 +1,7 @@
 % rebase('base.tpl', title='Job specification')
 <main id="job-spec">
 <h2>{{ jobspec.name }}</h2>
+<p class="desc">{{ jobspec.desc }}</p>
 
 % if job_status is not None:
     % if job_status['exit_code'] == 0:

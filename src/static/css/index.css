@@ -81,6 +81,9 @@ main#job-result pre {
     margin-right: 32px;
 }
 
+main#job-spec p.desc {
+    margin-bottom: 24px;
+}
 ul#job-spec {
     margin-top: 24px;
 }

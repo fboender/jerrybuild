@@ -25,6 +25,7 @@ mail_to = dev@example.com
 # Example project: ansible-cmdb
 #
 #[project:ansible-cmdb]
+#desc = Run ansible-cmdb test suite
 #url = /project/ansible-cmdb
 #provider = github
 #secret = SECRET_TOKEN_HERE
