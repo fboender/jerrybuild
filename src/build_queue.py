@@ -63,7 +63,6 @@ class BuildQueue(threading.Thread):
 
         if job.exit_code != 0 and job.jobspec.mail_to:
             # Send email
-            logging.info("{}: failed. Sending emails".format(job))
             logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.jobspec.mail_to)))
             self.send_fail_mail(job)
             logging.info("{}: Emails sent".format(job))
