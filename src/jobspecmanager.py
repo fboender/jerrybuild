@@ -59,7 +59,7 @@ class JobSpecManager:
     def get_jobspecs(self):
         return self.jobspecs
 
-    def make_job(self, name, env):
+    def make_job(self, name, body, env):
         jobspec = self.jobspecs[name]
 
         mail_to = [] + self.mail_to
@@ -67,5 +67,5 @@ class JobSpecManager:
             mail_to.extend([m.strip() for m in env['mail_to'].split(',')])
         mail_to = list(set(mail_to)) # Remove duplicates
 
-        job = Job(jobspec, env, mail_to=mail_to, default_work_dir=self.default_work_dir)
+        job = Job(jobspec, body, env, mail_to=mail_to, default_work_dir=self.default_work_dir)
         return job

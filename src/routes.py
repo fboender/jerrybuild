@@ -69,7 +69,7 @@ def generic_handler():
     logging.info("Received event for project '{}'".format(jobspec.name))
     provider = providers[jobspec.provider]
     env = provider.normalize(request, jobspec.name, config)
-    job = jobspec_manager.make_job(jobspec.name, env)
+    job = jobspec_manager.make_job(jobspec.name, request.body.read(), env)
     build_queue.put(job)
     return {'id': job.id}
 

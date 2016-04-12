@@ -8,9 +8,10 @@ import time
 
 
 class Job:
-    def __init__(self, jobspec, env, mail_to=[], default_work_dir=None):
+    def __init__(self, jobspec, body, env, mail_to=[], default_work_dir=None):
         self.jobspec = jobspec
         self.env = env
+        self.body = body
         self.id = uuid.uuid4().hex
         self.mail_to = mail_to
         self.default_work_dir = default_work_dir
@@ -37,10 +38,11 @@ class Job:
             p = subprocess.Popen(cmd,
                                  cwd=work_dir,
                                  shell=True,
+                                 stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
                                  env=self.env)
-            self.output, ignore = p.communicate(input)
+            self.output, ignore = p.communicate(self.body)
             self.exit_code = p.returncode
         except OSError as err:
             self.exit_code = 127
