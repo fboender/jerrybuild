@@ -27,6 +27,7 @@ def normalize(request, project_name, config):
     if str(res.hexdigest()) != str(signature):
         raise ValueError("Invalid secret")
 
+    env['provider'] = 'github'
     env["event"] = request.headers['X-Github-Event']
     env['repo_type'] = 'git'
     env['repo_url'] = body['repository']['clone_url']

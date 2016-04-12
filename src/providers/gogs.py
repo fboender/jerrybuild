@@ -18,6 +18,7 @@ def normalize(request, project_name, config):
     if body['secret'] != secret:
         raise ValueError("Invalid secret")
 
+    env['provider'] = 'gogs'
     env['event'] = request.headers['X-Gogs-Event']
     env['repo_type'] = 'git'
     env['repo_url'] = body['repository']['clone_url']
