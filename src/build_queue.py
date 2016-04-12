@@ -5,6 +5,7 @@ import os
 import logging
 import Queue
 import json
+import socket
 from tools import mkdir_p, mail
 
 
@@ -86,11 +87,11 @@ class BuildQueue(threading.Thread):
             os.symlink(job_path, latest_path)
 
     def send_fail_mail(self, job):
-        subject = "Build job '{}' for project '{}' failed with exit code {}'".format(job.id, job.jobspec.name, job.exit_code)
-        msg = "Exit code = {}.\n\n" \
-              "STDOUT\n======\n\n{}\n\n" \
-              "STDERR\n======\n\n{}\n\n".format(job.exit_code, job.stdout, job.stderr)
-        mail(job.mail_to, subject, msg)
+        subject = "Build job '{}' (id={}) failed with exit code {}'".format(job.jobspec.name, job.id, job.exit_code)
+        msg = "Host = {}\n" \
+              "Exit code = {}.\n\n" \
+              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), job.exit_code, job.output)
+        mail(job.jobspec.mail_to, subject, msg)
 
     def get_job_status(self, job_id):
         job_dir = os.path.join(self.status_dir, 'jobs')
