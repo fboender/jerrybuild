@@ -26,20 +26,20 @@ end
 
 % job_status_button(job_status['exit_code'])
 
-<ul id="job-status-summary">
-    <li><b>ID</b>: {{ job_status['id'] }}</li>
-    <li><b>Status</b>: {{ job_status['status'] }}</li>
-    <li><b>Exit-code</b>: {{ job_status['exit_code'] }}</li>
-    <li><b>Started</b>: {{ time_start_str }}</li>
-    <li><b>Ended</b>: {{ time_end_str }}</li>
-    <li><b>Build time</b>: {{ time_duration }}</li>
-</ul>
+<table id="job-status-overview">
+    <tr><th>ID</th><td>{{ job_status['id'] }}</td></tr>
+    <tr><th>Status</th><td>{{ job_status['status'] }}</td></tr>
+    <tr><th>Exit code</th><td>{{ job_status['exit_code'] }}</td></tr>
+    <tr><th>Started</th><td>{{ time_start_str }}</td></tr>
+    <tr><th>Ended</th><td>{{ time_end_str }}</td></tr>
+    <tr><th>Build time</th><td>{{ time_duration }}</td></tr>
+</table>
 
 <h3>Environment</h3>
 <table id="job-status-env">
     % for k, v in sorted(job_status['env'].items()):
         <tr>
-            <td><b>{{ k }}</b></td>
+            <th>{{ k }}</th>
             <td>{{ v }}</td>
         </tr>
     % end
