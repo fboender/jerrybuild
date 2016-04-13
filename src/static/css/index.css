@@ -61,6 +61,12 @@ td {
 .red { background-color: #d9534f; color: #FFFFFF; }
 .gray { background-color: #505050; color: #FFFFFF; }
 .blue { background-color: #0065FF; color: #FFFFFF; }
+.pulse { animation: pulse 1s infinite; }
+@keyframes pulse {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
 
 /* Job status elements */
 ul#job-status li {
