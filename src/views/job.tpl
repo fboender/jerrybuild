@@ -2,6 +2,7 @@
 % import datetime
 % import time
 % import duration
+% job_status_button = include('helpers/job_status.tpl')['job_status_button']
 <%
 time_start_str = "Not started"
 time_end_str = "Still running"
@@ -23,13 +24,7 @@ end
 <main id="job-result">
 <h2><a href="/jobspec/{{ jobspec.name }}">{{ jobspec.name }}</a> ({{ job_status['id'] }})</h2>
 
-% if job_status['exit_code'] is None:
-    <span class="button blue">Building</span>
-% elif job_status['exit_code'] == 0:
-    <span class="button green">Passed</span>
-% else:
-    <span class="button red">Failed</span>
-% end
+% job_status_button(job_status['exit_code'])
 
 <ul id="job-status-summary">
     <li><b>ID</b>: {{ job_status['id'] }}</li>

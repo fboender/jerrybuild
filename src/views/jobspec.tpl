@@ -1,14 +1,11 @@
 % rebase('base.tpl', title='Job specification')
+% job_status_button = include('helpers/job_status.tpl')['job_status_button']
 <main id="job-spec">
 <h2>{{ jobspec.name }}</h2>
 <p class="desc">{{ jobspec.desc }}</p>
 
 % if job_status is not None:
-    % if job_status['exit_code'] == 0:
-        <a href="/job/{{ job_status['id'] }}"><span class="button green">Passed</span></a>
-    % else:
-        <a href="/job/{{ job_status['id'] }}"><span class="button red">Failed`</span></a>
-    % end
+    % job_status_button(job_status['exit_code'], job_status['id'])
 % else:
     <span class="button gray">Never run</span>
 % end
