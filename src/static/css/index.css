@@ -22,6 +22,11 @@ pre {
 b {
     font-weight: bold;
 }
+th {
+    text-align: left;
+    font-weight: bold;
+    padding-right: 12px;
+}
 
 /* UI elements */
 header h1 {
@@ -53,9 +58,6 @@ li {
     border-radius: 3px;
     font-size: 16px;
 }
-td {
-    padding-right: 12px;
-}
 
 .green { background-color: #5cb85c; color: #FFFFFF; }
 .red { background-color: #d9534f; color: #FFFFFF; }
@@ -68,28 +70,30 @@ td {
     100% { opacity: 0; }
 }
 
-/* Job status elements */
-ul#job-status li {
+/* Main: overview */
+main#overview ul#job-status li {
     line-height: 32px;
 }
-ul#job-status .job-name {
+main#overview ul#job-status .job-name {
     font-weight: bold;
 }
-ul#job-status .job-latest {
+main#overview ul#job-status .job-latest {
     margin-left: 32px;
 }
-ul#job-status-summary {
+
+/* Main: job results */
+main#job-result table#job-status-overview {
     margin-top: 24px;
 }
-
 main#job-result pre {
     margin-left: 32px;
     margin-right: 32px;
 }
 
+/* Main: job specification */
 main#job-spec p.desc {
     margin-bottom: 24px;
 }
-ul#job-spec {
+main#job-spec ul#job-spec {
     margin-top: 24px;
 }
