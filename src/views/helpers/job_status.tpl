@@ -13,6 +13,10 @@
             <a href="/job/{{ job_id }}"><span class="button green">Passed</span></a>
         % end
     % else:
-        <span class="button red">Failed</span>
+        % if job_id is None:
+            <span class="button red">Failed</span>
+        % else:
+            <a href="/job/{{ job_id }}"><span class="button red">Failed</span></a>
+        % end
     % end
 % end
