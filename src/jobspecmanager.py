@@ -3,6 +3,7 @@
 import sys
 import os
 import ConfigParser
+import logging
 
 import jobspec
 from job import Job

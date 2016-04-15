@@ -9,7 +9,7 @@ import signal
 import build_queue as bq
 import jobspecmanager
 import bottle
-from bottle import route, request, abort
+from bottle import request
 import wsgi_server
 import routes
 
