@@ -4,6 +4,7 @@ import os
 import sys
 import logging
 import ConfigParser
+import signal
 
 import build_queue as bq
 import jobspecmanager
@@ -53,6 +54,16 @@ def load_providers(paths):
                 logging.exception(err)
     return providers
 
+def sig_hup_handler_generate(jobspec_manager):
+    """
+    Closure that returns a HUP signal handler that reloads the configuration
+    file.
+    """
+    def sig_hup_handler(signum, frame):
+        jobspec_manager.reload()
+        bottle.TEMPLATES.clear()
+    return sig_hup_handler
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.stderr.write("Usage: {} <config.ini>\n".format(sys.argv[0]))
@@ -60,6 +71,7 @@ if __name__ == "__main__":
 
     config = ConfigParser.RawConfigParser()
     config.read(sys.argv[1])
+
     log_level = logging.INFO
     if config.has_option('server', 'log_level'):
         log_level_str = config.get('server', 'log_level')
@@ -81,6 +93,9 @@ if __name__ == "__main__":
 
     # Initialize the Jobspec manager
     jobspec_manager = jobspecmanager.JobSpecManager(sys.argv[1])
+
+    # Setup a SIGHUP signal handler that reloads configuration
+    signal.signal(signal.SIGHUP, sig_hup_handler_generate(jobspec_manager))
 
     # Load the providers
     providers = load_providers(['providers'])

@@ -42,6 +42,10 @@ class JobSpecManager:
         self.config_file = config_file
         self.default_work_dir = default_work_dir
 
+    def reload(self):
+        logging.info("Reloading configuration file")
+        self.load(self.config_file)
+
     def get_jobspec(self, name):
         return self.jobspecs[name]
 

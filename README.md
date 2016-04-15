@@ -106,6 +106,17 @@ If you configure a new webhook in Github with
 `SECRET_TOKEN_HERE` as the secret token, Github will call Jerrybuild on each
 commit (or other action) and the `run_tests.sh` script will be called.
 
+## Reloading
+
+You can reload the configuration file by sending the HUP signal to Jerrybuild:
+
+    $ pidof -x "jerrybuild"
+    4718
+    $ kill -HUP 4718
+    # In log file: 2016-04-15 16:03:31,645:INFO:Reloading configuration file
+
+FIXME: Implement `reload` in init job.
+
 # Providers
 
 Providers are like plugins that understand how to parse webhook callbacks from
