@@ -26,6 +26,7 @@ class JobSpecManager:
         default_work_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
 
         config = ConfigParser.RawConfigParser()
+        config.optionxform = str  # Case-sensitive option names for env_
         config.read(config_file)
 
         if config.has_option('server', 'work_dir'):
