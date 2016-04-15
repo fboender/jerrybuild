@@ -3,9 +3,13 @@
 import hmac
 import hashlib
 import json
+from bottle import abort
 
 
 def normalize(request, project_name, config):
+    if request.headers['X-Github-Event'] == 'ping':
+        abort(200, "Pong")
+
     env = {}
     raw_body = request.body.read()
     body = json.load(request.body)
