@@ -18,6 +18,7 @@ pre {
     font-family: monospace;
     background-color: #F8F8F8;
     padding: 10px;
+    overflow: auto;
 }
 b {
     font-weight: bold;
