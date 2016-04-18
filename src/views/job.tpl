@@ -1,7 +1,7 @@
 % rebase('base.tpl', title='Job')
 % import datetime
 % import time
-% import duration
+% import tools
 % job_status_button = include('helpers/job_status.tpl')['job_status_button']
 <%
 time_start_str = "Not started"
@@ -16,9 +16,9 @@ if job_status['time_end'] is not None:
 end
 
 if job_status['time_start'] is not None and job_status['time_end'] is not None:
-    time_duration = duration.duration(job_status['time_end'] - job_status['time_start'])
+    time_duration = tools.duration(job_status['time_end'] - job_status['time_start'])
 elif job_status['time_start'] is not None:
-    time_duration = duration.duration(time.time() - job_status['time_start'])
+    time_duration = tools.duration(time.time() - job_status['time_start'])
 end
 %>
 <main id="job-result">
