@@ -87,7 +87,7 @@ class BuildQueue(threading.Thread):
             os.symlink(job_path, latest_path)
 
     def send_fail_mail(self, job):
-        subject = "Build job '{}' (id={}) failed with exit code {}'".format(job.jobspec.name, job.id, job.exit_code)
+        subject = "Build job '{}' (id={}..) failed with exit code {}'".format(job.jobspec.name, job.id[:8], job.exit_code)
         msg = "Host = {}\n" \
               "Exit code = {}.\n\n" \
               "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), job.exit_code, job.output)
