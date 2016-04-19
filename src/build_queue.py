@@ -61,11 +61,14 @@ class BuildQueue(threading.Thread):
         self.write_job_status(job, link_latest=True)
         logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
 
-        if job.exit_code != 0 and job.jobspec.mail_to:
-            # Send email
-            logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.jobspec.mail_to)))
-            self.send_fail_mail(job)
-            logging.info("{}: Emails sent".format(job))
+        if job.exit_code != 0:
+            if job.jobspec.mail_to:
+                # Send email
+                logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.jobspec.mail_to)))
+                self.send_fail_mail(job)
+                logging.info("{}: Emails sent".format(job))
+            else:
+                logging.info("{}: No email configured. Not sending email.".format(job))
 
     def write_job_status(self, job, link_latest=True):
         job_dir = os.path.join(self.status_dir, 'jobs')
