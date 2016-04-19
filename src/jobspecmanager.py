@@ -62,5 +62,6 @@ class JobSpecManager:
 
     def make_job(self, name, body, env):
         jobspec = self.jobspecs[name]
+        env['job'] = jobspec.name
         job = Job(jobspec, body, env, default_work_dir=self.default_work_dir)
         return job
