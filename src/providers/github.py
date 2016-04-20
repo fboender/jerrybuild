@@ -6,15 +6,14 @@ import json
 from bottle import abort
 
 
-def normalize(request, project_name, config):
+def normalize(request, config_values):
     if request.headers['X-Github-Event'] == 'ping':
         abort(200, "Pong")
 
     env = {}
     raw_body = request.body.read()
     body = json.load(request.body)
-    config_section = 'project:{}'.format(project_name)
-    secret = bytes(config.get(config_section, 'secret').strip())
+    secret = bytes(config_values['secret'])
 
     if request.headers['X-Github-Event'] != 'push':
         raise NotImplementedError("Only push events are currently supported")

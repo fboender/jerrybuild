@@ -6,8 +6,10 @@ import logging
 import ConfigParser
 import signal
 
+import tools
 import build_queue as bq
-import jobspecmanager
+from jobdef_manager import JobDefManager
+import jobdef_manager
 import bottle
 from bottle import request
 import wsgi_server
@@ -54,13 +56,13 @@ def load_providers(paths):
                 logging.exception(err)
     return providers
 
-def sig_hup_handler_generate(jobspec_manager):
+def sig_hup_handler_generate(jobdef_manager):
     """
     Closure that returns a HUP signal handler that reloads the configuration
     file.
     """
     def sig_hup_handler(signum, frame):
-        jobspec_manager.reload()
+        jobdef_manager.reload()
         bottle.TEMPLATES.clear()
     return sig_hup_handler
 
@@ -91,21 +93,22 @@ if __name__ == "__main__":
     build_queue = bq.BuildQueue(state_dir, smtp_server=smtp_server)
     build_queue.start()
 
-    # Initialize the Jobspec manager
-    jobspec_manager = jobspecmanager.JobSpecManager(sys.argv[1])
+    # Initialize the Job Definition Manager
+    jobdef_manager = JobDefManager(sys.argv[1])
 
     # Setup a SIGHUP signal handler that reloads configuration
-    signal.signal(signal.SIGHUP, sig_hup_handler_generate(jobspec_manager))
+    signal.signal(signal.SIGHUP, sig_hup_handler_generate(jobdef_manager))
 
     # Load the providers
-    providers = load_providers(['providers'])
+    providers = load_providers([tools.bin_rel_path('providers')])
 
     dep_inject = DepInjector()
     dep_inject.add_dep('build_queue', build_queue)
-    dep_inject.add_dep('jobspec_manager', jobspec_manager)
+    dep_inject.add_dep('jobdef_manager', jobdef_manager)
     dep_inject.add_dep('config', config)
     dep_inject.add_dep('providers', providers)
 
+    bottle.TEMPLATE_PATH.insert(0, tools.bin_rel_path('views'))
     wsgiapp = bottle.default_app()
     wsgiapp.install(dep_inject)
 

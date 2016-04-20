@@ -1,10 +1,24 @@
 import os
+import sys
 import errno
 import smtplib
 import getpass
 import socket
 from datetime import datetime, timedelta
 
+def bin_rel_path(path):
+    """
+    Return the full real path to `path`, where `path` is relative to the binary
+    currently running.
+    """
+    return os.path.join(
+        os.path.realpath(
+            os.path.dirname(
+                sys.argv[0]
+            )
+        ),
+        path
+    )
 
 def mail(to, subject, msg, smtp_server="localhost"):
     """

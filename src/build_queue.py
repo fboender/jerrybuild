@@ -14,6 +14,8 @@ class BuildQueue(threading.Thread):
 
     def __init__(self, status_dir, smtp_server='127.0.0.1'):
         self.status_dir = status_dir
+        self.jobs_dir = os.path.join(self.status_dir, 'jobs')
+        self.all_dir = os.path.join(self.status_dir, 'jobs', '_all')
         self.make_status_dir()
         self.smtp_server = smtp_server
         threading.Thread.__init__(self)
@@ -23,10 +25,8 @@ class BuildQueue(threading.Thread):
         self.handle_queue()
 
     def make_status_dir(self):
-        jobs_dir = os.path.join(self.status_dir, 'jobs')
-        projects_dir = os.path.join(self.status_dir, 'projects')
-        mkdir_p(jobs_dir)
-        mkdir_p(projects_dir)
+        mkdir_p(self.jobs_dir)
+        mkdir_p(self.all_dir)
 
     def put(self, job):
         job.set_status('queued')
@@ -58,59 +58,50 @@ class BuildQueue(threading.Thread):
         job.run()
 
         job.set_status('done')
-        self.write_job_status(job, link_latest=True)
+        self.write_job_status(job)
         logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
 
         if job.exit_code != 0:
-            if job.jobspec.mail_to:
+            if job.mail_to:
                 # Send email
-                logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.jobspec.mail_to)))
-                self.send_fail_mail(job)
+                logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.mail_to)))
+                job.send_fail_mail(job)
                 logging.info("{}: Emails sent".format(job))
             else:
                 logging.info("{}: No email configured. Not sending email.".format(job))
 
-    def write_job_status(self, job, link_latest=True):
-        job_dir = os.path.join(self.status_dir, 'jobs')
-        job_path = os.path.join(job_dir, job.id)
-        project_dir = os.path.join(self.status_dir, 'projects', job.jobspec.name)
-        project_path = os.path.join(project_dir, job.id)
-        mkdir_p(project_dir)
+    def write_job_status(self, job):
+        jobdef_dir = os.path.join(self.status_dir, 'jobs', job.jobdef_name)
+        mkdir_p(jobdef_dir)  # If it doesn't exist yet
+        job_status_path = os.path.join(self.all_dir, job.id)
+        job_status_link = os.path.join(jobdef_dir, job.id)
+        job_latest_link = os.path.join(jobdef_dir, "latest")
 
         status = job.to_dict()
-        with open(job_path, 'w') as f:
+        with open(job_status_path, 'w') as f:
             json.dump(status, f)
-        if not os.path.exists(project_path):
-            os.symlink(job_path, project_path)
 
-        if link_latest:
-            latest_path = os.path.join(project_dir, 'latest')
-            if os.path.exists(latest_path):
-                os.unlink(latest_path)
-            os.symlink(job_path, latest_path)
+        if not os.path.exists(job_status_link):
+            os.symlink(job_status_path, job_status_link)
 
-    def send_fail_mail(self, job):
-        subject = "Build job '{}' (id={}..) failed with exit code {}'".format(job.jobspec.name, job.id[:8], job.exit_code)
-        msg = "Host = {}\n" \
-              "Exit code = {}.\n\n" \
-              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), job.exit_code, job.output)
-        mail(job.jobspec.mail_to, subject, msg)
+        if os.path.exists(job_latest_link):
+            os.unlink(job_latest_link)
+        os.symlink(job_status_path, job_latest_link)
 
     def get_job_status(self, job_id):
-        job_dir = os.path.join(self.status_dir, 'jobs')
-        job_path = os.path.join(job_dir, job_id)
+        job_status_path = os.path.join(self.all_dir, job_id)
         try:
-            with open(job_path, 'r') as f:
+            with open(job_status_path, 'r') as f:
                 status = json.load(f)
             return status
         except IOError:
             return None
 
-    def get_project_status(self, project):
-        project_dir = os.path.join(self.status_dir, 'projects', project)
-        project_path = os.path.join(project_dir, 'latest')
+    def get_latest_status(self, jobdef_name):
+        jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
+        job_latest_link = os.path.join(jobdef_dir, "latest")
         try:
-            with open(project_path, 'r') as f:
+            with open(job_latest_link, 'r') as f:
                 status = json.load(f)
             return status
         except IOError:

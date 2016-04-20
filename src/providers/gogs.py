@@ -3,11 +3,10 @@
 import json
 
 
-def normalize(request, project_name, config):
+def normalize(request, config_values={}):
     env = {}
     body = json.load(request.body)
-    config_section = 'project:{}'.format(project_name)
-    secret = config.get(config_section, 'secret')
+    secret = config_values['secret']
 
     if request.headers['X-Gogs-Event'] != 'push':
         raise NotImplementedError("Only push events are currently supported")

@@ -22,7 +22,7 @@ elif job_status['time_start'] is not None:
 end
 %>
 <main id="job-result">
-<h2><a href="/jobspec/{{ jobspec.name }}">{{ jobspec.name }}</a> ({{ job_status['id'] }})</h2>
+<h2><a href="/job/definition/{{ jobdef.name }}">{{ jobdef.name }}</a> ({{ job_status['id'] }})</h2>
 
 % job_status_button(job_status['exit_code'])
 

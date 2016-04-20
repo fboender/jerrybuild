@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-class JobSpec:
+class JobDef:
     def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
                  mail_to=[], custom_params={}):
         self.name = name
@@ -13,8 +13,11 @@ class JobSpec:
         self.mail_to = mail_to
         self.custom_params = custom_params
 
+    def get_config_section_name(self):
+        return 'job:{}'.format(self.name)
+
     def __repr__(self):
-        return "JobSpec <name={}>".format(self.name)
+        return "JobDef <name={}>".format(self.name)
 
 
 def from_config(config, section_name):
@@ -63,4 +66,4 @@ def from_config(config, section_name):
         if params[required] is None:
             raise KeyError("Missing required option '{}' in '{}'".format(required, section_name))
 
-    return JobSpec(**params)
+    return JobDef(**params)
