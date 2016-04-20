@@ -71,7 +71,7 @@ def generic_handler():
     if not jobdef:
         abort(404, "Not found")
 
-    logging.info("Received event for project '{}'".format(jobdef.name))
+    logging.info("Received event for job '{}'".format(jobdef.name))
     provider = providers[jobdef.provider]
 
     # Extract configuration options for this job definition from configuration

@@ -27,11 +27,11 @@ work_dir = /var/lib/jerrybuild/workspace
 env_SSH_DEPLOY_KEY_DIR = /var/lib/jerrybuild/deploy_keys/
 
 #
-# Example project: ansible-cmdb
+# Example job specification: ansible-cmdb
 #
 #[job:ansible-cmdb]
 #desc = Run ansible-cmdb test suite
-#url = /project/ansible-cmdb
+#url = /hook/ansible-cmdb
 #provider = github
 #secret = SECRET_TOKEN_HERE
 #cmd = /home/build/ansible-cmdb/run_tests.sh
