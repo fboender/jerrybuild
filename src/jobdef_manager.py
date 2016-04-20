@@ -62,6 +62,12 @@ class JobDefManager:
 
     def make_job(self, name, body, env):
         jobdef = self.jobdefs[name]
-        cmd = jobdef.cmd
-        job = Job(name, cmd, body, env, jobdef.mail_to, work_dir=self.default_work_dir)
+
+        if jobdef.work_dir is not None:
+            work_dir = jobdef.work_dir
+        else:
+            work_dir = self.default_work_dir
+
+        job = Job(name, jobdef.cmd, body, env, jobdef.mail_to,
+                  work_dir)
         return job
