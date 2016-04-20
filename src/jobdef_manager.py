@@ -63,5 +63,5 @@ class JobDefManager:
     def make_job(self, name, body, env):
         jobdef = self.jobdefs[name]
         cmd = jobdef.cmd
-        job = Job(name, cmd, body, env, work_dir=self.default_work_dir)
+        job = Job(name, cmd, body, env, jobdef.mail_to, work_dir=self.default_work_dir)
         return job

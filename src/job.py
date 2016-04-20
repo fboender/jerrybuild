@@ -5,6 +5,9 @@ import logging
 import uuid
 import subprocess
 import time
+import socket
+import tools
+
 
 JOB_STATUSSES = [
     "queued",
@@ -14,11 +17,12 @@ JOB_STATUSSES = [
 ]
 
 class Job:
-    def __init__(self, jobdef_name, cmd, body, env, work_dir=None):
+    def __init__(self, jobdef_name, cmd, body, env, mail_to, work_dir=None):
         self.jobdef_name = jobdef_name
         self.cmd = cmd
         self.body = body
         self.env = env
+        self.mail_to = mail_to
         self.work_dir = work_dir
         self.status = None
         self.exit_code = None
@@ -74,7 +78,7 @@ class Job:
         msg = "Host = {}\n" \
               "Exit code = {}.\n\n" \
               "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), self.exit_code, self.output)
-        mail(job.mail_to, subject, msg)
+        tools.mail(job.mail_to, subject, msg)
 
     def __repr__(self):
         return "{}(id = {})".format(self.jobdef_name, self.id)
