@@ -10,7 +10,7 @@ import jobdef
 
 class JobDefManager:
     def __init__(self, config_file):
-        self.jobdefs= {}
+        self.jobdefs = {}
         self.config = None
         self.config_file = None
         self.default_work_dir = None
