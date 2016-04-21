@@ -43,6 +43,8 @@ def from_config(config, section_name):
         if option == 'mail_to':
             mail_tos = [mail_to.strip() for mail_to in config.get('server', 'mail_to').split(',')]
             params['mail_to'].update(mail_tos)
+        elif option == 'work_dir':
+            params['work_dir'] = config.get('server', 'work_dir')
         elif option.startswith('env_'):
             env_name = option[4:].strip()
             env_value = config.get('server', option).strip()
