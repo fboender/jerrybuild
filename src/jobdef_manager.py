@@ -6,7 +6,6 @@ import ConfigParser
 import logging
 
 import jobdef
-from job import Job
 
 
 class JobDefManager:
@@ -59,15 +58,3 @@ class JobDefManager:
 
     def get_jobdefs(self):
         return self.jobdefs
-
-    def make_job(self, name, body, env):
-        jobdef = self.jobdefs[name]
-
-        if jobdef.work_dir is not None:
-            work_dir = jobdef.work_dir
-        else:
-            work_dir = self.default_work_dir
-
-        job = Job(name, jobdef.cmd, body, env, jobdef.mail_to,
-                  work_dir)
-        return job

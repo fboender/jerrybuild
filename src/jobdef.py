@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from job import Job
+
 class JobDef:
     def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
                  mail_to=[], custom_params={}):
@@ -15,6 +17,10 @@ class JobDef:
 
     def get_config_section_name(self):
         return 'job:{}'.format(self.name)
+
+    def make_job(self, body, env):
+        job = Job(self.name, self.cmd, body, env, self.mail_to, self.work_dir)
+        return job
 
     def __repr__(self):
         return "JobDef <name={}>".format(self.name)
