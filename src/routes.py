@@ -76,6 +76,7 @@ def generic_handler():
 
     # Extract configuration options for this job definition from configuration
     # file.
+    # FIXME: Shouldb't be here.
     config_section_name = jobdef.get_config_section_name()
     config_values = {}
     for option_key in config.options(config_section_name):
