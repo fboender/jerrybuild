@@ -82,8 +82,7 @@ main#job-result table#job-status-overview {
     margin-top: 24px;
 }
 main#job-result pre {
-    margin-left: 32px;
-    margin-right: 32px;
+    margin-right: 16px;
 }
 
 /* Main: job specification */
