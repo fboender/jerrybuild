@@ -73,15 +73,6 @@ li {
 }
 
 /* Main: overview */
-main#overview ul#job-status li {
-    line-height: 32px;
-}
-main#overview ul#job-status .job-name {
-    font-weight: bold;
-}
-main#overview ul#job-status .job-latest {
-    margin-left: 32px;
-}
 main#overview table#job-status td {
     padding-right: 20px;
 }
