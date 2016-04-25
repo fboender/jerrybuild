@@ -58,6 +58,7 @@ li {
     padding: 4px 8px 4px 8px;
     border-radius: 3px;
     font-size: 16px;
+    line-height: 32px;
 }
 
 .green { background-color: #5cb85c; color: #FFFFFF; }
@@ -82,7 +83,6 @@ main#overview ul#job-status .job-latest {
     margin-left: 32px;
 }
 main#overview table#job-status td {
-    line-height: 1.4em;
     padding-right: 20px;
 }
 
