@@ -7,3 +7,4 @@ README.html
 *.zip
 src/jerrybuild.ini
 src/jerrybuild.cfg
+test/test.log
