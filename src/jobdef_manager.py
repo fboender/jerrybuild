@@ -2,10 +2,10 @@
 
 import sys
 import os
-import ConfigParser
 import logging
 
 import jobdef
+import tools
 
 
 class JobDefManager:
@@ -25,9 +25,7 @@ class JobDefManager:
         config_file = config_file
         default_work_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
 
-        config = ConfigParser.RawConfigParser()
-        config.optionxform = str  # Case-sensitive option names for env_
-        config.read(config_file)
+        config = tools.config_load(config_file, case_sensitive=False)
 
         if config.has_option('server', 'work_dir'):
             default_work_dir = config.get('server', 'work_dir')

@@ -26,6 +26,13 @@ work_dir = /var/lib/jerrybuild/workspace
 # SSH_DEPLOY_KEY_DIR in your scripts.
 env_SSH_DEPLOY_KEY_DIR = /var/lib/jerrybuild/deploy_keys/
 
+
+#
+# Include jobs from a directory
+#
+%include /etc/jerrybuild/jobs.d/*.cfg
+
+
 #
 # Example job specification: ansible-cmdb
 #

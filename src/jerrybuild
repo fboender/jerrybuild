@@ -3,7 +3,6 @@
 import os
 import sys
 import logging
-import ConfigParser
 import signal
 
 import tools
@@ -71,8 +70,7 @@ if __name__ == "__main__":
         sys.stderr.write("Usage: {} <config.cfg>\n".format(sys.argv[0]))
         sys.exit(1)
 
-    config = ConfigParser.RawConfigParser()
-    config.read(sys.argv[1])
+    config = tools.config_load(sys.argv[1])
 
     log_level = logging.INFO
     if config.has_option('server', 'log_level'):

@@ -5,6 +5,13 @@ import smtplib
 import getpass
 import socket
 from datetime import datetime, timedelta
+import StringIO
+import re
+import glob
+try:
+    import ConfigParser
+except ImportError:  # py3
+    import configparser as ConfigParser
 
 def bin_rel_path(path):
     """
@@ -81,6 +88,39 @@ def duration(secs):
         return '0s'
     else:
         return ' '.join(t[:2])
+
+def config_load(path, case_sensitive=True):
+    """
+    ConfigParser wrapper with support for includes.
+
+    To include files, put the following in your config on separate line:
+
+        %include conf.d/*.conf
+
+    """
+    base_path = os.path.dirname(os.path.realpath(path))
+
+    with open(path, 'r') as base_fp:
+        base_cfg = base_fp.read()
+
+    for match in re.findall('^%include (.*)$', base_cfg, flags=re.MULTILINE):
+        files = glob.glob(os.path.join(base_path, match))
+        if not files:
+            raise RuntimeError("No config files found for include '{}'".format(os.path.join(base_path, match)))
+
+        include_cfg = ""
+        for file in files:
+            include_cfg += open(os.path.join(base_path, file), 'r').read()
+        include_stmt = '^%include {}$'.format(re.escape(match))
+        base_cfg = re.sub(include_stmt, include_cfg, base_cfg, flags=re.MULTILINE)
+
+    config_fp = StringIO.StringIO(base_cfg)
+    conf = ConfigParser.ConfigParser()
+    if not case_sensitive:
+        conf.optionxform = str
+    conf.readfp(config_fp)
+
+    return conf
 
 if __name__ == '__main__':
    import doctest
