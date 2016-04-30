@@ -51,7 +51,8 @@ class Job:
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
                                  env=self.env)
-            self.output, ignore = p.communicate(self.body)
+            stdout, ignore = p.communicate(self.body.encode('utf8'))
+            self.output = stdout.decode('utf8')
             self.exit_code = p.returncode
         except OSError as err:
             self.exit_code = 127

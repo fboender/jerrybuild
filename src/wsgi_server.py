@@ -1,5 +1,9 @@
+import sys
 from wsgiref.simple_server import make_server, WSGIServer
-from SocketServer import ThreadingMixIn
+if sys.version_info.major > 2:
+    from socketserver import ThreadingMixIn
+else:
+    from SocketServer import ThreadingMixIn
 
 
 class ThreadingWSGIServer(ThreadingMixIn, WSGIServer):

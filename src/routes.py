@@ -89,7 +89,7 @@ def generic_handler():
         env["HEADER_{}".format(k.upper())] = v
     env.update(provider.normalize(request, config_values))
 
-    job = jobdef.make_job(request.body.read(), env)
+    job = jobdef.make_job(request.body.read().decode('utf8'), env)
     build_queue.put(job)
 
     return {'id': job.id}

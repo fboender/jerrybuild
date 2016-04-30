@@ -3,9 +3,13 @@
 import threading
 import os
 import logging
-import Queue
+import sys
 import json
 import socket
+if sys.version_info.major > 2:
+    import queue as Queue
+else:
+    import Queue
 from tools import mkdir_p, mail
 
 

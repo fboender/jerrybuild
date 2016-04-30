@@ -5,13 +5,14 @@ import smtplib
 import getpass
 import socket
 from datetime import datetime, timedelta
-import StringIO
 import re
 import glob
-try:
-    import ConfigParser
-except ImportError:  # py3
+if sys.version_info.major > 2:
     import configparser as ConfigParser
+    from io import StringIO as StringIO
+else:
+    import ConfigParser
+    from StringIO import StringIO
 
 def bin_rel_path(path):
     """
@@ -114,7 +115,7 @@ def config_load(path, case_sensitive=True):
         include_stmt = '^%include {}$'.format(re.escape(match))
         base_cfg = re.sub(include_stmt, include_cfg, base_cfg, flags=re.MULTILINE)
 
-    config_fp = StringIO.StringIO(base_cfg)
+    config_fp = StringIO(base_cfg)
     conf = ConfigParser.ConfigParser()
     if not case_sensitive:
         conf.optionxform = str
