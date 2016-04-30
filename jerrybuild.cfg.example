@@ -36,11 +36,26 @@ env_SSH_DEPLOY_KEY_DIR = /var/lib/jerrybuild/deploy_keys/
 #
 # Example job specification: ansible-cmdb
 #
-#[job:ansible-cmdb]
-#desc = Run ansible-cmdb test suite
-#url = /hook/ansible-cmdb
-#provider = github
-#secret = SECRET_TOKEN_HERE
-#cmd = /home/build/ansible-cmdb/run_tests.sh
-#env_run_coverage = 0
+[job:ansible-cmdb]
+desc = Run ansible-cmdb test suite
+
+# URL to listen for webhook calls. This will listen on
+# http://127.0.0.1/hook/ansible-cmdb
+url = /hook/ansible-cmdb
+
+# The provider setting determines the kind of webhook. Currently supported are:
+# generic, github and gogs. Depending on the provider, different environment
+# settings will be passed to the `cmd` script.
+provider = github
+
+# The script to execute when the webhook is called
+cmd = /home/build/ansible-cmdb/run_tests.sh
+
+# A setting specific to the Github and Gogs providers.
+secret = SECRET_TOKEN_HERE
+
+# Define a custom environment variable to be passed to the script for this job.
+# The script will get a `run_coverage=0` environment setting.
+env_run_coverage = 0
+
 
