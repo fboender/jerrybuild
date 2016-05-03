@@ -3,11 +3,11 @@ jerrybuild
 
 ![Status: Unstable](https://img.shields.io/badge/status-unstable-red.svg)
 
-A lightweight build / CI (Continues Integration) server.
+A lightweight build / CI (Continuous Integration) server.
 
 ## About
 
-Jerrybuild is a lightweight project build and Continues Integration server
+Jerrybuild is a lightweight project build and Continuous Integration server
 written in Python. Basically, it's a web server that listens for webhook
 notifications and then runs scripts.
 
