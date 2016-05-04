@@ -85,10 +85,10 @@ class BuildQueue(threading.Thread):
         with open(job_status_path, 'w') as f:
             json.dump(status, f)
 
-        if not os.path.exists(job_status_link):
+        if not os.path.islink(job_status_link):
             os.symlink(job_status_path, job_status_link)
 
-        if os.path.exists(job_latest_link):
+        if os.path.islink(job_latest_link):
             os.unlink(job_latest_link)
         os.symlink(job_status_path, job_latest_link)
 
