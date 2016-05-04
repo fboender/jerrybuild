@@ -20,8 +20,8 @@ def bin_rel_path(path):
     currently running.
     """
     return os.path.join(
-        os.path.realpath(
-            os.path.dirname(
+        os.path.dirname(
+            os.path.realpath(
                 sys.argv[0]
             )
         ),
