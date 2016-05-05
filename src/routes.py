@@ -20,12 +20,12 @@ def index():
     build_queue = request.deps['build_queue']
     jobdefs = jobdef_manager.get_jobdefs()
 
-    job_status = {}
+    job_statusses = {}
     for name, jobdef in jobdefs.items():
         jobdef_status = build_queue.get_latest_status(name)
-        job_status[name] = jobdef_status
+        job_statusses[name] = jobdef_status
 
-    return template('index.tpl', job_status=job_status)
+    return template('index.tpl', job_statusses=job_statusses)
 
 @route('/job/definition/<job_name>')
 def job_definition(job_name):
