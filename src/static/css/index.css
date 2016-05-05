@@ -54,7 +54,13 @@ h3 {
 li {
     line-height: 1.2em;
 }
-.button {
+.status-button {
+    padding: 4px 8px 4px 8px;
+    border-radius: 3px;
+    font-size: 16px;
+    line-height: 32px;
+}
+.action-button {
     padding: 4px 8px 4px 8px;
     border-radius: 3px;
     font-size: 16px;

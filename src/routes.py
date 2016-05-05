@@ -1,7 +1,8 @@
 import logging
 
-from bottle import route, request, abort, template, static_file
+from bottle import route, request, abort, template, static_file, redirect
 import tools
+import job
 
 @route('/static/<filename:path>')
 def send_static(filename):
@@ -51,6 +52,18 @@ def job_status(job_id):
     jobdef = jobdef_manager.get_jobdef(job_name)
 
     return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
+
+@route('/job/rerun/<job_id>')
+def job_rerun(job_id):
+    """
+    Rerun an already executed job.
+    """
+    build_queue = request.deps['build_queue']
+    job_status = build_queue.get_job_status(job_id)
+    rerun_job = job.from_dict(job_status)
+    new_job_id = build_queue.put(rerun_job)
+    redirect("/job/status/" + new_job_id)
+    #return template('job_rerun.tpl', job_status=rerun_job.to_dict())
 
 @route('/<:re:.*>', method=['GET', 'POST'])
 def generic_handler():

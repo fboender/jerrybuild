@@ -2,21 +2,22 @@
     %# Display a button that shows the status of the job.
     % if exit_code is None:
         % if job_id is None:
-            <span class="button blue">Building<span class="pulse">...</span></span>
+            <span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Building<span class="pulse">...</span></span>
         % else:
-            <a href="/job/status/{{ job_id }}"><span class="button blue">Building<span class="pulse">...</span></span></a>
+            <a href="/job/status/{{ job_id }}"><span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Building<span class="pulse">...</span></span></a>
         % end
     % elif exit_code == 0:
         % if job_id is None:
-            <span class="button green">Passed</span>
+            <span class="status-button green"><i class="fa fa-check" aria-hidden="true"></i> Passed</span>
         % else:
-            <a href="/job/status/{{ job_id }}"><span class="button green">Passed</span></a>
+            <a href="/job/status/{{ job_id }}"><span class="status-button green"><i class="fa fa-check" aria-hidden="true"></i> Passed</span></a>
+        
         % end
     % else:
         % if job_id is None:
-            <span class="button red">Failed</span>
+            <span class="status-button red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Failed</span>
         % else:
-            <a href="/job/status/{{ job_id }}"><span class="button red">Failed</span></a>
+            <a href="/job/status/{{ job_id }}"><span class="status-button red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Failed</span></a>
         % end
     % end
 % end

@@ -22,9 +22,16 @@ elif job_status['time_start'] is not None:
 end
 %>
 <main id="job-result">
+
+% if job_status['status'] in ('done', 'internal_error'):
+    <a href="/job/rerun/{{ job_status['id'] }}"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
+% end
+
 <h2><a href="/job/definition/{{ jobdef.name }}">{{ jobdef.name }}</a> ({{ job_status['id'] }})</h2>
 
+<div class="job-status">
 % job_status_button(job_status['exit_code'])
+</div>
 
 <table id="job-status-overview">
     <tr><th>ID</th><td>{{ job_status['id'] }}</td></tr>

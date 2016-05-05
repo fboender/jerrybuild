@@ -22,7 +22,7 @@ class Job:
         self.cmd = cmd
         self.body = body
         self.env = env
-        self.mail_to = mail_to
+        self.mail_to = list(mail_to)
         self.work_dir = work_dir
         self.status = None
         self.exit_code = None
@@ -65,6 +65,8 @@ class Job:
             'cmd': self.cmd,
             'body': self.body,
             'env': self.env,
+            'mail_to': self.mail_to,
+            'work_dir': self.work_dir,
             'status': self.status,
             'exit_code': self.exit_code,
             'output': self.output,
@@ -83,3 +85,8 @@ class Job:
 
     def __repr__(self):
         return "{}(id = {})".format(self.jobdef_name, self.id)
+
+def from_dict(d):
+    job = Job(jobdef_name=d['jobdef_name'], cmd=d['cmd'], body=d['body'],
+              env=d['env'], mail_to=d['mail_to'], work_dir=d['work_dir'])
+    return job
