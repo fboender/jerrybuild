@@ -33,6 +33,9 @@ class BuildQueue(threading.Thread):
         mkdir_p(self.all_dir)
 
     def put(self, job):
+        """
+        Put a job in the queue for building.
+        """
         job.set_status('queued')
         self.write_job_status(job)
         self.queue.put(job)
@@ -40,6 +43,9 @@ class BuildQueue(threading.Thread):
         return job.id
 
     def handle_queue(self):
+        """
+        Continuously read the build queue for jobs and build them.
+        """
         logging.info("Build queue running")
         while True:
             try:
