@@ -92,11 +92,11 @@ class BuildQueue(threading.Thread):
             json.dump(status, f)
 
         if not os.path.islink(job_status_link):
-            os.symlink(job_status_path, job_status_link)
+            os.symlink(os.path.join('..', '_all', job.id), job_status_link)
 
         if os.path.islink(job_latest_link):
             os.unlink(job_latest_link)
-        os.symlink(job_status_path, job_latest_link)
+        os.symlink(os.path.join('..', '_all', job.id), job_latest_link)
 
     def get_job_status(self, job_id):
         job_status_path = os.path.join(self.all_dir, job_id)
