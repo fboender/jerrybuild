@@ -1,4 +1,5 @@
 <%
+import tools
 time_duration = "Unknown"
 
 if 'time_start' in job_status:
