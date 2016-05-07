@@ -22,4 +22,7 @@
     <li><b>Command</b>: {{ jobdef.cmd }}</li>
     <li><b>Failure mail to</b>: {{ ", ".join(jobdef.mail_to) }}</li>
 </ul>
+
+<h3>Shield</h3>
+<a href="/job/shield/{{ jobdef.name }}"><img src="/job/shield/{{ jobdef.name }}" /></a>
 </main>

@@ -1,6 +1,6 @@
 import logging
 
-from bottle import route, request, abort, template, static_file, redirect
+from bottle import route, request, response, abort, template, static_file, redirect
 import tools
 import job
 
@@ -52,6 +52,33 @@ def job_status(job_id):
     jobdef = jobdef_manager.get_jobdef(job_name)
 
     return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
+
+@route('/job/shield/<job_name>')
+def job_shield(job_name):
+    """
+    Show a build shield (http://shields.io/) for this job's latest build.
+    """
+    jobdef_manager = request.deps['jobdef_manager']
+    build_queue = request.deps['build_queue']
+    job_status = build_queue.get_latest_status(job_name)
+
+    label = "buikd"
+    status = "unknown"
+    color = "lightgrey"
+
+    if job_status is None:
+        status = "never built"
+    elif job_status["exit_code"] is None:
+        status = "building"
+        color = "blue"
+    elif job_status["exit_code"] == 0:
+        status = "passed"
+        color = "brightgreen"
+    else:
+        status = "failed"
+        color = "red"
+
+    redirect('https://img.shields.io/badge/{}-{}-{}.svg'.format(label, status, color))
 
 @route('/job/rerun/<job_id>')
 def job_rerun(job_id):

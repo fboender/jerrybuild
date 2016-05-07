@@ -22,6 +22,7 @@ Features:
   or job-specificly configured environment settings.
 * Send email on job build failures
 * Web interface front-end
+* Shield support (http://shields.io/)
 
 Since Jerrybuild is supposed to be lightweight, it doesn't implement some
 features found in other CI servers:
