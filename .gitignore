@@ -6,6 +6,3 @@ README.html
 *.deb
 *.tar.gz
 *.zip
-src/jerrybuild.ini
-src/jerrybuild.cfg
-test/test.log
