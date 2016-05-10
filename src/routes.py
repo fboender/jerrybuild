@@ -62,7 +62,7 @@ def job_shield(job_name):
     build_queue = request.deps['build_queue']
     job_status = build_queue.get_latest_status(job_name)
 
-    label = "buikd"
+    label = "build"
     status = "unknown"
     color = "lightgrey"
 
