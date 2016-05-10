@@ -1,5 +1,7 @@
 % import time, datetime
-% if 'time_end' not in job_status:
+% if job_status is None:
+    Never built
+% elif 'time_end' not in job_status:
     Unknown
 % elif job_status['time_end'] is None:
     Still running

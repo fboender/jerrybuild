@@ -1,6 +1,6 @@
 %# Display a button that shows the status of the job.
 % if job_status is None:
-    <span class="status-button gray"><i class="fa fa-question-circle" aria-hidden="true"></i> Never run</span>
+    <span class="status-button gray"><i class="fa fa-question-circle" aria-hidden="true"></i> Never built</span>
 % elif job_status['exit_code'] is None:
     % if job_status['id'] is None:
         <span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Building<span class="pulse">...</span></span>
