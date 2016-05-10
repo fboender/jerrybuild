@@ -87,10 +87,12 @@ def job_rerun(job_id):
     """
     build_queue = request.deps['build_queue']
     job_status = build_queue.get_job_status(job_id)
-    rerun_job = job.from_dict(job_status)
+    try:
+        rerun_job = job.from_dict(job_status)
+    except KeyError as err:
+        abort(500, "Couldn't construct new job from old job: {}".format(err))
     new_job_id = build_queue.put(rerun_job)
     redirect("/job/status/" + new_job_id)
-    #return template('job_rerun.tpl', job_status=rerun_job.to_dict())
 
 @route('/<:re:.*>', method=['GET', 'POST'])
 def generic_handler():
