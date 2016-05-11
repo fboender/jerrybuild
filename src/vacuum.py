@@ -27,6 +27,9 @@ class Vacuum(threading.Thread):
 
     def do_vacuum(self):
         for jobdef_name, jobdef in self.jobdefs.items():
+            if jobdef.keep_jobs == 0:
+                # Don't vacuum at all
+                continue
             logging.debug("Vacuuming job {}".format(jobdef_name))
             job_status_dir = self.build_queue.get_job_status_dir(jobdef_name)
             filter_func = self.get_dir_filter(jobdef.keep_jobs)
