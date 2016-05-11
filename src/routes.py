@@ -129,7 +129,11 @@ def generic_handler():
     env = {}
     for k, v in request.headers.items():
         env["HEADER_{}".format(k.upper())] = v
-    env.update(provider.normalize(request, config_values))
+    request_env = provider.normalize(request, config_values)
+    if request_env is False:
+        # Normalization method aborted the request.
+        return
+    env.update(request_env)
 
     job = jobdef.make_job(request.body.read().decode('utf8'), env)
     build_queue.put(job)

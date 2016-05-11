@@ -3,12 +3,14 @@
 import hmac
 import hashlib
 import json
-from bottle import abort
+from bottle import response
 
 
 def normalize(request, config_values):
     if request.headers['X-Github-Event'] == 'ping':
-        abort(200, "Pong")
+        response.status = 200
+        response.body = "pong"
+        return False
 
     env = {}
     raw_body = request.body.read()
