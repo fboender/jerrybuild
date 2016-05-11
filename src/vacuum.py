@@ -10,7 +10,7 @@ import time
 class Vacuum(threading.Thread):
     daemon = True
 
-    def __init__(self, jobdefs, build_queue, vacuum_interval=3):
+    def __init__(self, jobdefs, build_queue, vacuum_interval=3600):
         threading.Thread.__init__(self)
         self.jobdefs = jobdefs
         self.build_queue = build_queue
