@@ -27,7 +27,7 @@ class Vacuum(threading.Thread):
 
     def do_vacuum(self):
         for jobdef_name, jobdef in self.jobdefs.items():
-            if jobdef.keep_jobs == 0:
+            if jobdef.keep_jobs == 0 or jobdef.keep_jobs == '0':
                 # Don't vacuum at all
                 continue
             logging.debug("Vacuuming job {}".format(jobdef_name))
