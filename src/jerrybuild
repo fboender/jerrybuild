@@ -6,6 +6,7 @@ import logging
 import signal
 
 import tools
+import vacuum
 import build_queue as bq
 from jobdef_manager import JobDefManager
 import jobdef_manager
@@ -93,6 +94,13 @@ if __name__ == "__main__":
 
     # Initialize the Job Definition Manager
     jobdef_manager = JobDefManager(sys.argv[1])
+
+    # Start the vacuumer
+    global_keep_jobs = 0
+    if config.has_option('server', 'keep_jobs'):
+        global_keep_jobs = config.get('server', 'keep_jobs')
+    vacuum = vacuum.Vacuum(jobdef_manager.get_jobdefs(), build_queue)
+    vacuum.start()
 
     # Setup a SIGHUP signal handler that reloads configuration
     signal.signal(signal.SIGHUP, sig_hup_handler_generate(jobdef_manager))

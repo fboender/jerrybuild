@@ -4,7 +4,7 @@ from job import Job
 
 class JobDef:
     def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
-                 mail_to=[], custom_params={}):
+                 keep_jobs=0, mail_to=[], custom_params={}):
         self.name = name
         self.desc = desc
         self.url = url
@@ -12,6 +12,7 @@ class JobDef:
         self.cmd = cmd
         self.env = env
         self.work_dir = work_dir
+        self.keep_jobs = keep_jobs
         self.mail_to = mail_to
         self.custom_params = custom_params
 
@@ -35,21 +36,26 @@ def from_config(config, section_name):
         'cmd': None,
         'env': {},
         'work_dir': None,
+        'keep_jobs': 0,
         'mail_to': set(),
         'custom_params': {},
     }
 
+    # Global settings. Are overridden by job specific settings
     for option in config.options('server'):
         if option == 'mail_to':
             mail_tos = [mail_to.strip() for mail_to in config.get('server', 'mail_to').split(',')]
             params['mail_to'].update(mail_tos)
         elif option == 'work_dir':
             params['work_dir'] = config.get('server', 'work_dir')
+        elif option == 'keep_jobs':
+            params['keep_jobs'] = config.get('server', 'keep_jobs')
         elif option.startswith('env_'):
             env_name = option[4:].strip()
             env_value = config.get('server', option).strip()
             params['env'][env_name] = env_value
 
+    # Job specific settings.
     for option in config.options(section_name):
         if option == 'desc':
             params['desc'] = config.get(section_name, 'desc')
@@ -61,6 +67,8 @@ def from_config(config, section_name):
             params['cmd'] = config.get(section_name, 'cmd')
         elif option == 'work_dir':
             params['work_dir'] = config.get(section_name, 'work_dir')
+        elif option == 'keep_jobs':
+            params['keep_jobs'] = config.get(section_name, 'keep_jobs')
         elif option == 'mail_to':
             params['mail_to'].update([s.strip() for s in config.get(section_name, 'mail_to').split(',')])
         elif option.startswith('env_'):

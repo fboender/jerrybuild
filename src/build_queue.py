@@ -98,6 +98,15 @@ class BuildQueue(threading.Thread):
             os.unlink(job_latest_link)
         os.symlink(os.path.join('..', '_all', job.id), job_latest_link)
 
+    def get_job_status_dir(self, jobdef_name):
+        return os.path.join(self.status_dir, 'jobs', jobdef_name)
+
+    def del_job_status(self, jobdef_name, job_id):
+        jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
+        print jobdef_dir, job_id
+        os.unlink(os.path.join(jobdef_dir, job_id))
+        os.unlink(os.path.join(jobdef_dir, '..', '_all', job_id))
+
     def get_job_status(self, job_id):
         job_status_path = os.path.join(self.all_dir, job_id)
         try:
