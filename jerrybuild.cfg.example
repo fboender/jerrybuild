@@ -68,4 +68,3 @@ secret = SECRET_TOKEN_HERE
 # The script will get a `run_coverage=0` environment setting.
 env_run_coverage = 0
 
-
