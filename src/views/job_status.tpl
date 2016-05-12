@@ -1,4 +1,10 @@
-% rebase('base.tpl', title='Job')
+<%
+reload_page = False
+if job_status['status'] not in ('done', 'internal_error'):
+    reload_page = True
+end
+%>
+% rebase('base.tpl', title='Job', reload_page=reload_page)
 % import tools
 <main id="job-result">
 

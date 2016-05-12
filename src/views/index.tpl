@@ -1,4 +1,12 @@
-% rebase('base.tpl', title='Projects')
+<%
+reload_page = False
+for job_status in job_statusses.values():
+    if job_status['status'] not in ('done', 'internal_error'):
+        reload_page = True
+    end
+end
+%>
+% rebase('base.tpl', title='Projects', reload_page=reload_page)
 <main id="overview">
 <table id="job-status">
     <tr>
