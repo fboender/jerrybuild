@@ -21,7 +21,7 @@ doc:
 	markdown_py README.md > README.html
 
 release_clean: clean
-    @if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
+	@if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
 
 release: release_src release_deb release_rpm
 
