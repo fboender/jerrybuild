@@ -20,7 +20,8 @@ class JobDef:
         return 'job:{}'.format(self.name)
 
     def make_job(self, body, env):
-        job = Job(self.name, self.cmd, body, env, self.mail_to, self.work_dir)
+        newenv = dict(self.env.items() + env.items())
+        job = Job(self.name, self.cmd, body, newenv, self.mail_to, self.work_dir)
         return job
 
     def __repr__(self):

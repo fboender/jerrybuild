@@ -15,12 +15,13 @@ clean:
 	rm -f README.html
 	find ./ -name "*.pyc" -delete
 	find ./ -name "__pycache__" -type d -delete
+	rm -f example/gen_*
 
 doc:
 	markdown_py README.md > README.html
 
 release_clean: clean
-    @if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
+	@if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
 
 release: release_src release_deb release_rpm
 
@@ -100,17 +101,29 @@ release_rpm: release_clean release_deb
 	cd $(PROG)-$(REL_VERSION) && rpmbuild --buildroot='$(shell readlink -f $(PROG)-$(REL_VERSION))/' -bb --target noarch '$(PROG)-$(REL_VERSION)-2.spec'
 
 
+install: clean
+	install -m 0755 -d \
+		$(DESTDIR)/etc/jobs.d \
+		$(DESTDIR)/lib/$(PROG)/providers \
+		$(DESTDIR)/lib/$(PROG)/static/font-awesome/css \
+		$(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts \
+		$(DESTDIR)/lib/$(PROG)/static/css \
+		$(DESTDIR)/lib/$(PROG)/views/helpers \
+		$(DESTDIR)/share/doc \
+		$(DESTDIR)/bin
+	install -m 0755 src/*.py src/jerrybuild $(DESTDIR)/lib/$(PROG)/
+	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
+	install -m 0644 src/static/font-awesome/css/*.css $(DESTDIR)/lib/$(PROG)/static/font-awesome/css
+	install -m 0644 src/static/font-awesome/fonts/* $(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts 
+	install -m 0644 src/views/*.tpl $(DESTDIR)/lib/$(PROG)/views
+	install -m 0644 src/views/helpers/*.tpl $(DESTDIR)/lib/$(PROG)/views/helpers
+	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
+	install -m 0644 src/static/css/*.css $(DESTDIR)/lib/$(PROG)/static/css
+	install -m 0644 CHANGELOG.txt README.md $(DESTDIR)/share/doc/
+	install -m 0644 jerrybuild.cfg.example $(DESTDIR)/etc/jerrybuild.cfg.dist
+	ln -nsf $(DESTDIR)/lib/$(PROG)/jerrybuild $(DESTDIR)/bin/jerrybuild
+
 uninstall:
 	rm -rf /usr/local/lib/$(PROG)
 	rm -f /usr/local/man/man/ansible-cmdb.man.1.gz
 	rm -rf /usr/local/bin/ansible-cmdb
-
-clean:
-	rm -f *.rpm
-	rm -f *.deb
-	rm -f *.tar.gz
-	rm -f *.zip
-	rm -f README.html
-	find ./ -name "*.pyc" -delete
-	find ./ -name "__pycache__" -type d -delete
-	rm -f example/gen_*

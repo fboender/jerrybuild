@@ -50,7 +50,7 @@ class Job:
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
-                                 env=self.env)
+                                 env=dict(os.environ.items() + self.env.items()))
             stdout, ignore = p.communicate(self.body.encode('utf8'))
             self.output = stdout.decode('utf8')
             self.exit_code = p.returncode
