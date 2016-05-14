@@ -118,6 +118,7 @@ install: clean
 	install -m 0644 src/views/*.tpl $(DESTDIR)/lib/$(PROG)/views
 	install -m 0644 src/views/helpers/*.tpl $(DESTDIR)/lib/$(PROG)/views/helpers
 	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
+	install -m 0644 src/static/css/*.css $(DESTDIR)/lib/$(PROG)/static/css
 	install -m 0644 CHANGELOG.txt README.md $(DESTDIR)/share/doc/
 	install -m 0644 jerrybuild.cfg.example $(DESTDIR)/etc/jerrybuild.cfg.dist
 	ln -nsf $(DESTDIR)/lib/$(PROG)/jerrybuild $(DESTDIR)/bin/jerrybuild
