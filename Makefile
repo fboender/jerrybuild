@@ -102,8 +102,9 @@ release_rpm: release_clean release_deb
 
 
 install: clean
-	install -m 0755 -d $(DESTDIR)/etc/jobs.d $(DESTDIR)/lib/$(PROG) $(DESTDIR)/share/doc $(DESTDIR)/bin
+	install -m 0755 -d $(DESTDIR)/etc/jobs.d $(DESTDIR)/lib/$(PROG)/providers $(DESTDIR)/share/doc $(DESTDIR)/bin
 	install -m 0755 src/*.py src/jerrybuild $(DESTDIR)/lib/$(PROG)/
+	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
 	install -m 0644 CHANGELOG.txt README.md $(DESTDIR)/share/doc/
 	install -m 0644 jerrybuild.cfg.example $(DESTDIR)/etc/jerrybuild.cfg.dist
 	ln -nsf $(DESTDIR)/lib/$(PROG)/jerrybuild $(DESTDIR)/bin/jerrybuild
