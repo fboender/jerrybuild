@@ -15,6 +15,7 @@ clean:
 	rm -f README.html
 	find ./ -name "*.pyc" -delete
 	find ./ -name "__pycache__" -type d -delete
+	rm -f example/gen_*
 
 doc:
 	markdown_py README.md > README.html
@@ -100,17 +101,14 @@ release_rpm: release_clean release_deb
 	cd $(PROG)-$(REL_VERSION) && rpmbuild --buildroot='$(shell readlink -f $(PROG)-$(REL_VERSION))/' -bb --target noarch '$(PROG)-$(REL_VERSION)-2.spec'
 
 
+install: clean
+	install -m 0755 -d $(DESTDIR)/etc/jobs.d $(DESTDIR)/lib/$(PROG) $(DESTDIR)/share/doc $(DESTDIR)/bin
+	install -m 0755 src/*.py src/jerrybuild $(DESTDIR)/lib/$(PROG)/
+	install -m 0644 CHANGELOG.txt README.md $(DESTDIR)/share/doc/
+	install -m 0644 jerrybuild.cfg.example $(DESTDIR)/etc/jerrybuild.cfg.dist
+	ln -nsf $(DESTDIR)/lib/$(PROG)/jerrybuild $(DESTDIR)/bin/jerrybuild
+
 uninstall:
 	rm -rf /usr/local/lib/$(PROG)
 	rm -f /usr/local/man/man/ansible-cmdb.man.1.gz
 	rm -rf /usr/local/bin/ansible-cmdb
-
-clean:
-	rm -f *.rpm
-	rm -f *.deb
-	rm -f *.tar.gz
-	rm -f *.zip
-	rm -f README.html
-	find ./ -name "*.pyc" -delete
-	find ./ -name "__pycache__" -type d -delete
-	rm -f example/gen_*
