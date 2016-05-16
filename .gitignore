@@ -6,3 +6,4 @@ README.html
 *.deb
 *.tar.gz
 *.zip
+test/test.log
