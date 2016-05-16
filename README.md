@@ -67,11 +67,14 @@ This section assumes you've installed the Ubuntu package. If not, please
 modify the paths accordingly. Note that it's possible to run Jerrybuild
 directly from the Git repository.
 
-There's also a full (Tutorial)[] available.
+There's also a more in-dpeth full [Tutorial]() available.
 
-1. Review the configuration in `/etc/jerrybuild/jerrybuild.cfg'.
+For this example, we'll be building a project named `my-project`. It uses Git
+and is hosted on Github.
 
-1. Create a new job: `/etc/jerrybuild/jobs.d/my-project`:
+First, **review the configuration** in `/etc/jerrybuild/jerrybuild.cfg'.
+
+Next, create a new job: `/etc/jerrybuild/jobs.d/my-project`:
 
     [job:my-project]
     desc = Build MyProject
@@ -80,13 +83,13 @@ There's also a full (Tutorial)[] available.
     secret = thooRohmooroot3ha1ohf7menozei9ni
     cmd = /var/lib/jerrybuild/workspace/my-project/build.sh
 
-1. Git clone your project:
+Git clone your project:
 
     $ cd /var/lib/jerrybuild/workspace/
-    $ git clone https://github.com/youruser/my-project.git
+    $ git clone git@github.com:yourusername/my-project.git
 
-1. The `build.sh` in your project would look something like this, assuming we
-   want to build `master` branch:
+The `build.sh` in your project would look something like this, assuming we
+want to build `master` branch:
 
     $ cd my-project
     $ cat build.sh
@@ -108,9 +111,10 @@ There's also a full (Tutorial)[] available.
     make test
     make release REL_VERSION=9.99
 
-1. Configure the webhook in Github
-1. Start Jerrybuild:
+Start Jerrybuild:
 
     $ jerrybuild /etc/jerrybuild/jerrybuild.cfg
+
+Configure the webhook in Github. FIXME
 
 
