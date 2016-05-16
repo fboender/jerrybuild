@@ -6,7 +6,6 @@ import uuid
 import subprocess
 import time
 import socket
-import tools
 
 
 JOB_STATUSSES = [
@@ -75,13 +74,6 @@ class Job:
             'id': self.id,
         }
         return d
-
-    def send_fail_mail(self, job):
-        subject = "Build job '{}' (id={}..) failed with exit code {}'".format(self.jobdef_name, self.id[:8], self.exit_code)
-        msg = "Host = {}\n" \
-              "Exit code = {}.\n\n" \
-              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), self.exit_code, self.output)
-        tools.mail(job.mail_to, subject, msg)
 
     def __repr__(self):
         return "{}(id = {})".format(self.jobdef_name, self.id)

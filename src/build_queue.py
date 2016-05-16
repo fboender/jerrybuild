@@ -75,7 +75,7 @@ class BuildQueue(threading.Thread):
             if job.mail_to:
                 # Send email
                 logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.mail_to)))
-                job.send_fail_mail(job)
+                self.send_fail_mail(job)
                 logging.info("{}: Emails sent".format(job))
             else:
                 logging.info("{}: No email configured. Not sending email.".format(job))
@@ -125,3 +125,13 @@ class BuildQueue(threading.Thread):
             return status
         except IOError:
             return None
+
+    def send_fail_mail(self, job):
+        subject = "Build job '{}' (id={}..) failed with exit code {}'".format(job.jobdef_name.encode('utf8'),
+                                                                              job.id[:8],
+                                                                              job.exit_code)
+        msg = "Host = {}\n" \
+              "Exit code = {}.\n\n" \
+              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), job.exit_code, job.output.encode('utf8'))
+        mail(job.mail_to, subject, msg)
+
