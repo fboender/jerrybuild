@@ -6,6 +6,9 @@ listen = 0.0.0.0
 # Port to listen on
 port = 5281
 
+# Server URL, optional
+#server_url = http://localhost
+
 # Logging level. Possible values: DEBUG, INFO, WARN, ERROR,
 # FATAL
 log_level = INFO

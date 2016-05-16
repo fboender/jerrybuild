@@ -16,12 +16,13 @@ from tools import mkdir_p, mail
 class BuildQueue(threading.Thread):
     daemon = True
 
-    def __init__(self, status_dir, smtp_server='127.0.0.1'):
+    def __init__(self, status_dir, smtp_server='127.0.0.1', server_url='http://localhost'):
         self.status_dir = status_dir
         self.jobs_dir = os.path.join(self.status_dir, 'jobs')
         self.all_dir = os.path.join(self.status_dir, 'jobs', '_all')
         self.make_status_dir()
         self.smtp_server = smtp_server
+        self.server_url = server_url.rstrip('/')
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
 
@@ -130,8 +131,13 @@ class BuildQueue(threading.Thread):
         subject = "Build job '{}' (id={}..) failed with exit code {}'".format(job.jobdef_name.encode('utf8'),
                                                                               job.id[:8],
                                                                               job.exit_code)
+        job_url = self.server_url + '/job/status/' + job.id
         msg = "Host = {}\n" \
               "Exit code = {}.\n\n" \
-              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(), job.exit_code, job.output.encode('utf8'))
+              "View the full job: {}.\n\n" \
+              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(),
+                                                job.exit_code,
+                                                job_url,
+                                                job.output.encode('utf8'))
         mail(job.mail_to, subject, msg)
 

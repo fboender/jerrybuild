@@ -14,6 +14,7 @@ import bottle
 from bottle import request
 import wsgi_server
 import routes
+import socket
 
 
 class DepInjector:
@@ -89,7 +90,10 @@ if __name__ == "__main__":
     smtp_server = '127.0.0.1'
     if config.has_option('server', 'smtp_server'):
         smtp_server = config.get('server', 'smtp_server')
-    build_queue = bq.BuildQueue(state_dir, smtp_server=smtp_server)
+    server_url = 'http://' + socket.getfqdn()
+    if config.has_option('server', 'server_url'):
+        server_url = config.get('server', 'server_url')
+    build_queue = bq.BuildQueue(state_dir, smtp_server=smtp_server, server_url=server_url)
     build_queue.start()
 
     # Initialize the Job Definition Manager
