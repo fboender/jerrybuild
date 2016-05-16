@@ -139,5 +139,5 @@ class BuildQueue(threading.Thread):
                                                 job.exit_code,
                                                 job_url,
                                                 job.output.encode('utf8'))
-        mail(job.mail_to, subject, msg)
+        mail(job.mail_to, subject, msg, smtp_server=self.smtp_server)
 
