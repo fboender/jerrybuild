@@ -104,6 +104,7 @@ release_rpm: release_clean release_deb
 install: clean
 	install -m 0755 -d \
 		$(DESTDIR)/etc/jobs.d \
+		$(DESTDIR)/lib/$(PROG)/tools \
 		$(DESTDIR)/lib/$(PROG)/providers \
 		$(DESTDIR)/lib/$(PROG)/static/font-awesome/css \
 		$(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts \
@@ -112,6 +113,7 @@ install: clean
 		$(DESTDIR)/share/doc \
 		$(DESTDIR)/bin
 	install -m 0755 src/*.py src/jerrybuild $(DESTDIR)/lib/$(PROG)/
+	install -m 0755 src/tools/* $(DESTDIR)/lib/$(PROG)/tools
 	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
 	install -m 0644 src/static/font-awesome/css/*.css $(DESTDIR)/lib/$(PROG)/static/font-awesome/css
 	install -m 0644 src/static/font-awesome/fonts/* $(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts 

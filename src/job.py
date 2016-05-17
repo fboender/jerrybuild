@@ -6,6 +6,8 @@ import uuid
 import subprocess
 import time
 import socket
+import copy
+import sys
 
 
 JOB_STATUSSES = [
@@ -36,8 +38,12 @@ class Job:
 
     def run(self):
         work_dir = self.work_dir
-
         cmd = os.path.join(work_dir, self.cmd)
+        env = os.environ.copy()
+        env.update(self.env)
+        bin_basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
+        tools_path = os.path.join(bin_basedir, 'tools')
+        env["PATH"] = "{}:{}".format(env["PATH"], tools_path)
 
         logging.info("Running '{}' with command '{}' in working dir '{}'".format(self, cmd, work_dir))
 
@@ -49,7 +55,7 @@ class Job:
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
-                                 env=dict(os.environ.items() + self.env.items()))
+                                 env=env)
             stdout, ignore = p.communicate(self.body.encode('utf8'))
             self.output = stdout.decode('utf8')
             self.exit_code = p.returncode
