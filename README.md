@@ -67,7 +67,7 @@ This section assumes you've installed the Ubuntu package. If not, please
 modify the paths accordingly. Note that it's possible to run Jerrybuild
 directly from the Git repository.
 
-There's also a more in-dpeth full [Tutorial]() available.
+There's also a more in-depth full [Tutorial]() available.
 
 For this example, we'll be building a project named `my-project`. It uses Git
 and is hosted on Github.
