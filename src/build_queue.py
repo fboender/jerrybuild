@@ -59,52 +59,89 @@ class BuildQueue(threading.Thread):
 
     def build(self, job):
         job.set_status('running')
-        self.write_job_status(job)
+        self.write_job_status(job, running=True)
         logging.info("{}: starting".format(job))
 
         for k, v in job.env.items():
             logging.debug('{}: env: {}={}'.format(job, k, v))
         logging.debug("{}: executing.".format(job))
 
-        job.run()
+        result = job.run()
+        if result == -1:
+            # Build was aborted. Remove the project specific job status, but
+            # keep the _all job status so we can inspect the output if
+            # required.
+            job.set_status('aborted')
+            logging.info("{}: intentionally aborted.".format(job))
 
-        job.set_status('done')
-        self.write_job_status(job)
-        logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
+            self.write_job_status(job, aborted=True)
+        else:
+            job.set_status('done')
+            logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
 
-        if job.exit_code != 0:
-            if job.mail_to:
-                # Send email
-                logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.mail_to)))
-                self.send_fail_mail(job)
-                logging.info("{}: Emails sent".format(job))
-            else:
-                logging.info("{}: No email configured. Not sending email.".format(job))
+            if job.exit_code != 0:
+                if job.mail_to:
+                    # Send email
+                    logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.mail_to)))
+                    self.send_fail_mail(job)
+                    logging.info("{}: Emails sent".format(job))
+                else:
+                    logging.info("{}: No email configured. Not sending email.".format(job))
 
-    def write_job_status(self, job):
+            self.write_job_status(job, running=False, latest=True)
+
+    def write_job_status(self, job, running=False, latest=False, aborted=False):
+        """
+        Write the current job status as set in this object to job status dir
+        and symlink them if needed.
+
+        * Job status goes to state/_all/<uuid>.
+        * Symlink goes from state/_all/<uuid> to state/<job_name>/uuid, unless
+          aborted == True, in which case it is removed.
+        * Symlink goes from FIXME
+        """
         jobdef_dir = os.path.join(self.status_dir, 'jobs', job.jobdef_name)
         mkdir_p(jobdef_dir)  # If it doesn't exist yet
         job_status_path = os.path.join(self.all_dir, job.id)
         job_status_link = os.path.join(jobdef_dir, job.id)
+        job_running_link = os.path.join(jobdef_dir, "running")
         job_latest_link = os.path.join(jobdef_dir, "latest")
 
+        # Write the job status from the _all dir to the state/_all/<uuid> file
         status = job.to_dict()
         with open(job_status_path, 'w') as f:
             json.dump(status, f)
 
-        if not os.path.islink(job_status_link):
-            os.symlink(os.path.join('..', '_all', job.id), job_status_link)
+        # Link the job status from the _all dir to the state/<job_name>/<uuid>
+        # file, unless the build was aborted.
+        if not aborted:
+            if not os.path.islink(job_status_link):
+                os.symlink(os.path.join('..', '_all', job.id), job_status_link)
+        else:
+            logging.info("Removing status link")
+            if os.path.islink(job_status_link):
+                os.unlink(job_status_link)
 
-        if os.path.islink(job_latest_link):
-            os.unlink(job_latest_link)
-        os.symlink(os.path.join('..', '_all', job.id), job_latest_link)
+        # Link or remove the state/<job_name>/running to the job file in _all
+        if running:
+            if os.path.islink(job_running_link):
+                os.unlink(job_running_link)
+            os.symlink(os.path.join('..', '_all', job.id), job_running_link)
+        else:
+            if os.path.islink(job_running_link):
+                os.unlink(job_running_link)
+
+        # Link the state/<job_name>/latest to the job file in _all
+        if not aborted and latest:
+            if os.path.islink(job_latest_link):
+                os.unlink(job_latest_link)
+            os.symlink(os.path.join('..', '_all', job.id), job_latest_link)
 
     def get_job_status_dir(self, jobdef_name):
         return os.path.join(self.status_dir, 'jobs', jobdef_name)
 
     def del_job_status(self, jobdef_name, job_id):
         jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
-        print jobdef_dir, job_id
         os.unlink(os.path.join(jobdef_dir, job_id))
         os.unlink(os.path.join(jobdef_dir, '..', '_all', job_id))
 

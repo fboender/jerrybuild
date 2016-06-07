@@ -13,8 +13,9 @@ import sys
 JOB_STATUSSES = [
     "queued",
     "running",
+    "aborted",
     "done",
-    "internal_error"
+    "internal_error",
 ]
 
 class Job:
@@ -37,6 +38,12 @@ class Job:
         self.status = status
 
     def run(self):
+        """
+        Run this job. Record the status in properties on this Job object.
+
+        Returns -1 if the build was aborted (no error, but should continue
+        building), 0 on success and 1 on failure.
+        """
         work_dir = self.work_dir
         cmd = self.cmd
         env = os.environ.copy()
@@ -59,6 +66,13 @@ class Job:
             stdout, ignore = p.communicate(self.body.encode('utf8'))
             self.output = stdout.decode('utf8')
             self.exit_code = p.returncode
+            if self.exit_code == 255:
+                return -1
+            elif self.exit_code == 0:
+                return 0
+            else:
+                return 1
+
         except OSError as err:
             self.exit_code = 127
             self.output = str(err)

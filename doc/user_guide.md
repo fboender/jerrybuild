@@ -43,12 +43,16 @@ Configuration options explained:
   Github or Gogs, so that Jerrybuild can verify that Github or Gogs really
   made the notification. This option is optional depending on the provider
   used.
-* **`cmd`**: The script to run when the webhook is called. Depending on which
-  provider you're using, several environment variables will be set with
+* **`cmd`**: The shell command to run when the webhook is called. Depending on
+  which provider you're using, several environment variables will be set with
   information regarding the webhook notification. For example, the Github
   provider will set the `commit` variable to the hash of the last commit on a
   `push` event. The command is executed relative to the local or global
-  (`[server`]) `work_dir` option. This option is required.
+  (`[server`]) `work_dir` option. If the script returns with exit code 255,
+  the build is aborted. This is useful when you want to run a pre-check to see
+  if you even want to build at all. Jerrybuild pretends the build never
+  happened. Otherwise, an exit code of 0 indicates success, > 0 indicates
+  failure. This option is required.
 
 You can specify as many build jobs as you like. They should always start with
 `job:`.
