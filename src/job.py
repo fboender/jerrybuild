@@ -38,7 +38,7 @@ class Job:
 
     def run(self):
         work_dir = self.work_dir
-        cmd = os.path.join(work_dir, self.cmd)
+        cmd = self.cmd
         env = os.environ.copy()
         env.update(self.env)
         bin_basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
