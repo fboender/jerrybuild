@@ -1,5 +1,6 @@
 <%
 import tools
+import time
 time_duration = "Never built"
 
 if job_status is not None and 'time_start' in job_status:
