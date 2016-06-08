@@ -19,7 +19,8 @@ JOB_STATUSSES = [
 ]
 
 class Job:
-    def __init__(self, jobdef_name, cmd, body, env, mail_to, work_dir=None):
+    def __init__(self, jobdef_name, cmd, body, env, mail_to, work_dir=None,
+                 prev_id=None):
         self.jobdef_name = jobdef_name
         self.cmd = cmd
         self.body = body
@@ -32,10 +33,14 @@ class Job:
         self.time_start = None
         self.time_end = None
         self.id = uuid.uuid4().hex
+        self.prev_id = prev_id
 
     def set_status(self, status):
         assert status in JOB_STATUSSES
         self.status = status
+
+    def set_prev_id(self, prev_id):
+        self.prev_id = prev_id
 
     def run(self):
         """
@@ -91,6 +96,7 @@ class Job:
             'output': self.output,
             'time_start': self.time_start,
             'time_end': self.time_end,
+            'prev_id': self.prev_id,
             'id': self.id,
         }
         return d
@@ -100,5 +106,6 @@ class Job:
 
 def from_dict(d):
     job = Job(jobdef_name=d['jobdef_name'], cmd=d['cmd'], body=d['body'],
-              env=d['env'], mail_to=d['mail_to'], work_dir=d['work_dir'])
+              env=d['env'], mail_to=d['mail_to'], work_dir=d['work_dir'],
+              prev_id=d.get('prev_id', None))
     return job

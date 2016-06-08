@@ -58,6 +58,11 @@ class BuildQueue(threading.Thread):
                 self.write_job_status(job)
 
     def build(self, job):
+        # Fetch the previously built job and set it on the job
+        prev_job = self.get_latest_status(job.jobdef_name)
+        if prev_job:
+            job.set_prev_id(prev_job['id'])
+
         job.set_status('running')
         self.write_job_status(job, running=True)
         logging.info("{}: starting".format(job))
