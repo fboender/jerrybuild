@@ -71,17 +71,18 @@ class Job:
             stdout, ignore = p.communicate(self.body.encode('utf8'))
             self.output = stdout.decode('utf8')
             self.exit_code = p.returncode
-            if self.exit_code == 255:
-                return -1
-            elif self.exit_code == 0:
-                return 0
-            else:
-                return 1
-
         except OSError as err:
             self.exit_code = 127
             self.output = str(err)
+
         self.time_end = time.time()
+
+        if self.exit_code == 255:
+            return -1
+        elif self.exit_code == 0:
+            return 0
+        else:
+            return 1
 
     def to_dict(self):
         d = {
