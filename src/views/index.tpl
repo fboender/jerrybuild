@@ -25,7 +25,7 @@ end
                 % include('helpers/job_status.tpl')
             </td>
             <td>
-                % include('helpers/job_time_end.tpl')
+                % include('helpers/job_time_end_ago.tpl')
             </td>
             <td>
                 % include('helpers/job_duration.tpl')

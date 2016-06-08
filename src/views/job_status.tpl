@@ -28,6 +28,9 @@ end
     <tr><th>Ended</th><td>
         % include('helpers/job_time_end.tpl')
     </td></tr>
+    <tr><th>Built</th><td>
+        % include('helpers/job_time_end_ago.tpl')
+    </td></tr>
     <tr><th>Build time</th><td>
         % include('helpers/job_duration.tpl')
     </td></tr>
