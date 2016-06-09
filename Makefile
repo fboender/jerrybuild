@@ -60,6 +60,9 @@ release_deb: release_clean doc
 	mkdir -p rel_deb/usr/share/doc/$(PROG)
 	mkdir -p rel_deb/usr/share/man/man1
 	mkdir -p rel_deb/var/lib/${PROG}
+	mkdir -p rel_deb/var/lib/${PROG}/workspace
+	mkdir -p rel_deb/var/lib/${PROG}/deploy_keys
+	mkdir -p rel_deb/var/lib/${PROG}/jobs
 	mkdir -p rel_deb/etc/${PROG}
 	mkdir -p rel_deb/etc/${PROG}/jobs.d
 
