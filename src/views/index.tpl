@@ -1,7 +1,7 @@
 <%
 reload_page = False
 for job_status in job_statusses.values():
-    if job_status['status'] not in ('done', 'internal_error'):
+    if job_status is not None and job_status['status'] not in ('done', 'internal_error'):
         reload_page = True
     end
 end
