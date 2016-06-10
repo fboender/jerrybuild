@@ -113,7 +113,7 @@ def config_load(path, case_sensitive=True):
 
         include_cfg = ""
         for file in files:
-            if file.startswith('EXAMPLE'):
+            if os.path.basename(file).startswith('EXAMPLE'):
                 continue
             include_cfg += open(os.path.join(base_path, file), 'r').read()
         include_stmt = '^%include {}$'.format(re.escape(match))
