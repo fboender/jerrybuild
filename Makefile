@@ -73,7 +73,8 @@ release_deb: release_clean doc
 	cp -r src/* rel_deb/usr/lib/${PROG}/
 	ln -s ../lib/$(PROG)/jerrybuild rel_deb/usr/bin/jerrybuild
 	cp -ar contrib/debian/DEBIAN rel_deb/
-	cp jerrybuild.cfg.example rel_deb/etc/${PROG}/${PROG}.cfg
+	cp contrib/debian/jerrybuild.cfg rel_deb/etc/${PROG}/${PROG}.cfg
+	cp -ar contrib/debian/jobs.d rel_deb/etc/${PROG}/
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog

@@ -98,6 +98,8 @@ def config_load(path, case_sensitive=True):
 
         %include conf.d/*.conf
 
+    Files starting with 'EXAMPLE' will not be included
+
     """
     base_path = os.path.dirname(os.path.realpath(path))
 
@@ -111,6 +113,8 @@ def config_load(path, case_sensitive=True):
 
         include_cfg = ""
         for file in files:
+            if file.startswith('EXAMPLE'):
+                continue
             include_cfg += open(os.path.join(base_path, file), 'r').read()
         include_stmt = '^%include {}$'.format(re.escape(match))
         base_cfg = re.sub(include_stmt, include_cfg, base_cfg, flags=re.MULTILINE)
