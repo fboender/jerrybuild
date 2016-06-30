@@ -39,6 +39,7 @@ release_src: release_clean doc
 	cp LICENSE $(PROG)-$(REL_VERSION)/
 	cp README.md $(PROG)-$(REL_VERSION)/
 	cp CHANGELOG.txt $(PROG)-$(REL_VERSION)/
+	cp contrib/jerrybuild.man.1 $(PROG)-$(REL_VERSION)/
 
 	# Bump version numbers
 	find $(PROG)-$(REL_VERSION)/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g" 
@@ -65,6 +66,7 @@ release_deb: release_clean doc
 	mkdir -p rel_deb/var/lib/${PROG}/jobs
 	mkdir -p rel_deb/etc/${PROG}
 	mkdir -p rel_deb/etc/${PROG}/jobs.d
+	mkdir -p rel_deb/usr/share/man/man1
 
 	# Copy the source to the release directory structure.
 	cp README.md rel_deb/usr/share/doc/$(PROG)/
@@ -78,6 +80,8 @@ release_deb: release_clean doc
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog
+	cp -ar contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/jerrybuild.1
+	gzip -9 rel_deb/usr/share/man/man1/jerrybuild.1
 
 	# Bump version numbers
 	find rel_deb/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g" 
