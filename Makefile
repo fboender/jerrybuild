@@ -66,6 +66,7 @@ release_deb: release_clean doc
 	mkdir -p rel_deb/var/lib/${PROG}/jobs
 	mkdir -p rel_deb/etc/${PROG}
 	mkdir -p rel_deb/etc/${PROG}/jobs.d
+	mkdir -p rel_deb/etc/init.d
 	mkdir -p rel_deb/usr/share/man/man1
 
 	# Copy the source to the release directory structure.
@@ -79,6 +80,7 @@ release_deb: release_clean doc
 	cp -ar contrib/debian/jobs.d rel_deb/etc/${PROG}/
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
+	cp contrib/debian/jerrybuild.init.sysv5 rel_deb/etc/init.d/jerrybuild
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog
 	cp -ar contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/jerrybuild.1
 	gzip -9 rel_deb/usr/share/man/man1/jerrybuild.1

@@ -1,2 +1,3 @@
 /etc/jerrybuild/jerrybuild.cfg
 /etc/jerrybuild/jobs.d/EXAMPLE.cfg
+/etc/init.d/jerrybuild
