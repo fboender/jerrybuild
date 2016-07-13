@@ -11,9 +11,12 @@
 <p class="desc">{{ jobdef.desc }}</p>
 
 <div class="job-status">
+<h3>Last job</h3>
 % include('helpers/job_status.tpl')
+% include('helpers/job_time_end_ago.tpl')
 </div>
 
+<div class="job-spec">
 <ul id="job-spec">
     <li><b>Name</b>: {{ jobdef.name }}</li>
     <li><b>URL</b>: {{ jobdef.url}}</li>
@@ -22,6 +25,23 @@
     <li><b>Command</b>: {{ jobdef.cmd }}</li>
     <li><b>Failure mail to</b>: {{ ", ".join(jobdef.mail_to) }}</li>
 </ul>
+</div>
+
+<div class="status-history">
+<h3>Status history</h3>
+<table>
+% for job_status in job_all_statusses:
+    <tr>
+        <td>
+        % include('helpers/job_status.tpl')
+        </td>
+        <td>
+        % include('helpers/job_time_end_ago.tpl')
+        </td>
+    </tr>
+% end
+</table>
+</div>
 
 <h3>Shield</h3>
 <a href="/job/{{ jobdef.name }}/shield"><img src="/job/{{ jobdef.name }}/shield" /></a>

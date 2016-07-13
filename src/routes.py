@@ -37,7 +37,10 @@ def job_definition(job_name):
 
     jobdef = jobdef_manager.get_jobdef(job_name)
     job_status = build_queue.get_latest_status(job_name)
-    return template('job_definition.tpl', jobdef=jobdef, job_status=job_status)
+    job_all_statusses = build_queue.get_all_status(job_name)
+
+    return template('job_definition.tpl',jobdef=jobdef, job_status=job_status,
+                    job_all_statusses=job_all_statusses)
 
 @route('/job/<job_name>/shield')
 def job_shield(job_name):

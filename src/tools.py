@@ -7,6 +7,7 @@ import socket
 from datetime import datetime, timedelta
 import re
 import glob
+import stat
 if sys.version_info.major > 2:
     import configparser as ConfigParser
     from io import StringIO as StringIO
@@ -126,6 +127,30 @@ def config_load(path, case_sensitive=True):
     conf.readfp(config_fp)
 
     return conf
+
+def listdir_sorted(path, stat_key='st_mtime', reverse=False):
+    """
+    Return a list of file / dir names in `path`, sorted by `stat_key`. If
+    `reverse` is True, the result is reverse (biggest/oldest first).
+
+    `stat_key` must be a string contaiing a valid field of the os.stat()
+    structure.. i.e: 'st_size', 'st_mtime', 'st_ctime' or 'st_atime'.
+
+    OSError Errno 2 (No such file or directory) errors are ignored. These are
+    caused by invalid symlinks.
+    """
+    files = []
+    for fname in os.listdir(path):
+        try:
+            fstat = os.stat(os.path.join(path, fname))
+            files.append((getattr(fstat, stat_key), fname))
+        except OSError as err:
+            if err.errno == 2:
+                pass
+            else:
+                raise
+
+    return [fname for fprop, fname in sorted(files, reverse=reverse)]
 
 if __name__ == '__main__':
    import doctest

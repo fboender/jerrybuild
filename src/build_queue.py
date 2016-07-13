@@ -10,7 +10,7 @@ if sys.version_info.major > 2:
     import queue as Queue
 else:
     import Queue
-from tools import mkdir_p, mail
+from tools import mkdir_p, mail, listdir_sorted
 
 
 class BuildQueue(threading.Thread):
@@ -158,6 +158,19 @@ class BuildQueue(threading.Thread):
             return status
         except IOError:
             return None
+
+    def get_all_status(self, jobdef_name):
+        """
+        Return a list of all job statusses sorted by date (youngest first).
+        """
+        jobdef_dir = self.get_job_status_dir(jobdef_name)
+        jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
+
+        all_status = []
+        for job_id in listdir_sorted(jobdef_dir, reverse=True):
+            if job_id != "latest":
+                all_status.append(self.get_job_status(job_id))
+        return all_status
 
     def get_latest_status(self, jobdef_name):
         jobdef_dir = self.get_job_status_dir(jobdef_name)

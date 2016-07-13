@@ -98,3 +98,6 @@ main#job-spec p.desc {
 main#job-spec ul#job-spec {
     margin-top: 24px;
 }
+main#job-spec .status-history td {
+    padding-right: 12px;
+}
