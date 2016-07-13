@@ -146,7 +146,7 @@ class BuildQueue(threading.Thread):
         return os.path.join(self.status_dir, 'jobs', jobdef_name)
 
     def del_job_status(self, jobdef_name, job_id):
-        jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
+        jobdef_dir = self.get_job_status_dir(jobdef_name)
         os.unlink(os.path.join(jobdef_dir, job_id))
         os.unlink(os.path.join(jobdef_dir, '..', '_all', job_id))
 
@@ -160,7 +160,7 @@ class BuildQueue(threading.Thread):
             return None
 
     def get_latest_status(self, jobdef_name):
-        jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
+        jobdef_dir = self.get_job_status_dir(jobdef_name)
         job_latest_link = os.path.join(jobdef_dir, "latest")
         try:
             with open(job_latest_link, 'r') as f:
