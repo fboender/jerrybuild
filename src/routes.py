@@ -39,20 +39,6 @@ def job_definition(job_name):
     job_status = build_queue.get_latest_status(job_name)
     return template('job_definition.tpl', jobdef=jobdef, job_status=job_status)
 
-@route('/job/<job_id>/status')
-def job_status(job_id):
-    """
-    Show the job status for any job.
-    """
-    jobdef_manager = request.deps['jobdef_manager']
-    build_queue = request.deps['build_queue']
-
-    job_status = build_queue.get_job_status(job_id)
-    job_name = job_status['jobdef_name']
-    jobdef = jobdef_manager.get_jobdef(job_name)
-
-    return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
-
 @route('/job/<job_name>/shield')
 def job_shield(job_name):
     """
@@ -80,8 +66,22 @@ def job_shield(job_name):
 
     redirect('https://img.shields.io/badge/{}-{}-{}.svg'.format(label, status, color))
 
+@route('/job/<job_id>/status')
+def jobrun_status(job_id):
+    """
+    Show the job status for any job.
+    """
+    jobdef_manager = request.deps['jobdef_manager']
+    build_queue = request.deps['build_queue']
+
+    job_status = build_queue.get_job_status(job_id)
+    job_name = job_status['jobdef_name']
+    jobdef = jobdef_manager.get_jobdef(job_name)
+
+    return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
+
 @route('/job/<job_id>/rerun')
-def job_rerun(job_id):
+def jobrun_rerun(job_id):
     """
     Rerun an already executed job.
     """
