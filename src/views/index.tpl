@@ -19,7 +19,7 @@ end
         % job_status = job_statusses[name]
         <tr>
             <td>
-                <a href="/job/definition/{{ name }}">{{ name }}</a>
+                <a href="/job/{{ name }}/definition">{{ name }}</a>
             </td>
             <td>
                 % include('helpers/job_status.tpl')

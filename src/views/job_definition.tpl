@@ -3,7 +3,7 @@
 
 <div class="action-buttons">
 % if job_status and job_status['status'] in ('done', 'internal_error'):
-    <a href="/job/rerun/{{ job_status['id'] }}"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
+    <a href="/job/{{ job_status['id'] }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
 % end
 </div>
 
@@ -24,5 +24,5 @@
 </ul>
 
 <h3>Shield</h3>
-<a href="/job/shield/{{ jobdef.name }}"><img src="/job/shield/{{ jobdef.name }}" /></a>
+<a href="/job/{{ jobdef.name }}/shield"><img src="/job/{{ jobdef.name }}/shield" /></a>
 </main>

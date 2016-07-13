@@ -27,7 +27,7 @@ def index():
 
     return template('index.tpl', job_statusses=job_statusses)
 
-@route('/job/definition/<job_name>')
+@route('/job/<job_name>/definition')
 def job_definition(job_name):
     """
     Display some information about a job's definition.
@@ -39,7 +39,7 @@ def job_definition(job_name):
     job_status = build_queue.get_latest_status(job_name)
     return template('job_definition.tpl', jobdef=jobdef, job_status=job_status)
 
-@route('/job/status/<job_id>')
+@route('/job/<job_id>/status')
 def job_status(job_id):
     """
     Show the job status for any job.
@@ -53,7 +53,7 @@ def job_status(job_id):
 
     return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
 
-@route('/job/shield/<job_name>')
+@route('/job/<job_name>/shield')
 def job_shield(job_name):
     """
     Show a build shield (http://shields.io/) for this job's latest build.
@@ -80,7 +80,7 @@ def job_shield(job_name):
 
     redirect('https://img.shields.io/badge/{}-{}-{}.svg'.format(label, status, color))
 
-@route('/job/rerun/<job_id>')
+@route('/job/<job_id>/rerun')
 def job_rerun(job_id):
     """
     Rerun an already executed job.
@@ -92,7 +92,7 @@ def job_rerun(job_id):
     except KeyError as err:
         abort(500, "Couldn't construct new job from old job: {}".format(err))
     new_job_id = build_queue.put(rerun_job)
-    redirect("/job/status/" + new_job_id)
+    redirect("/job/{}/status".format(new_job_id))
 
 @route('/<:re:.*>', method=['GET', 'POST'])
 def generic_handler():

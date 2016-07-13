@@ -9,10 +9,10 @@ end
 <main id="job-result">
 
 % if job_status['status'] in ('done', 'internal_error'):
-    <a href="/job/rerun/{{ job_status['id'] }}"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
+    <a href="/job/{{ job_status['id'] }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
 % end
 
-<h2><a href="/job/definition/{{ jobdef.name }}">{{ jobdef.name }}</a> ({{ job_status['id'] }})</h2>
+<h2><a href="/job/{{ jobdef.name }}/definition">{{ jobdef.name }}</a> ({{ job_status['id'] }})</h2>
 
 <div class="job-status">
 % include('helpers/job_status.tpl')
