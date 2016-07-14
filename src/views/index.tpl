@@ -15,22 +15,26 @@ end
         <th>Last build</th>
         <th>Last duration</th>
     </tr>
-    % for name in sorted(job_statusses.keys()):
-        % job_status = job_statusses[name]
-        <tr>
-            <td>
-                <a href="/job/{{ name }}/definition">{{ name }}</a>
-            </td>
-            <td>
-                % include('helpers/job_status.tpl')
-            </td>
-            <td>
-                % include('helpers/job_time_end_ago.tpl')
-            </td>
-            <td>
-                % include('helpers/job_duration.tpl')
-            </td>
-        </tr>
+    % if len(job_statusses) == 0:
+        <tr><td>&nbsp;</td><td colspan="3">No jobs defined</a></td></tr>
+    % else:
+        % for name in sorted(job_statusses.keys()):
+            % job_status = job_statusses[name]
+            <tr>
+                <td>
+                    <a href="/job/{{ name }}/definition">{{ name }}</a>
+                </td>
+                <td>
+                    % include('helpers/job_status.tpl')
+                </td>
+                <td>
+                    % include('helpers/job_time_end_ago.tpl')
+                </td>
+                <td>
+                    % include('helpers/job_duration.tpl')
+                </td>
+            </tr>
+        % end
     % end
 </table>
 
