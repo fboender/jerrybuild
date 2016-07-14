@@ -167,9 +167,14 @@ class BuildQueue(threading.Thread):
         jobdef_dir = os.path.join(self.status_dir, 'jobs', jobdef_name)
 
         all_status = []
-        for job_id in listdir_sorted(jobdef_dir, reverse=True):
-            if job_id != "latest":
-                all_status.append(self.get_job_status(job_id))
+        try:
+            for job_id in listdir_sorted(jobdef_dir, reverse=True):
+                if job_id != "latest":
+                    all_status.append(self.get_job_status(job_id))
+        except OSError as err:
+            # Surpress "not found" since the job may have never run.
+            if err.errno != 2:
+                raise
         return all_status
 
     def get_latest_status(self, jobdef_name):
