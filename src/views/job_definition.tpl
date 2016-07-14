@@ -25,15 +25,21 @@
 <div class="status-history">
 <h3>Status history</h3>
 <table>
-% for job_status in job_all_statusses:
+% if len(job_all_statusses) == 0:
     <tr>
-        <td>
-        % include('helpers/job_status.tpl')
-        </td>
-        <td>
-        % include('helpers/job_time_end_ago.tpl')
-        </td>
+        <td colspan="2">Never built</td>
     </tr>
+% else:
+    % for job_status in job_all_statusses:
+        <tr>
+            <td>
+            % include('helpers/job_status.tpl')
+            </td>
+            <td>
+            % include('helpers/job_time_end_ago.tpl')
+            </td>
+        </tr>
+    % end
 % end
 </table>
 </div>
