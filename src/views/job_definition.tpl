@@ -8,15 +8,9 @@
 </div>
 
 <h2>{{ jobdef.name }}</h2>
+<div class="job-spec">
 <p class="desc">{{ jobdef.desc }}</p>
 
-<div class="job-status">
-<h3>Last job</h3>
-% include('helpers/job_status.tpl')
-% include('helpers/job_time_end_ago.tpl')
-</div>
-
-<div class="job-spec">
 <ul id="job-spec">
     <li><b>Name</b>: {{ jobdef.name }}</li>
     <li><b>URL</b>: {{ jobdef.url}}</li>
@@ -26,6 +20,7 @@
     <li><b>Failure mail to</b>: {{ ", ".join(jobdef.mail_to) }}</li>
 </ul>
 </div>
+
 
 <div class="status-history">
 <h3>Status history</h3>
