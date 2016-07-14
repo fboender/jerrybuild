@@ -46,7 +46,7 @@ do_start()
         --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
 		|| return 1
 	start-stop-daemon -b -C -c $USER --start --quiet --make-pidfile \
-        --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS >$LOGFILE 2>&1 \
+        --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS >>$LOGFILE 2>&1 \
 		|| return 2
 }
 
