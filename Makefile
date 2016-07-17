@@ -34,6 +34,7 @@ release_src: release_clean doc
 	rm -rf $(PROG)-$(REL_VERSION)
 
 	# Prepare source
+	umask 022
 	mkdir $(PROG)-$(REL_VERSION)
 	cp -ar src/* $(PROG)-$(REL_VERSION)/
 	cp LICENSE $(PROG)-$(REL_VERSION)/
@@ -54,6 +55,7 @@ release_deb: release_clean doc
 	# Cleanup
 	rm -rf rel_deb
 
+	umask 022
 	mkdir -p rel_deb/usr/bin
 	mkdir -p rel_deb/usr/lib/${PROG}
 	mkdir -p rel_deb/usr/lib/${PROG}/mako
@@ -75,14 +77,14 @@ release_deb: release_clean doc
 	cp CHANGELOG.txt rel_deb/usr/share/doc/$(PROG)/
 	cp -r src/* rel_deb/usr/lib/${PROG}/
 	ln -s ../lib/$(PROG)/jerrybuild rel_deb/usr/bin/jerrybuild
-	cp -ar contrib/debian/DEBIAN rel_deb/
+	cp -r contrib/debian/DEBIAN rel_deb/
 	cp contrib/debian/jerrybuild.cfg rel_deb/etc/${PROG}/${PROG}.cfg
-	cp -ar contrib/debian/jobs.d rel_deb/etc/${PROG}/
+	cp -r contrib/debian/jobs.d rel_deb/etc/${PROG}/
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/jerrybuild.init.sysv5 rel_deb/etc/init.d/jerrybuild
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog
-	cp -ar contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/jerrybuild.1
+	cp -r contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/jerrybuild.1
 	gzip -9 rel_deb/usr/share/man/man1/jerrybuild.1
 
 	# Bump version numbers
