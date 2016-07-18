@@ -86,7 +86,7 @@ release_deb: release_clean doc
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog
 	cp -r contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/jerrybuild.1
 	gzip -9 rel_deb/usr/share/man/man1/jerrybuild.1
-	chmod 650 rel_dev/etc/${PROG}/jobs.d
+	chmod 650 rel_deb/etc/${PROG}/jobs.d
 	find rel_deb/ -type f -print0 | xargs -0 chmod 644 
 	find rel_deb/ -type d -print0 | xargs -0 chmod 755
 
