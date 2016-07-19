@@ -21,7 +21,7 @@ doc:
 	markdown_py README.md > README.html
 
 release_clean: clean
-	@if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
+	#@if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
 
 release: release_src release_deb release_rpm
 
@@ -82,13 +82,15 @@ release_deb: release_clean doc
 	cp -r contrib/debian/jobs.d rel_deb/etc/${PROG}/
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
-	cp contrib/debian/jerrybuild.init.sysv5 rel_deb/etc/init.d/jerrybuild
+	cp contrib/debian/jerrybuild.init.sysv5 rel_deb/etc/init.d/${PROG}
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog
-	cp -r contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/jerrybuild.1
+	cp -r contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/${PROG}.1
 	gzip -9 rel_deb/usr/share/man/man1/jerrybuild.1
+
 	chmod 650 rel_deb/etc/${PROG}/jobs.d
 	find rel_deb/ -type f -print0 | xargs -0 chmod 644 
 	find rel_deb/ -type d -print0 | xargs -0 chmod 755
+	chmod 755 rel_deb/DEBIAN/postinst rel_deb/etc/init.d/${PROG}
 
 	# Bump version numbers
 	find rel_deb/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g" 
