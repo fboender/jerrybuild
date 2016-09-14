@@ -19,9 +19,10 @@ class JobDef:
     def get_config_section_name(self):
         return 'job:{}'.format(self.name)
 
-    def make_job(self, body, env):
+    def make_job(self, body, env, prev_id=None):
         newenv = dict(self.env.items() + env.items())
-        job = Job(self.name, self.cmd, body, newenv, self.mail_to, self.work_dir)
+        job = Job(self.name, self.cmd, body, newenv, self.mail_to,
+                  self.work_dir, prev_id=prev_id)
         return job
 
     def __repr__(self):

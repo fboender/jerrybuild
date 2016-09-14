@@ -104,9 +104,3 @@ class Job:
 
     def __repr__(self):
         return "{}(id = {})".format(self.jobdef_name, self.id)
-
-def from_dict(d):
-    job = Job(jobdef_name=d['jobdef_name'], cmd=d['cmd'], body=d['body'],
-              env=d['env'], mail_to=d['mail_to'], work_dir=d['work_dir'],
-              prev_id=d.get('prev_id', None))
-    return job

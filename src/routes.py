@@ -86,15 +86,19 @@ def jobrun_status(job_id):
 @route('/job/<job_id>/rerun')
 def jobrun_rerun(job_id):
     """
-    Rerun an already executed job.
+    Rerun an already executed job. We re-use the body and environment of the
+    previous job.
     """
     build_queue = request.deps['build_queue']
+    jobdef_manager = request.deps['jobdef_manager']
+
     job_status = build_queue.get_job_status(job_id)
-    try:
-        rerun_job = job.from_dict(job_status)
-    except KeyError as err:
-        abort(500, "Couldn't construct new job from old job: {}".format(err))
-    new_job_id = build_queue.put(rerun_job)
+    jobdef_name = job_status['jobdef_name']
+    jobdef = jobdef_manager.get_jobdef(jobdef_name)
+    job = jobdef.make_job(job_status['body'], job_status['env'],
+                          prev_id=job_status['id'])
+
+    new_job_id = build_queue.put(job)
     redirect("/job/{}/status".format(new_job_id))
 
 @route('/<:re:.*>', method=['GET', 'POST'])
