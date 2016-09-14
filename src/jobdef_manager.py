@@ -9,6 +9,11 @@ import tools
 
 
 class JobDefManager:
+    """
+    The JobDefManager handles the loading of Job definitions from config file.
+    Job definitions are used to create Job objects which represent a single
+    build. Job definitions are kept as JobDef objects.
+    """
     def __init__(self, config_file):
         self.jobdefs = {}
         self.config = None
@@ -20,6 +25,10 @@ class JobDefManager:
             raise RuntimeError("JobDefs not initialized properly")
 
     def _load(self, config_file):
+        """
+        Load job definitions from `config_file`. This resets most of this
+        object's state.
+        """
         jobdefs = {}
         config = None
         config_file = config_file
@@ -42,17 +51,29 @@ class JobDefManager:
         self.default_work_dir = default_work_dir
 
     def reload(self):
+        """
+        Reload the job definitions from the config file.
+        """
         logging.info("Reloading configuration file")
         self._load(self.config_file)
 
     def get_jobdef(self, name):
+        """
+        Return the Job definition (JobDef object) corresponding to `name`.
+        """
         return self.jobdefs[name]
 
     def get_jobdef_from_url(self, url):
+        """
+        Return the Job definition (JobDef object) that listens to `url`.
+        """
         for name, jobdef_inst in self.jobdefs.items():
             if jobdef_inst.url.rstrip('/') == url.rstrip('/'):
                 return jobdef_inst
         return None
 
     def get_jobdefs(self):
+        """
+        Return a dictionary of all job name => JobDef mappings.
+        """
         return self.jobdefs

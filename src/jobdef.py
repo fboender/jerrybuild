@@ -2,7 +2,13 @@
 
 from job import Job
 
+
 class JobDef:
+    """
+    Job definition objects contain all the information required to create jobs.
+    JobDef objects are generally constructed by the JobDefManager. JobDe
+    objects can be used to create jobs using make_job().
+    """
     def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
                  keep_jobs=0, mail_to=[], custom_params={}):
         self.name = name
