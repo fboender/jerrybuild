@@ -126,7 +126,7 @@ def generic_handler():
     # Extract configuration options for this job definition from configuration
     # file.
     # FIXME: Shouldb't be here.
-    config_section_name = jobdef.get_config_section_name()
+    config_section_name = 'job:{}'.format(jobdef.name)
     config_values = {}
     for option_key in config.options(config_section_name):
         option_value = config.get(config_section_name, option_key)
@@ -136,7 +136,7 @@ def generic_handler():
     env = {}
     for k, v in request.headers.items():
         env["HEADER_{}".format(k.upper())] = v
-    request_env = provider.normalize(request, config_values)
+    request_env = provider.normalize(request, jobdef)
     if request_env is False:
         # Normalization method aborted the request.
         return

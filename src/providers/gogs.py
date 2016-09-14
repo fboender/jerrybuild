@@ -3,10 +3,10 @@
 import json
 
 
-def normalize(request, config_values={}):
+def normalize(request, jobdef):
     env = {}
     body = json.load(request.body)
-    secret = config_values['secret']
+    secret = jobdef.custom_params['secret']
 
     if request.headers['X-Gogs-Event'] != 'push':
         raise NotImplementedError("Only push events are currently supported")

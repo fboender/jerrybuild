@@ -22,9 +22,6 @@ class JobDef:
         self.mail_to = mail_to
         self.custom_params = custom_params
 
-    def get_config_section_name(self):
-        return 'job:{}'.format(self.name)
-
     def make_job(self, body, env, prev_id=None):
         newenv = dict(self.env.items() + env.items())
         job = Job(self.name, self.cmd, body, newenv, self.mail_to,

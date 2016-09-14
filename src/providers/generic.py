@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-def normalize(request, config_values={}):
+def normalize(request, jobdef):
     env = {}
 
     env['provider'] = 'generic'

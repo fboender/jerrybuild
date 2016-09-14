@@ -6,7 +6,7 @@ import json
 from bottle import response
 
 
-def normalize(request, config_values):
+def normalize(request, jobdef):
     if request.headers['X-Github-Event'] == 'ping':
         response.status = 200
         response.body = "pong"
@@ -15,7 +15,7 @@ def normalize(request, config_values):
     env = {}
     raw_body = request.body.read()
     body = json.load(request.body)
-    secret = bytes(config_values['secret'])
+    secret = bytes(jobdef.custom_params['secret'])
 
     if request.headers['X-Github-Event'] != 'push':
         raise NotImplementedError("Only push events are currently supported")
