@@ -14,12 +14,12 @@ class JobDefManager:
         self.config = None
         self.config_file = None
         self.default_work_dir = None
-        self.load(config_file)
+        self._load(config_file)
 
         if self.config is None or self.config_file is None:
             raise RuntimeError("JobDefs not initialized properly")
 
-    def load(self, config_file):
+    def _load(self, config_file):
         jobdefs = {}
         config = None
         config_file = config_file
@@ -43,7 +43,7 @@ class JobDefManager:
 
     def reload(self):
         logging.info("Reloading configuration file")
-        self.load(self.config_file)
+        self._load(self.config_file)
 
     def get_jobdef(self, name):
         return self.jobdefs[name]
