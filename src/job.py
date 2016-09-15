@@ -29,7 +29,7 @@ class Job:
         self.work_dir = work_dir
         self.status = None
         self.exit_code = None
-        self.output = None
+        self.output = u''
         self.time_start = None
         self.time_end = None
         self.id = uuid.uuid4().hex
@@ -68,8 +68,14 @@ class Job:
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
                                  env=env)
-            stdout, ignore = p.communicate(self.body.encode('utf8'))
-            self.output = stdout.decode('utf8')
+            # Stream output to self.output
+            while True:
+                stdout = p.stdout.readline().decode('utf8')
+                if not stdout:
+                    break
+                self.output += stdout
+
+            p.poll()
             self.exit_code = p.returncode
         except OSError as err:
             self.exit_code = 127

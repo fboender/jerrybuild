@@ -25,6 +25,7 @@ class BuildQueue(threading.Thread):
         self.server_url = server_url.rstrip('/')
         threading.Thread.__init__(self)
         self.queue = Queue.Queue()
+        self.running_jobs = {}
 
     def run(self):
         self.handle_queue()
@@ -58,6 +59,8 @@ class BuildQueue(threading.Thread):
                 self.write_job_status(job)
 
     def build(self, job):
+        self.running_jobs[job.id] = job
+
         # Fetch the previously built job and set it on the job
         prev_job = self.get_latest_status(job.jobdef_name)
         if prev_job:
@@ -94,6 +97,8 @@ class BuildQueue(threading.Thread):
                     logging.info("{}: No email configured. Not sending email.".format(job))
 
             self.write_job_status(job, running=False, latest=True)
+
+        del self.running_jobs[job.id]
 
     def write_job_status(self, job, running=False, latest=False, aborted=False):
         """

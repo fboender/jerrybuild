@@ -47,6 +47,6 @@ end
 </table>
 
 <h3>Output</h3>
-<pre>{{ job_status['output'] }}</pre>
+<iframe width="800px" height="400px" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';" src="http://localhost:5281/job/{{ job_status["id"] }}/stream_output"></iframe>
 
 </main>

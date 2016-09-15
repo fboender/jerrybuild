@@ -1,4 +1,5 @@
 import logging
+import time
 
 from bottle import route, request, response, abort, template, static_file, redirect
 import tools
@@ -101,6 +102,29 @@ def jobrun_rerun(job_id):
     new_job_id = build_queue.put(job)
     redirect("/job/{}/status".format(new_job_id))
 
+@route('/job/<job_id>/stream_output')
+def jobrun_stream_output(job_id):
+    yield u"<html><head><style>pre { padding: 10px; background-color:#000000; color:#FFFFFF; }</style></head><body><pre>"
+
+    build_queue = request.deps['build_queue']
+    if job_id in build_queue.running_jobs:
+        # Job is running. Stream output as it's happening
+        job = build_queue.running_jobs[job_id]
+        pos = 0
+        while True:
+            out = job.output[pos:]
+            if out:
+                pos += len(out)
+                yield out
+            if job.status != 'running':
+                break
+            time.sleep(0.1)
+    else:
+        # Job isn't running
+        job_status = build_queue.get_job_status(job_id)
+        yield job_status['output']
+
+
 @route('/<:re:.*>', method=['GET', 'POST'])
 def generic_handler():
     """
@@ -146,4 +170,3 @@ def generic_handler():
     build_queue.put(job)
 
     return {'id': job.id}
-
