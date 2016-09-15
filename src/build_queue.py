@@ -188,9 +188,9 @@ class BuildQueue(threading.Thread):
             return None
 
     def send_fail_mail(self, job):
-        subject = "Build job '{}' (id={}..) failed with exit code {}'".format(job.jobdef_name.encode('utf8'),
-                                                                              job.id[:8],
-                                                                              job.exit_code)
+        subject = "Build job '{}' (id={}..) failed with exit code {}".format(job.jobdef_name.encode('utf8'),
+                                                                             job.id[:8],
+                                                                             job.exit_code)
         job_url = self.server_url + '/job/status/' + job.id
         msg = "Host = {}\n" \
               "Exit code = {}.\n\n" \
