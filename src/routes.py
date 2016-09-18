@@ -104,6 +104,11 @@ def jobrun_rerun(job_id):
 
 @route('/job/<job_id>/stream_output')
 def jobrun_stream_output(job_id):
+    """
+    Stream the output of a job to the browser. This is embedded in an iframe.
+    If the job is still running, the output is streamed live. Otherwise, the
+    collected output is sent.
+    """
     yield u"<html><head><style>pre { padding: 10px; background-color:#000000; color:#FFFFFF; }</style></head><body><pre>"
 
     build_queue = request.deps['build_queue']
@@ -128,10 +133,10 @@ def jobrun_stream_output(job_id):
 @route('/<:re:.*>', method=['GET', 'POST'])
 def generic_handler():
     """
-    The generic handler catches al requests not caught by any other route. It
+    The generic handler catches all requests not caught by any other route. It
     checks the configuration to see if the URL requested is one registered as a
-    job's webhook URL handler. If so, it normalized the request and queues the
-    job.
+    job's webhook URL handler. If so, it normalizes the request and queues the
+    job for building.
 
     It returns immediately (aynsc) with a JSON structure containing the job id.
     """
