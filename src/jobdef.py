@@ -23,7 +23,9 @@ class JobDef:
         self.custom_params = custom_params
 
     def make_job(self, body, env, prev_id=None):
-        newenv = dict(self.env.items() + env.items())
+        newenv = dict(self.env.items() + \
+                      env.items() + \
+                      self.custom_params.items())
         job = Job(self.name, self.cmd, body, newenv, self.mail_to,
                   self.work_dir, prev_id=prev_id)
         return job
