@@ -152,15 +152,6 @@ def generic_handler():
     logging.info("Received event for job '{}'".format(jobdef.name))
     provider = providers[jobdef.provider]
 
-    # Extract configuration options for this job definition from configuration
-    # file.
-    # FIXME: Shouldb't be here.
-    config_section_name = 'job:{}'.format(jobdef.name)
-    config_values = {}
-    for option_key in config.options(config_section_name):
-        option_value = config.get(config_section_name, option_key)
-        config_values[option_key] = option_value
-
     # Put the headers of the request in the environment.
     env = {}
     for k, v in request.headers.items():
