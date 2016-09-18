@@ -49,4 +49,8 @@ end
 <h3>Output</h3>
 <iframe width="800px" height="400px" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';" src="http://localhost:5281/job/{{ job_status["id"] }}/stream_output"></iframe>
 
+<div id="job-status-exitcode">
+Exit code: {{ job_status['exit_code'] }}
+</div>
+
 </main>
