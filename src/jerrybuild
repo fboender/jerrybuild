@@ -67,6 +67,41 @@ def sig_hup_handler_generate(jobdef_manager):
         bottle.TEMPLATES.clear()
     return sig_hup_handler
 
+
+def job_changed_handler_generate(smtp_server, server_url):
+    """
+    Closure that returns a Job Changed handler. The Job Changed handler is
+    called by the build queue whenever the job exit code changes from the
+    previous build.
+    """
+    def job_changed_handler(cur_job, prev_job):
+        """
+        Send email if a job fails the first time or when it recovers (builds
+        succesfully again).
+        """
+        if cur_job.exit_code != 0 and cur_job.exit_code != prev_job.exit_code:
+            logging.info("{}: failed. Sending emails to {}".format(cur_job, ', '.join(cur_job.mail_to)))
+            subject = "Build job '{}' (id={}..) failed with exit code {}".format(cur_job.jobdef_name.encode('utf8'),
+                                                                                 cur_job.id[:8],
+                                                                                 cur_job.exit_code)
+        elif cur_job.exit_code == 0 and cur_job.exit_code != prev_job.exit_code:
+            logging.info("{}: recovered. Sending emails to {}".format(cur_job, ', '.join(cur_job.mail_to)))
+            subject = "Build job '{}' (id={}..) recovered".format(cur_job.jobdef_name.encode('utf8'),
+                                                                  cur_job.id[:8],
+                                                                  cur_job.exit_code)
+            job_url = server_url + '/job/status/' + cur_job.id
+            msg = "Host = {}\n" \
+                  "Exit code = {}.\n\n" \
+                  "View the full job: {}.\n\n" \
+                  "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(),
+                                                    cur_job.exit_code,
+                                                    job_url,
+                                                    cur_job.output.encode('utf8'))
+        tools.mail(cur_job.mail_to, subject, msg, smtp_server=smtp_server)
+        logging.info("{}: Emails sent".format(cur_job))
+    return job_changed_handler
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2 or '--help' in sys.argv:
         sys.stderr.write("Usage: {} <config.cfg>\n".format(sys.argv[0]))
@@ -85,7 +120,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=log_level,
                         format='%(asctime)s:%(levelname)s:%(message)s')
 
-    # Start the build queue
+    # Initialize the job changed handler, which will send an email when a job
+    # failed. It's triggered by the job queue.
     state_dir = config.get('server', 'state_dir')
     smtp_server = '127.0.0.1'
     if config.has_option('server', 'smtp_server'):
@@ -93,7 +129,10 @@ if __name__ == "__main__":
     server_url = 'http://' + socket.getfqdn()
     if config.has_option('server', 'server_url'):
         server_url = config.get('server', 'server_url')
-    build_queue = bq.BuildQueue(state_dir, smtp_server=smtp_server, server_url=server_url)
+    job_changed_handler = job_changed_handler_generate(smtp_server, server_url)
+
+    # Initialize the build queue
+    build_queue = bq.BuildQueue(state_dir, job_changed_handler)
     build_queue.start()
 
     # Initialize the Job Definition Manager
@@ -109,6 +148,7 @@ if __name__ == "__main__":
     # Load the providers
     providers = load_providers([tools.bin_rel_path('providers')])
 
+    # Set up dependency injections for the Bottle web routes.
     dep_inject = DepInjector()
     dep_inject.add_dep('build_queue', build_queue)
     dep_inject.add_dep('jobdef_manager', jobdef_manager)

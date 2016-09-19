@@ -5,25 +5,25 @@ import os
 import logging
 import sys
 import json
-import socket
 if sys.version_info.major > 2:
     import queue as Queue
 else:
     import Queue
-from tools import mkdir_p, mail, listdir_sorted
+from tools import mkdir_p, listdir_sorted
+import job
 
 
 class BuildQueue(threading.Thread):
     daemon = True
 
-    def __init__(self, status_dir, smtp_server='127.0.0.1', server_url='http://localhost'):
+    # FIXME: called 'status_dir' here, but 'state_dir' in main.
+    def __init__(self, status_dir, job_changed_handler=None):
+        threading.Thread.__init__(self)
         self.status_dir = status_dir
+        self.job_changed_handler = job_changed_handler
         self.jobs_dir = os.path.join(self.status_dir, 'jobs')
         self.all_dir = os.path.join(self.status_dir, 'jobs', '_all')
         self.make_status_dir()
-        self.smtp_server = smtp_server
-        self.server_url = server_url.rstrip('/')
-        threading.Thread.__init__(self)
         self.queue = Queue.Queue()
         self.running_jobs = {}
 
@@ -81,23 +81,25 @@ class BuildQueue(threading.Thread):
             # keep the _all job status so we can inspect the output if
             # required.
             job.set_status('aborted')
-            logging.info("{}: intentionally aborted.".format(job))
+            logging.info("{}: result: intentionally aborted. Exit code = {}".format(job, job.exit_code))
 
             self.write_job_status(job, aborted=True)
         else:
             job.set_status('done')
-            logging.info("{}: done. Exit code = {}".format(job, job.exit_code))
-
-            if job.exit_code != 0:
-                if job.mail_to:
-                    # Send email
-                    logging.info("{}: failed. Sending emails to {}".format(job, ', '.join(job.mail_to)))
-                    self.send_fail_mail(job)
-                    logging.info("{}: Emails sent".format(job))
-                else:
-                    logging.info("{}: No email configured. Not sending email.".format(job))
+            if job.exit_code == 0:
+                logging.info("{}: result: success. Exit code = {}".format(job, job.exit_code))
+            else:
+                logging.warn("{}: result: failed. Exit code = {}".format(job, job.exit_code))
 
             self.write_job_status(job, running=False, latest=True)
+
+            if job.exit_code != prev_job.exit_code:
+                # Job result has changed since last time. Call the `job_changed_handler`.
+                if self.job_changed_handler is not None:
+                    logging.debug("{}: failed! Calling the 'job changed' handler".format(job.id[:8]))
+                    self.job_changed_handler(job, prev_job)
+                else:
+                    logging.debug("{}: failed, but no 'job changed' handler defined.".format(job.id[:8]))
 
         del self.running_jobs[job.id]
 
@@ -192,18 +194,3 @@ class BuildQueue(threading.Thread):
             return job.from_dict(status)
         except IOError:
             return None
-
-    def send_fail_mail(self, job):
-        subject = "Build job '{}' (id={}..) failed with exit code {}".format(job.jobdef_name.encode('utf8'),
-                                                                             job.id[:8],
-                                                                             job.exit_code)
-        job_url = self.server_url + '/job/status/' + job.id
-        msg = "Host = {}\n" \
-              "Exit code = {}.\n\n" \
-              "View the full job: {}.\n\n" \
-              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(),
-                                                job.exit_code,
-                                                job_url,
-                                                job.output.encode('utf8'))
-        mail(job.mail_to, subject, msg, smtp_server=self.smtp_server)
-
