@@ -6,7 +6,7 @@ listen = 127.0.0.1
 # Port to listen on
 port = 5281
 
-# Server URL, optional
+# Server URL, optional. The URL at which the web frontend is reachable.
 #server_url = http://localhost
 
 # Logging level. Possible values: DEBUG, INFO, WARN, ERROR,
@@ -46,8 +46,12 @@ keep_jobs = 40
 %include /etc/jerrybuild/jobs.d/*.cfg
 
 
+#############################################################################
+
+
 #
-# Example job specification: ansible-cmdb
+# Example job specification: ansible-cmdb.
+# Normally, this would go in jobs.d/ansible-cmdb.cfg
 #
 [job:ansible-cmdb]
 desc = Run ansible-cmdb test suite
@@ -66,6 +70,12 @@ cmd = /home/build/ansible-cmdb/run_tests.sh
 
 # A setting specific to the Github and Gogs providers.
 secret = SECRET_TOKEN_HERE
+
+# Override the global keep_jobs setting, optional.
+# keep_jobs=10
+
+# Additioal email addresses on top of the global `mail_to` setting. Optional.
+# mail_to = other.user@example.com
 
 # Define a custom environment variable to be passed to the script for this job.
 # The script will get a `run_coverage=0` environment setting.
