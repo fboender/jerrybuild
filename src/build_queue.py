@@ -61,10 +61,11 @@ class BuildQueue(threading.Thread):
     def build(self, job):
         self.running_jobs[job.id] = job
 
-        # Fetch the previously built job and set it on the job
+        # Fetch the previously built job and set it on the job. This is used
+        # for linking and comparing to the previous job.
         prev_job = self.get_latest_status(job.jobdef_name)
         if prev_job:
-            job.set_prev_id(prev_job['id'])
+            job.set_prev_id(prev_job.id)
 
         job.set_status('running')
         self.write_job_status(job, running=True)
@@ -160,7 +161,7 @@ class BuildQueue(threading.Thread):
         try:
             with open(job_status_path, 'r') as f:
                 status = json.load(f)
-            return status
+            return job.from_dict(status)
         except IOError:
             return None
 
@@ -188,7 +189,7 @@ class BuildQueue(threading.Thread):
         try:
             with open(job_latest_link, 'r') as f:
                 status = json.load(f)
-            return status
+            return job.from_dict(status)
         except IOError:
             return None
 

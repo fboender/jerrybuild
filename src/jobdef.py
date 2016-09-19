@@ -35,6 +35,9 @@ class JobDef:
 
 
 def from_config(config, section_name):
+    """
+    Generate a JobDef instance from a configuration section.
+    """
     params = {
         'name': section_name.split(':', 1)[1],
         'desc': "No description",

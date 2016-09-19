@@ -1,6 +1,6 @@
 <%
 reload_page = False
-if job_status['status'] not in ('done', 'internal_error'):
+if job_status.status not in ('done', 'internal_error'):
     reload_page = True
 end
 %>
@@ -8,20 +8,20 @@ end
 % import tools
 <main id="job-result">
 
-% if job_status['status'] in ('done', 'internal_error'):
-    <a href="/job/{{ job_status['id'] }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
+% if job_status.status in ('done', 'internal_error'):
+    <a href="/job/{{ job_status.id }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
 % end
 
-<h2><a href="/job/{{ jobdef.name }}/definition">{{ jobdef.name }}</a> ({{ job_status['id'] }})</h2>
+<h2><a href="/job/{{ jobdef.name }}/definition">{{ jobdef.name }}</a> ({{ job_status.id }})</h2>
 
 <div class="job-status">
 % include('helpers/job_status.tpl')
 </div>
 
 <table id="job-status-overview">
-    <tr><th>ID</th><td>{{ job_status['id'] }}</td></tr>
-    <tr><th>Status</th><td>{{ job_status['status'] }}</td></tr>
-    <tr><th>Exit code</th><td>{{ job_status['exit_code'] }}</td></tr>
+    <tr><th>ID</th><td>{{ job_status.id }}</td></tr>
+    <tr><th>Status</th><td>{{ job_status.status }}</td></tr>
+    <tr><th>Exit code</th><td>{{ job_status.exit_code }}</td></tr>
     <tr><th>Started</th><td>
         % include('helpers/job_time_start.tpl')
     </td></tr>
@@ -38,7 +38,7 @@ end
 
 <h3>Environment</h3>
 <table id="job-status-env">
-    % for k, v in sorted(job_status['env'].items()):
+    % for k, v in sorted(job_status.env.items()):
         <tr>
             <th>{{ k }}</th>
             <td>{{ v }}</td>
@@ -47,10 +47,10 @@ end
 </table>
 
 <h3>Output</h3>
-<iframe width="800px" height="400px" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';" src="http://localhost:5281/job/{{ job_status["id"] }}/stream_output"></iframe>
+<iframe width="800px" height="400px" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';" src="http://localhost:5281/job/{{ job_status.id }}/stream_output"></iframe>
 
 <div id="job-status-exitcode">
-Exit code: {{ job_status['exit_code'] }}
+Exit code: {{ job_status.exit_code }}
 </div>
 
 </main>

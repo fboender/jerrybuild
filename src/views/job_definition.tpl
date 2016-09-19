@@ -2,8 +2,8 @@
 <main id="job-spec">
 
 <div class="action-buttons">
-% if job_status and job_status['status'] in ('done', 'internal_error'):
-    <a href="/job/{{ job_status['id'] }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
+% if job_status and job_status.status in ('done', 'internal_error'):
+    <a href="/job/{{ job_status.id }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
 % end
 </div>
 

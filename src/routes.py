@@ -58,10 +58,10 @@ def job_shield(job_name):
 
     if job_status is None:
         status = "never built"
-    elif job_status["exit_code"] is None:
+    elif job_status.exit_code is None:
         status = "building"
         color = "blue"
-    elif job_status["exit_code"] == 0:
+    elif job_status.exit_code == 0:
         status = "passed"
         color = "brightgreen"
     else:
@@ -79,7 +79,7 @@ def jobrun_status(job_id):
     build_queue = request.deps['build_queue']
 
     job_status = build_queue.get_job_status(job_id)
-    job_name = job_status['jobdef_name']
+    job_name = job_status.jobdef_name
     jobdef = jobdef_manager.get_jobdef(job_name)
 
     return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
@@ -94,10 +94,10 @@ def jobrun_rerun(job_id):
     jobdef_manager = request.deps['jobdef_manager']
 
     job_status = build_queue.get_job_status(job_id)
-    jobdef_name = job_status['jobdef_name']
+    jobdef_name = job_status.jobdef_name
     jobdef = jobdef_manager.get_jobdef(jobdef_name)
-    job = jobdef.make_job(job_status['body'], job_status['env'],
-                          prev_id=job_status['id'])
+    job = jobdef.make_job(job_status.body, job_status.env,
+                          prev_id=job_status.id)
 
     new_job_id = build_queue.put(job)
     redirect("/job/{}/status".format(new_job_id))
@@ -127,7 +127,7 @@ def jobrun_stream_output(job_id):
     else:
         # Job isn't running
         job_status = build_queue.get_job_status(job_id)
-        yield job_status['output']
+        yield job_status.output
 
 
 @route('/<:re:.*>', method=['GET', 'POST'])

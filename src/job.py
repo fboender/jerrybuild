@@ -19,6 +19,8 @@ JOB_STATUSSES = [
 ]
 
 class Job:
+    # NOTE: If you change the function definition, you also have to change
+    # `to_dict` and `from_dict`!
     def __init__(self, jobdef_name, cmd, body, env, mail_to, work_dir=None,
                  prev_id=None):
         self.jobdef_name = jobdef_name
@@ -110,3 +112,20 @@ class Job:
 
     def __repr__(self):
         return "{}(id = {})".format(self.jobdef_name, self.id)
+
+
+def from_dict(d):
+    job = Job(d['jobdef_name'],
+              d['cmd'],
+              d['body'],
+              d['env'],
+              d['mail_to'],
+              d['work_dir'])
+    job.status = d['status']
+    job.exit_code = d['exit_code']
+    job.output = d['output']
+    job.time_start = d['time_start']
+    job.time_end = d['time_end']
+    job.prev_id = d['prev_id']
+    job.id = d['id']
+    return job
