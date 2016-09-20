@@ -89,14 +89,17 @@ def job_changed_handler_generate(smtp_server, server_url):
             subject = "Build job '{}' (id={}..) recovered".format(cur_job.jobdef_name.encode('utf8'),
                                                                   cur_job.id[:8],
                                                                   cur_job.exit_code)
-            job_url = server_url + '/job/status/' + cur_job.id
-            msg = "Host = {}\n" \
-                  "Exit code = {}.\n\n" \
-                  "View the full job: {}.\n\n" \
-                  "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(),
-                                                    cur_job.exit_code,
-                                                    job_url,
-                                                    cur_job.output.encode('utf8'))
+        else:
+            return
+
+        job_url = server_url + '/job/status/' + cur_job.id
+        msg = "Host = {}\n" \
+              "Exit code = {}.\n\n" \
+              "View the full job: {}.\n\n" \
+              "OUTPUT\n======\n\n{}\n\n".format(socket.getfqdn(),
+                                                cur_job.exit_code,
+                                                job_url,
+                                                cur_job.output.encode('utf8'))
         tools.mail(cur_job.mail_to, subject, msg, smtp_server=smtp_server)
         logging.info("{}: Emails sent".format(cur_job))
     return job_changed_handler
