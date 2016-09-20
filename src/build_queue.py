@@ -93,7 +93,8 @@ class BuildQueue(threading.Thread):
 
             self.write_job_status(job, running=False, latest=True)
 
-            if job.exit_code != prev_job.exit_code:
+            if (prev_job is not None and job.exit_code != prev_job.exit_code) or \
+               (prev_job is None):
                 # Job result has changed since last time. Call the `job_changed_handler`.
                 if self.job_changed_handler is not None:
                     logging.debug("{}: status changed. Calling the 'job changed' handler".format(job.id[:8]))

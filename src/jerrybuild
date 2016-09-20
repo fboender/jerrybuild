@@ -79,12 +79,14 @@ def job_changed_handler_generate(smtp_server, server_url):
         Send email if a job fails the first time or when it recovers (builds
         succesfully again).
         """
-        if cur_job.exit_code != 0 and cur_job.exit_code != prev_job.exit_code:
+        if cur_job.exit_code != 0 and \
+           (prev_job is None or cur_job.exit_code != prev_job.exit_code):
             logging.info("{}: failed. Sending emails to {}".format(cur_job, ', '.join(cur_job.mail_to)))
             subject = "Build job '{}' (id={}..) failed with exit code {}".format(cur_job.jobdef_name.encode('utf8'),
                                                                                  cur_job.id[:8],
                                                                                  cur_job.exit_code)
-        elif cur_job.exit_code == 0 and cur_job.exit_code != prev_job.exit_code:
+        elif cur_job.exit_code == 0 and \
+             (prev_job is not None and cur_job.exit_code != prev_job.exit_code):
             logging.info("{}: recovered. Sending emails to {}".format(cur_job, ', '.join(cur_job.mail_to)))
             subject = "Build job '{}' (id={}..) recovered".format(cur_job.jobdef_name.encode('utf8'),
                                                                   cur_job.id[:8],
