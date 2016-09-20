@@ -25,8 +25,8 @@ Features:
   create build scripts.
 * Pass custom environment variables to the scripts based on globally
   or job-specificly configured environment settings.
-* Send email on job build failures
-* Web interface front-end
+* Send email on job build failures and recovery.
+* Web interface front-end.
 * Shield support (http://shields.io/)
 
 Since Jerrybuild is supposed to be lightweight, it doesn't implement some
