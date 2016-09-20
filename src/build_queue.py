@@ -96,10 +96,10 @@ class BuildQueue(threading.Thread):
             if job.exit_code != prev_job.exit_code:
                 # Job result has changed since last time. Call the `job_changed_handler`.
                 if self.job_changed_handler is not None:
-                    logging.debug("{}: failed! Calling the 'job changed' handler".format(job.id[:8]))
+                    logging.debug("{}: status changed. Calling the 'job changed' handler".format(job.id[:8]))
                     self.job_changed_handler(job, prev_job)
                 else:
-                    logging.debug("{}: failed, but no 'job changed' handler defined.".format(job.id[:8]))
+                    logging.debug("{}: status changed, but no 'job changed' handler defined.".format(job.id[:8]))
 
         del self.running_jobs[job.id]
 
