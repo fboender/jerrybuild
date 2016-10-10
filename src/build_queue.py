@@ -68,7 +68,7 @@ class BuildQueue(threading.Thread):
             job.set_prev_id(prev_job.id)
 
         job.set_status('running')
-        self.write_job_status(job, running=True)
+        self.write_job_status(job)
         logging.info("{}: starting".format(job))
 
         for k, v in job.env.items():
@@ -91,7 +91,7 @@ class BuildQueue(threading.Thread):
             else:
                 logging.warn("{}: result: failed. Exit code = {}".format(job, job.exit_code))
 
-            self.write_job_status(job, running=False, latest=True)
+            self.write_job_status(job, latest=True)
 
             if (prev_job is not None and job.exit_code != prev_job.exit_code) or \
                (prev_job is None):
@@ -104,7 +104,7 @@ class BuildQueue(threading.Thread):
 
         del self.running_jobs[job.id]
 
-    def write_job_status(self, job, running=False, latest=False, aborted=False):
+    def write_job_status(self, job, latest=False, aborted=False):
         """
         Write the current job status as set in this object to job status dir
         and symlink them if needed.
@@ -118,7 +118,6 @@ class BuildQueue(threading.Thread):
         mkdir_p(jobdef_dir)  # If it doesn't exist yet
         job_status_path = os.path.join(self.all_dir, job.id)
         job_status_link = os.path.join(jobdef_dir, job.id)
-        job_running_link = os.path.join(jobdef_dir, "running")
         job_latest_link = os.path.join(jobdef_dir, "latest")
 
         # Write the job status from the _all dir to the state/_all/<uuid> file
@@ -135,15 +134,6 @@ class BuildQueue(threading.Thread):
             logging.info("Removing status link")
             if os.path.islink(job_status_link):
                 os.unlink(job_status_link)
-
-        # Link or remove the state/<job_name>/running to the job file in _all
-        if running:
-            if os.path.islink(job_running_link):
-                os.unlink(job_running_link)
-            os.symlink(os.path.join('..', '_all', job.id), job_running_link)
-        else:
-            if os.path.islink(job_running_link):
-                os.unlink(job_running_link)
 
         # Link the state/<job_name>/latest to the job file in _all
         if not aborted and latest:
@@ -178,7 +168,7 @@ class BuildQueue(threading.Thread):
         all_status = []
         try:
             for job_id in listdir_sorted(jobdef_dir, reverse=True):
-                if job_id != "latest":
+                if job_id not in ("latest"):
                     all_status.append(self.get_job_status(job_id))
         except OSError as err:
             # Surpress "not found" since the job may have never run.
