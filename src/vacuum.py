@@ -16,6 +16,18 @@ class Vacuum(threading.Thread):
         self.build_queue = build_queue
         self.vacuum_interval = vacuum_interval
 
+    def verify_job_status(self):
+        """
+        Go through all the job statusses and handle any invalid ones. Jobs can
+        become invalid if, for example, Jerrybuild is killed.
+        """
+        for jobdef_name, jobdef in self.jobdefs.items():
+            job_statusses = self.build_queue.get_all_status(jobdef_name)
+            for job in job_statusses:
+                if job.status in ['queued', 'running']:
+                    job.status = 'aborted'
+                    self.build_queue.write_job_status(job, aborted=True)
+
     def run(self):
         logging.info('Vacuum running')
         try:

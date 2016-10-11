@@ -146,8 +146,9 @@ if __name__ == "__main__":
     # Initialize the Job Definition Manager
     jobdef_manager = JobDefManager(sys.argv[1])
 
-    # Start the vacuumer
+    # The vacuumer will remove expired jobs.
     vacuum = vacuum.Vacuum(jobdef_manager.get_jobdefs(), build_queue)
+    vacuum.verify_job_status()  # Handle invalid jobs
     vacuum.start()
 
     # Setup a SIGHUP signal handler that reloads configuration
