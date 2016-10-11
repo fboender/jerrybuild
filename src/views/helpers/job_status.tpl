@@ -3,9 +3,13 @@
     <span class="status-button gray"><i class="fa fa-question-circle" aria-hidden="true"></i> Never built</span>
 % elif job_status.exit_code is None:
     % if job_status.id is None:
-        <span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Building<span class="pulse">...</span></span>
+        <span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> ??????<span class="pulse">...</span></span>
     % else:
-        <a href="/job/{{ job_status.id }}/status"><span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Building<span class="pulse">...</span></span></a>
+        % if job_status.status == 'queued':
+            <a href="/job/{{ job_status.id }}/status"><span class="status-button light-blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Queued<span class="pulse">...</span></span></a>
+        % else:
+            <a href="/job/{{ job_status.id }}/status"><span class="status-button blue"><i class="fa fa-clock-o" aria-hidden="true"></i> Building<span class="pulse">...</span></span></a>
+        % end
     % end
 % elif job_status.exit_code == 0:
     % if job_status.id is None:
