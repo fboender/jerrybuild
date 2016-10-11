@@ -154,7 +154,7 @@ if __name__ == "__main__":
     # Setup a SIGHUP signal handler that reloads configuration
     signal.signal(signal.SIGHUP, sig_hup_handler_generate(jobdef_manager))
 
-    # Load the providers
+    # Load the provider plugins
     providers = load_providers([tools.bin_rel_path('providers')])
 
     # Set up dependency injections for the Bottle web routes.
