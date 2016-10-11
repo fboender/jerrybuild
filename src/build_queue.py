@@ -38,6 +38,12 @@ class BuildQueue(threading.Thread):
         """
         Put a job in the queue for building.
         """
+        # Fetch the previously built job and set it on the job. This is used
+        # for linking and comparing to the previous job.
+        prev_job = self.get_latest_status(job.jobdef_name)
+        if prev_job:
+            job.set_prev_id(prev_job.id)
+
         job.set_status('queued')
         self.write_job_status(job)
         self.queue.put(job)
@@ -60,12 +66,6 @@ class BuildQueue(threading.Thread):
 
     def build(self, job):
         self.running_jobs[job.id] = job
-
-        # Fetch the previously built job and set it on the job. This is used
-        # for linking and comparing to the previous job.
-        prev_job = self.get_latest_status(job.jobdef_name)
-        if prev_job:
-            job.set_prev_id(prev_job.id)
 
         job.set_status('running')
         self.write_job_status(job)
@@ -93,6 +93,7 @@ class BuildQueue(threading.Thread):
 
             self.write_job_status(job)
 
+            prev_job = self.get_job_status(job.prev_id)
             if (prev_job is not None and job.exit_code != prev_job.exit_code) or \
                (prev_job is None):
                 # Job result has changed since last time. Call the `job_changed_handler`.
