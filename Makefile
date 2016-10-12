@@ -90,7 +90,7 @@ release_deb: release_clean doc
 	chmod 650 rel_deb/etc/${PROG}/jobs.d
 	find rel_deb/ -type f -print0 | xargs -0 chmod 644 
 	find rel_deb/ -type d -print0 | xargs -0 chmod 755
-	chmod 755 rel_deb/DEBIAN/postinst rel_deb/etc/init.d/${PROG}
+	chmod 755 rel_deb/DEBIAN/postinst rel_deb/etc/init.d/${PROG} rel_deb/usr/lib/jerrybuild/jerrybuild
 
 	# Bump version numbers
 	find rel_deb/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g" 
