@@ -16,7 +16,6 @@ import job
 class BuildQueue(threading.Thread):
     daemon = True
 
-    # FIXME: called 'status_dir' here, but 'state_dir' in main.
     def __init__(self, status_dir, job_changed_handler=None):
         threading.Thread.__init__(self)
         self.status_dir = status_dir

@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     # Initialize the job changed handler, which will send an email when a job
     # failed. It's triggered by the job queue.
-    state_dir = config.get('server', 'state_dir')
+    status_dir = config.get('server', 'status_dir')
     smtp_server = '127.0.0.1'
     if config.has_option('server', 'smtp_server'):
         smtp_server = config.get('server', 'smtp_server')
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     job_changed_handler = job_changed_handler_generate(smtp_server, server_url)
 
     # Initialize the build queue
-    build_queue = bq.BuildQueue(state_dir, job_changed_handler)
+    build_queue = bq.BuildQueue(status_dir, job_changed_handler)
     build_queue.start()
 
     # Initialize the Job Definition Manager
