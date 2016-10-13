@@ -121,4 +121,11 @@ Start Jerrybuild:
 
 Configure the webhook in Github. FIXME
 
+## Tools
 
+Jerrybuild itself doesn't know how to check out your source code, but it does
+provide tools to make it easier to do so. The tools come in the form of
+shellscripts. You can find them in the [src/tools](src/tools) directory.
+
+The directory containing the tools is automatically included in the PATH when
+your build script is being run, so you can use it right from your buildscript.
