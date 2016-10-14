@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    remove)
+        userdel -r jerrybuild
+        update-rc.d -f jerrybuild remove
+        ;;
+    purge)
+        rm -rf /var/lib/jerrybuild
+        ;;
+esac
+
+exit 0
