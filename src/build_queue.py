@@ -170,4 +170,8 @@ class BuildQueue(threading.Thread):
 
     def get_latest_status(self, jobdef_name):
         all_status = self.get_all_status(jobdef_name)
-        return(all_status[0])
+        try:
+            latest_status = all_status[0]
+            return latest_status
+        except IndexError:
+            return None
