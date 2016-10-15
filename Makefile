@@ -58,8 +58,8 @@ release_deb: release_clean doc
 	umask 022
 	mkdir -p rel_deb/usr/bin
 	mkdir -p rel_deb/usr/lib/${PROG}
-	mkdir -p rel_deb/usr/lib/${PROG}/mako
-	mkdir -p rel_deb/usr/lib/${PROG}/yaml
+	#mkdir -p rel_deb/usr/lib/${PROG}/mako
+	#mkdir -p rel_deb/usr/lib/${PROG}/yaml
 	mkdir -p rel_deb/usr/share/doc/$(PROG)
 	mkdir -p rel_deb/usr/share/man/man1
 	mkdir -p rel_deb/var/lib/${PROG}
