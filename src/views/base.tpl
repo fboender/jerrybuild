@@ -25,5 +25,8 @@
         <a href="/"><h1><span class="valign-helper"></span><img src="static/img/logo.png" alt="Jerrybuild" title="Jerrybuild" /></h1></a>
     </header>
     {{!base}}
+    <footer>
+        Jerrybuild v%%VERSION%%. &copy; 2016, Ferry Boender. Released under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a>. See <a href="https://github.com/fboender/jerrybuild">the github page</a> for more information.
+    </footer>
 </body>
 </html>
