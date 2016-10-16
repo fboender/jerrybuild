@@ -22,7 +22,7 @@
 </head>
 <body>
     <header>
-        <a href="/"><h1>Jerrybuild</h1></a>
+        <a href="/"><h1><span class="valign-helper"></span><img src="static/img/logo.png" alt="Jerrybuild" title="Jerrybuild" /></h1></a>
     </header>
     {{!base}}
 </body>

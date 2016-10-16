@@ -37,6 +37,26 @@ header h1 {
     color: #FFFFFF;
     padding-left: 16px;
     margin-bottom: 32px;
+    height: 55px;
+}
+header .valign-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+header img {
+    vertical-align: middle;
+    margin-right: 20px;
+}
+footer {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding: 6px 0px 6px 10px;
+    background-color: #C0C0C0;
+}
+footer a {
+    font-weight: bold;
 }
 main {
     padding-left: 16px;
