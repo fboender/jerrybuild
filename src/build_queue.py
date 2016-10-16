@@ -143,6 +143,9 @@ class BuildQueue(threading.Thread):
         os.unlink(os.path.join(jobdef_dir, '..', '_all', job_id))
 
     def get_job_status(self, job_id):
+        if job_id is None:
+            return None
+
         job_status_path = os.path.join(self.all_dir, job_id)
         try:
             with open(job_status_path, 'r') as f:
