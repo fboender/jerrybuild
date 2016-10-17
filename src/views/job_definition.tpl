@@ -11,14 +11,14 @@
 <div class="job-spec">
 <p class="desc">{{ jobdef.desc }}</p>
 
-<ul id="job-spec">
-    <li><b>Name</b>: {{ jobdef.name }}</li>
-    <li><b>URL</b>: {{ jobdef.url}}</li>
-    <li><b>Provider</b>: {{ jobdef.provider }}</li>
-    <li><b>Working dir</b>: {{ jobdef.work_dir }}</li>
-    <li><b>Command</b>: {{ jobdef.cmd }}</li>
-    <li><b>Failure mail to</b>: {{ ", ".join(jobdef.mail_to) }}</li>
-</ul>
+<table id="job-spec">
+    <tr><th><b>Name:</b></th><td> {{ jobdef.name }}</td></tr>
+    <tr><th><b>URL:</b></th><td> {{ jobdef.url}}</td></tr>
+    <tr><th><b>Provider:</b></th><td> {{ jobdef.provider }}</td></tr>
+    <tr><th><b>Working dir:</b></th><td> {{ jobdef.work_dir }}</td></tr>
+    <tr><th><b>Command:</b></th><td> {{ jobdef.cmd }}</td></tr>
+    <tr><th><b>Failure mail to:</b></th><td> {{ ", ".join(jobdef.mail_to) }}</td></tr>
+</table>
 </div>
 
 
