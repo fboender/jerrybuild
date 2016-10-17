@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# git_wrapper.sh
+# git-wrapper.sh
 #
 # A wrapper for Git that sets the SSH (deploy) key.
 #
