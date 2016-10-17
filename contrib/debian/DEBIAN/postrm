@@ -5,6 +5,7 @@ set -e
 case "$1" in
     remove)
         userdel -r jerrybuild
+        invoke-rc.d jerrybuild stop
         update-rc.d -f jerrybuild remove
         ;;
     purge)
