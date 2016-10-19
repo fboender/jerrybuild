@@ -120,12 +120,13 @@ release_rpm: release_clean release_deb
 
 install: clean
 	install -m 0755 -d \
-		$(DESTDIR)/etc/jobs.d \
+		$(DESTDIR)/etc/jerrybuild/jobs.d \
 		$(DESTDIR)/lib/$(PROG)/tools \
 		$(DESTDIR)/lib/$(PROG)/providers \
 		$(DESTDIR)/lib/$(PROG)/static/font-awesome/css \
 		$(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts \
 		$(DESTDIR)/lib/$(PROG)/static/css \
+		$(DESTDIR)/lib/$(PROG)/static/img \
 		$(DESTDIR)/lib/$(PROG)/views/helpers \
 		$(DESTDIR)/share/doc \
 		$(DESTDIR)/bin
@@ -134,15 +135,18 @@ install: clean
 	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
 	install -m 0644 src/static/font-awesome/css/*.css $(DESTDIR)/lib/$(PROG)/static/font-awesome/css
 	install -m 0644 src/static/font-awesome/fonts/* $(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts 
+	install -m 0644 src/static/img/* $(DESTDIR)/lib/$(PROG)/static/img
 	install -m 0644 src/views/*.tpl $(DESTDIR)/lib/$(PROG)/views
 	install -m 0644 src/views/helpers/*.tpl $(DESTDIR)/lib/$(PROG)/views/helpers
 	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
 	install -m 0644 src/static/css/*.css $(DESTDIR)/lib/$(PROG)/static/css
 	install -m 0644 CHANGELOG.txt README.md $(DESTDIR)/share/doc/
-	install -m 0644 jerrybuild.cfg.example $(DESTDIR)/etc/jerrybuild.cfg.dist
+	install -m 0644 contrib/jerrybuild.cfg $(DESTDIR)/etc/jerrybuild/jerrybuild.cfg
+	install -m 0644 contrib/jobs.d/*.cfg $(DESTDIR)/etc/jerrybuild/jobs.d
 	ln -nsf $(DESTDIR)/lib/$(PROG)/jerrybuild $(DESTDIR)/bin/jerrybuild
 
 uninstall:
 	rm -rf /usr/local/lib/$(PROG)
 	rm -f /usr/local/man/man/ansible-cmdb.man.1.gz
 	rm -rf /usr/local/bin/ansible-cmdb
+	echo "Not removing /etc/jerrybuild/"
