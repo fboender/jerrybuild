@@ -23,31 +23,7 @@ doc:
 release_clean: clean
 	#@if [ "$(shell git status --porcelain)" != "" ]; then echo "Repo not clean. Not building"; exit 1; fi
 
-release: release_src release_deb release_rpm
-
-release_src: release_clean doc
-	@echo "Making release for version $(REL_VERSION)"
-
-	@if [ -z "$(REL_VERSION)" ]; then echo "REL_VERSION required"; exit 1; fi
-
-	# Cleanup
-	rm -rf $(PROG)-$(REL_VERSION)
-
-	# Prepare source
-	umask 022
-	mkdir $(PROG)-$(REL_VERSION)
-	cp -ar src/* $(PROG)-$(REL_VERSION)/
-	cp LICENSE $(PROG)-$(REL_VERSION)/
-	cp README.md $(PROG)-$(REL_VERSION)/
-	cp CHANGELOG.txt $(PROG)-$(REL_VERSION)/
-	cp contrib/jerrybuild.man.1 $(PROG)-$(REL_VERSION)/
-
-	# Bump version numbers
-	find $(PROG)-$(REL_VERSION)/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g" 
-
-	# Create archives
-	zip -q -r $(PROG)-$(REL_VERSION).zip $(PROG)-$(REL_VERSION)
-	tar -czf $(PROG)-$(REL_VERSION).tar.gz  $(PROG)-$(REL_VERSION)
+release: release_deb release_rpm
 
 release_deb: release_clean doc
 	@if [ -z "$(REL_VERSION)" ]; then echo "REL_VERSION required"; exit 1; fi
@@ -119,8 +95,10 @@ release_rpm: release_clean release_deb
 
 
 install: clean
+	adduser --system --disabled-password --home /var/lib/jerrybuild \
+	        --shell /bin/sh --no-create-home --quiet --force-badname \
+	        --group jerrybuild
 	install -m 0755 -d \
-		$(DESTDIR)/etc/jerrybuild/jobs.d \
 		$(DESTDIR)/lib/$(PROG)/tools \
 		$(DESTDIR)/lib/$(PROG)/providers \
 		$(DESTDIR)/lib/$(PROG)/static/font-awesome/css \
@@ -130,6 +108,8 @@ install: clean
 		$(DESTDIR)/lib/$(PROG)/views/helpers \
 		$(DESTDIR)/share/doc \
 		$(DESTDIR)/bin
+	install -m 0750 -o jerrybuild -g jerrybuild -d \
+		$(DESTDIR)/etc/jerrybuild/jobs.d
 	install -m 0755 src/*.py src/jerrybuild $(DESTDIR)/lib/$(PROG)/
 	install -m 0755 src/tools/* $(DESTDIR)/lib/$(PROG)/tools
 	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
@@ -144,6 +124,13 @@ install: clean
 	install -m 0644 contrib/jerrybuild.cfg $(DESTDIR)/etc/jerrybuild/jerrybuild.cfg
 	install -m 0644 contrib/jobs.d/*.cfg $(DESTDIR)/etc/jerrybuild/jobs.d
 	ln -nsf $(DESTDIR)/lib/$(PROG)/jerrybuild $(DESTDIR)/bin/jerrybuild
+	@echo "\nInstallation done\n"
+	@echo "You can edit the config file at /etc/jerrybuild/jerrybuild.cfg. New jobs can be"
+	@echo "created in /etc/jerrybuild/jobs.d. Take a look at the EXAMPLE.cfg file in that"
+	@echo "dir for an example.\n"
+	@echo "There's a Sysv5 init script at contrib/jerrybuild.init.sysv5 which you can"
+	@echo "install manually.\n"
+	@echo "Type 'make uninstall' to remove jerrybuild from your system."
 
 uninstall:
 	rm -rf /usr/local/lib/$(PROG)
