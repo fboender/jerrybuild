@@ -56,7 +56,7 @@ release_deb: release_clean doc
 	cp -r contrib/jobs.d rel_deb/etc/${PROG}/
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
-	cp contrib/debian/jerrybuild.init.sysv5 rel_deb/etc/init.d/${PROG}
+	cp contrib/jerrybuild.init.sysv5 rel_deb/etc/init.d/${PROG}
 	gzip -9 rel_deb/usr/share/doc/$(PROG)/changelog
 	cp -r contrib/jerrybuild.man.1 rel_deb/usr/share/man/man1/${PROG}.1
 	gzip -9 rel_deb/usr/share/man/man1/jerrybuild.1
