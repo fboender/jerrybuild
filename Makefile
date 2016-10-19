@@ -78,8 +78,8 @@ release_deb: release_clean doc
 	cp -r src/* rel_deb/usr/lib/${PROG}/
 	ln -s ../lib/$(PROG)/jerrybuild rel_deb/usr/bin/jerrybuild
 	cp -r contrib/debian/DEBIAN rel_deb/
-	cp contrib/debian/jerrybuild.cfg rel_deb/etc/${PROG}/${PROG}.cfg
-	cp -r contrib/debian/jobs.d rel_deb/etc/${PROG}/
+	cp contrib/jerrybuild.cfg rel_deb/etc/${PROG}/${PROG}.cfg
+	cp -r contrib/jobs.d rel_deb/etc/${PROG}/
 	cp contrib/debian/copyright rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/changelog rel_deb/usr/share/doc/$(PROG)/
 	cp contrib/debian/jerrybuild.init.sysv5 rel_deb/etc/init.d/${PROG}
