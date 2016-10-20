@@ -65,11 +65,11 @@ release_deb: release_clean doc
 	chmod -R g-w rel_deb/
 	chmod 700 rel_deb/var/lib/${PROG}/deploy_keys
 	chmod 650 rel_deb/etc/${PROG}/jobs.d
-	find rel_deb/ -type f \! -executable -print0 | xargs -0 chmod 644 
+	find rel_deb/ -type f \! -executable -print0 | xargs -0 chmod 644
 	find rel_deb/ -type d -print0 | xargs -0 chmod 755
 
 	# Bump version numbers
-	find rel_deb/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g" 
+	find rel_deb/ -type f -print0 | xargs -0 sed -i "s/%%MASTER%%/$(REL_VERSION)/g"
 
 	# Create debian pacakge
 	fakeroot dpkg-deb --build rel_deb > /dev/null
@@ -114,7 +114,7 @@ install: clean
 	install -m 0755 src/tools/* $(DESTDIR)/lib/$(PROG)/tools
 	install -m 0644 src/providers/*.py $(DESTDIR)/lib/$(PROG)/providers
 	install -m 0644 src/static/font-awesome/css/*.css $(DESTDIR)/lib/$(PROG)/static/font-awesome/css
-	install -m 0644 src/static/font-awesome/fonts/* $(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts 
+	install -m 0644 src/static/font-awesome/fonts/* $(DESTDIR)/lib/$(PROG)/static/font-awesome/fonts
 	install -m 0644 src/static/img/* $(DESTDIR)/lib/$(PROG)/static/img
 	install -m 0644 src/views/*.tpl $(DESTDIR)/lib/$(PROG)/views
 	install -m 0644 src/views/helpers/*.tpl $(DESTDIR)/lib/$(PROG)/views/helpers
