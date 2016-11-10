@@ -51,49 +51,71 @@ features found in other CI servers:
 
 ## Installation
 
-Get the package for your distribution from the
-[Releases page](https://github.com/fboender/jerrybuild/releases) (Not required
-for MacOS X install)
+### Run from repo
+
+If you just want to evaluate Jerrybuild, it's possible to run Jerrybuild
+directly from the git reposiroty. When you're satisfied that you really wish
+to use Jerrybuild, you can install it on your system.
+
+### Install system-wide
+
+Get the package for your distribution from the [Releases
+page](https://github.com/fboender/jerrybuild/releases).
 
 For Debian / Ubuntu systems:
 
     sudo dpkg -i jerrybuild-*.deb
 
-To install from the Git repo:
+To install from source / the Git repo:
 
     git clone https://github.com/fboender/jerrybuild.git
     cd jerrybuild
-    make install
+    sudo make install
+
+The packages and `make install` install Jerrybuild system-wide and:
+
+* Creates a `jerrybuild` user which will own the configuration files and
+  working space.
+* Put the global configuration in `/etc/jerrybuild/jerrybuild.cfg`.
+* Put the job configuration in `/etc/jerrybuild/jobs.d`.
+* Creates the working space for your repositories in
+  `/var/lib/jerrybuild/workspace`/.
 
 ## Getting started
-
-This section assumes you've installed the Ubuntu package. If not, please
-modify the paths accordingly. Note that it's possible to run Jerrybuild
-directly from the Git repository.
 
 There's also a more in-depth full [Tutorial]() available.
 
 For this example, we'll be building a project named `my-project`. It uses Git
 and is hosted on Github.
 
-First, **review the configuration** in `/etc/jerrybuild/jerrybuild.cfg'.
-
-Next, create a new job: `/etc/jerrybuild/jobs.d/my-project`:
+Create a new job: `/etc/jerrybuild/jobs.d/my-project`:
 
     [job:my-project]
     desc = Build MyProject
     url = /hook/my-project
-    provider = github
-    secret = thooRohmooroot3ha1ohf7menozei9ni
+    provider = generic
     cmd = /var/lib/jerrybuild/workspace/my-project/build.sh
 
-Git clone your project:
+This defines a new job that will listen on the URL
+`http://localhost:5281/hook/my-project`, depending on the settings in the
+global configuration file. The provider is `generic`, which supports basically
+any SCM that can do POST requests. When a POST is made to the hook URL,
+Jerrybuild will execute the
+`/var/lib/jerrybuild/workspace/my-project/build.sh` script. Before doing so,
+it will change to the `work_dir` configured in the global configuration file.
+
+Next, git clone your project into the correct directory:
 
     $ cd /var/lib/jerrybuild/workspace/
     $ git clone git@github.com:yourusername/my-project.git
 
-The `build.sh` in your project would look something like this, assuming we
-want to build `master` branch:
+You may need to do this as the `jerrybuild` user, or otherwise probably want
+to change the ownership of the project to the `jerrybuild` user afterwards:
+
+    $ sudo chown -R jerrybuild:jerrybuild my-project
+
+You're completely free to implement `build.sh` as you see fit. It might look
+something like this though:
 
     $ cd my-project
     $ cat build.sh
