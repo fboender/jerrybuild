@@ -1,15 +1,47 @@
-Jerrybuild User Guide
-=====================
-
-FIXME
-
-## The configuration file
+## Main configuration file
 
 The main configuration file is location in `/etc/jerrybuild/jerrybuild.cfg`.
-The `server` section contains various annotated global directives. The
-defaults should be good enough.
+Here's an unannotated example configuration:
 
-### Defining jobs
+    [server]
+    listen = 127.0.0.1
+    port = 5281
+    server_url = http://build.example.com
+    log_level = INFO
+    mail_to = dev@example.com, manager@example.com
+
+    status_dir = /var/lib/jerrybuild/
+    work_dir = /var/lib/jerrybuild/workspace
+    keep_jobs = 40
+
+    env_SSH_DEPLOY_KEY_DIR = /var/lib/jerrybuild/deploy_keys/
+
+    %include /etc/jerrybuild/jobs.d/*.cfg
+
+Available configuration options:
+
+* **`listen`**: Address to listen on. Instead of changing this to listen on
+  external IPs, you'd be better off putting Jerrybuild behind Apache or NGinx.
+  See the Cookbook on how to easily do that.
+* **`port`**: Port to listen on
+* **`log_level`**: The logging level. Logging level. Possible values: DEBUG,
+  INFO, WARN, ERROR, FATAL
+* **`mail_to`**: Always send mail to recipients on build failure (optional).
+  Multiple addresses should be separated by a comma. You can add additional
+  addresses in each job section.
+* **`status_dir`**: Directory to keep job status files and such in.
+* **`work_dir`**: Default working directory for jobs.
+* **`keep_jobs`**: The number of job results or a timespan after which to
+  delete old job results. This value applies to each job seperately. The last
+  job status will never be deleted. This value can be overridden on a
+  job-by-job basis in the job's configuration section. Examples: `keep_jobs =
+  0` (Keep an infinite number of jobs), `keep_jobs = 10`  (Keep the last 10
+  job results), `keep_jobs = 4d` (Remove job results older than 4 days).
+* **`env_XXXXX`**: You can define global environment variables that will be
+  set for all scripts. For example, env_SSH_DEPLOY_KEY_DIR would result in an
+  environment variable SSH_DEPLOY_KEY_DIR in your scripts.
+
+## Defining jobs
 
 Jobs are defined in either the main configuration file or in separate job
 configurations that go in `/etc/jerrybuild/jobs.d`. For example, the following

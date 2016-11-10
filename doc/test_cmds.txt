@@ -1,3 +1,0 @@
-Build test project
-
-    curl --data "" http://localhost:5281/hook/test
