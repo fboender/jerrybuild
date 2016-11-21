@@ -129,4 +129,20 @@ We can automatically build this each night at 01:00 with a cron job:
 
 ### Link to a job's Shield
 
-TODO: Document this.
+Jerrybuild has support for [Shields](https://www.shields.io/). You can create
+an image that is a link to your project's shield. The following example
+assumes Jerrybuild is running at `example.org` behind an Nginx web server.
+Nginx should be configured to pass requests for shields to the Jerrybuild
+backend serrver:
+
+    # Pass requests for shields through to Jerrybuild for anyone. Caching
+    # is turned off.
+    location ~ /job/.*/shield {
+        proxy_pass http://127.0.0.1:5281;
+        expires off;
+    }
+
+Now you create an image anywhere that points the job's shield:
+
+    <img src="https://example.org/job/foomatic-nightly/shield" alt="build
+    status" />
