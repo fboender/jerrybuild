@@ -2,6 +2,10 @@ The Cookbook contains exxamples on how to achieve certain common scenarios.
 
 ## Serving Jerrybuild over HTTP(s)
 
+Jerrybuild's built-in webserver should not be publicly exposed on the
+Internet. Rather, you should serve requests from Apache or Nginx and configure
+them to proxy requests between the Jerrybuild webserver.
+
 ### Run behind Apache
 
 ### Run behind Nginx
