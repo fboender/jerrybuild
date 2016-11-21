@@ -104,7 +104,10 @@ TODO: Document this.
 
 ## Other
 
-### Run a build on a remote machine]
+### Run a build on a remote machine
+
+Jerrybuild doesn't offer any special support for building on remote machines.
+Rather, you should use common Unix tools such as SSH to accomplish this.
 
 TODO: Document this.
 
