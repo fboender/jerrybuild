@@ -134,8 +134,6 @@ signal to the Jerrybuild process:
     $ kill -HUP 4718
     # In log file: 2016-04-15 16:03:31,645:INFO:Reloading configuration file
 
-FIXME: Implement `reload` in init job.
-
 ## Providers
 
 Providers are like plugins that understand how to parse webhook callbacks from
@@ -202,7 +200,7 @@ the Gogs provider:
 
 # Tools
 
-To easy the creation of build scripts, Jerrybuild provides some tools
+To ease the creation of build scripts, Jerrybuild provides some tools
 out-of-the-box. These are automatically places in the PATH when the command is
 run.
 
