@@ -68,7 +68,7 @@ this, and you can let specific requests through depending on IP:
 
 ## Webhooks
 
-The meat of Jerrybuild is, of course, its support for webhooks. 
+The meat of Jerrybuild is, of course, its support for webhooks.
 
 ### Build when a new commit is pushed
 
@@ -76,7 +76,7 @@ The `git-co-commit.sh` tool provided with Jerrybuild is ideal for checking out
 any commits that are pushed to repositories. The following example will clean
 a local repository clone, fetch all new changes and check out the commit given
 in the `commit` environment variable. This variable is generally set by the
-Providers (Github, etc):
+Providers (Github, etc): FIXME
 
     #!/bin/sh
     
