@@ -204,5 +204,36 @@ To ease the creation of build scripts, Jerrybuild provides some tools
 out-of-the-box. These are automatically places in the PATH when the command is
 run.
 
-* **`git-wrapper.sh`**: A wrapper script for Git that allows you to set the
-  SSH private key.
+## git-wrapper.sh
+
+**`git-wrapper.sh`** is a wrapper for Git that sets the SSH (deploy) key. When
+you point the `GIT_SSH` environment variable to `git-wrapper.sh`, Git will use
+it to perform git commands. The `git-wrapper.sh` script reads the path to your
+SSH key from the `SSH_KEY` variable.
+
+You can set the `SSH_KEY` variable either in your build scripts, globally in
+the Jerrybuild main configuration or in the job definition.
+
+Example usage:
+
+    export SSH_KEY=/path/to/ssh_key.rsa
+    export GIT_SSH=git_wrapper.sh
+    
+    git fetch --all
+    git checkout master
+
+## git-co-commit.sh
+
+**`git-co-commit.sh`** resets a git repository to a good clean state, fetches
+all new changes and checks out the commit given in the `commit` environment
+variable.
+
+The `commit` environment variable is generally automatically set by the
+provider, such as Github.
+
+Example usage:
+
+    export SSH_KEY=/path/to/deploy_key.rsa
+    export GIT_SSH=git_wrapper.sh
+    
+    git-co-commit.sh
