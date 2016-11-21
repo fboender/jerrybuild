@@ -110,7 +110,19 @@ TODO: Document this.
 
 ### Scheduled builds
 
-TODO: Document this.
+You can schedule builds using a cron job. Say we have the following job
+definition:
+
+    [job:foomatic-nightly]
+    desc = Make nightly release builds of Foomatic
+    url = /hook/foomatic-nightly
+    provider = generic
+    cmd = foomatic-nightly.sh
+
+We can automatically build this each night at 01:00 with a cron job:
+
+    # m  h  dom mon dow command
+    00 01 * * * wget -q http://example.com/hook/foomatic-nightly
 
 ### Link to a job's Shield
 
