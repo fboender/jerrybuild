@@ -125,7 +125,7 @@ definition:
 We can automatically build this each night at 01:00 with a cron job:
 
     # m  h  dom mon dow command
-    00 01 * * * wget -q http://example.com/hook/foomatic-nightly
+    00 01 * * * wget -q -O - http://example.com/hook/foomatic-nightly > /dev/null
 
 ### Link to a job's Shield
 
