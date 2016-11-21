@@ -124,16 +124,10 @@ something like this though:
     set -e
 
     export SSH_KEY="/var/lib/jerrybuild/deploy_keys/my-project.rsa"
-    export GIT_SSH=git_wrapper.sh
+    export GIT_SSH=git_wrapper.sh  # Provided by Jerrybuild
 
     cd my-project
-
-    git checkout master
-    git reset --hard
-    git clean -f -d
-    git pull --rebase
-    git checkout $commit
-
+    git-co-commit.sh  # Provided by Jerrybuild
     make test
     make release REL_VERSION=9.99
 
