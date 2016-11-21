@@ -8,6 +8,8 @@ them to proxy requests between the Jerrybuild webserver.
 
 ### Run behind Apache
 
+TODO: Document this.
+
 ### Run behind Nginx
 
 I'll assume you've already gotten SSL certificates and placed them in
@@ -70,17 +72,26 @@ this, and you can let specific requests through depending on IP:
 
 ### Build when a new tag is pushed
 
+TODO: Document this.
+
 ### Build only a specific branch
+
+TODO: Document this.
 
 ### Build a merge request
 
-## Build scripts
+TODO: Document this.
 
 ## Other
 
 ### Run a build on a remote machine]
 
+TODO: Document this.
+
 ### Scheduled builds
+
+TODO: Document this.
 
 ### Link to a job's Shield
 
+TODO: Document this.
