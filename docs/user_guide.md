@@ -60,9 +60,8 @@ job shows how to run the tests for the
 This defines a job called `ansible-cmdb-test`. Each job should have its own
 `[job:XXXXXXXX]` section.
 
-Configuration options explained:
+Required configuration options are:
 
-* **`desc`**: A description of the build job.
 * **`url`**: The URL on which Jerrybuild's web server should listen for
   incoming webhook notifications. This option is required and has to be unique
   per job.
@@ -70,27 +69,28 @@ Configuration options explained:
   notification. Values values are: `github`, `gogs` and `generic`. Providers
   help with the parsing of the webhook request into environment variables that
   can be used by your build scripts. This option is required.
+* **`cmd`**: The shell command to run when the webhook is called. Depending on
+  which provider you're using, several environment variables will be set with
+  information regarding the webhook notification. For example, the Github
+  provider will set the `commit` variable to the hash of the last commit on a
+  `push` event. The command is executed relative to the `work_dir` set in the
+  job's definition or the main configuration. If the script returns with exit
+  code 255, the build is aborted. This is useful when you want to run a
+  pre-check to see if you even want to build at all. Jerrybuild pretends the
+  build never happened. Otherwise, an exit code of 0 indicates success, > 0
+  indicates failure. This option is required.
+
+You can specify as many build jobs as you like. They should always start with
+`job:`.
+
+There are a few optional options you can use when defining a job:
+
+* **`desc`**: A description of the build job.
 * **`secret`**: A setting specific to the Github and Gogs providers.
   The value must match the value specified in the webhook configuration on
   Github or Gogs, so that Jerrybuild can verify that Github or Gogs really
   made the notification. This option is optional depending on the provider
   used.
-* **`cmd`**: The shell command to run when the webhook is called. Depending on
-  which provider you're using, several environment variables will be set with
-  information regarding the webhook notification. For example, the Github
-  provider will set the `commit` variable to the hash of the last commit on a
-  `push` event. The command is executed relative to the local or global
-  (`[server`]) `work_dir` option. If the script returns with exit code 255,
-  the build is aborted. This is useful when you want to run a pre-check to see
-  if you even want to build at all. Jerrybuild pretends the build never
-  happened. Otherwise, an exit code of 0 indicates success, > 0 indicates
-  failure. This option is required.
-
-You can specify as many build jobs as you like. They should always start with
-`job:`.
-
-There are a few other options you can use when defining a job:
-
 * **`work_dir`**: The directory to which to change before running the `cmd`.
   If not given, but one if given in the `[server]` section, that one will be
   used instead. Otherwise, it will default to the directory of the executable
