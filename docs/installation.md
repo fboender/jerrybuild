@@ -21,6 +21,13 @@ You can run Jerrybuild directly from a git clone of the repository:
 This is mostly useful for evaluating Jerrybuild. If you're satisfied that
 Jerrybuild suits your needs, you should do a real install.
 
+# Pip
+
+If Pip (the Python package manager) is available on your system, you can
+install Jerrybuild using Pip:
+
+    pip install jerrybuild
+
 # Debian / Ubuntu
 
 Get the latest .deb package for your distribution from the

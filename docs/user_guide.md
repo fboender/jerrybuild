@@ -212,7 +212,15 @@ it to perform git commands. The `git-wrapper.sh` script reads the path to your
 SSH key from the `SSH_KEY` variable.
 
 You can set the `SSH_KEY` variable either in your build scripts, globally in
-the Jerrybuild main configuration or in the job definition.
+the Jerrybuild main configuration or in the job definition. For example:
+
+    [job:ansible-cmdb-tests]
+    url = /hook/ansible-cmdb-tests
+    provider = generic
+    env_SSH_KEY=/path/to/ssh_key.rsa
+    cmd = /var/lib/jerrybuild/workspace/ansible-cmdb/ansible-cmdb-tests.sh
+
+Or you can just specify it in your build script.
 
 Example usage:
 

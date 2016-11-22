@@ -37,9 +37,7 @@ features found in other CI servers:
 
 * Jerrybuild does not control your version control system for you. Updating
   clones and checking out the correct branches should be handled in your build
-  script. The Github, Gogs and other providers will pass environment values to
-  your script containing information on which repo/commit to build. #FIXME:
-  Examples.
+  script. Jerrybuild provides shell script helper tools for this.
 * The job build queue can currently only build one job at a time.
 * Jerrybuild cannot be configured via the web interface, only via the configuration file. 
 * Jerrybuild doesn't try to do things other programs are better at. As such:
@@ -47,5 +45,6 @@ features found in other CI servers:
     - The web interface has no authentication. If you require authentication,
       you should put Apache or Nginx in front of it. See the Cookbook for a
       How-to.
-    - Doesn't support SSL. Put Apache or Nginx in front of it. See the Cookbook for a How-to.
+    - Doesn't support SSL. Put Apache or Nginx in front of it. See the
+      Cookbook for a How-to.
 

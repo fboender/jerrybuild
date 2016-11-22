@@ -1,4 +1,4 @@
-This section assumes you've installed the Ubuntu or Redhat package, or that you installed Jerrybuild via `make install`. As such, we'll assume the following paths:
+This section assumes you've installed Jerrybuild system-wide on your system.
 
 * The main configuration file is in `/etc/jerrybild/jerrybuild.cfg`.
 * The state directory resides in `/var/lib/jerrybuild` and the workspace is
@@ -41,6 +41,10 @@ recommanded** and we're only doing this for the tutorial's purpose. In real
 life, you'll want to run Jerrybuild *behind Apache or Nginx*. See the Cookbook
 for info on how to do that.
 
+More information on the main configuration file can be found in the [User
+Guide](../user_guide)
+
+
 # Creating a new job
 
 Jobs can be defined in the main configuration file, or you can add them as
@@ -67,7 +71,7 @@ generic webhooks, Github and Gogs are available. Some providers have different
 requirements. For example, the Github provider requires a `secret` key to be
 present in your job definition. The secret is also added to the Github
 repository. Github then digitally signs the payload of the webhook callback
-using MHAC. The `github` provider in Jerrybuild automatically verifies this
+using HMAC. The `github` provider in Jerrybuild automatically verifies this
 signature.
 
 For more documentation and available options, check out the included
@@ -103,6 +107,8 @@ want to build `master` branch:
 
     cd my-project
 
+    # The git-co-commit.sh  tool provided with Jerrybuild does the same as the
+    # these commands:
     git checkout master
     git reset --hard
     git clean -f -d
