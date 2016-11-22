@@ -150,12 +150,25 @@ def generic_handler():
         abort(404, "Not found")
 
     logging.info("Received event for job '{}'".format(jobdef.name))
-    provider = providers[jobdef.provider]
 
-    # Put the headers of the request in the environment.
+    # Log debug info about the received request
+    logging.debug("request environ: {}".format(request.environ))
+    logging.debug("request path: {}".format(request.path))
+    logging.debug("request method: {}".format(request.method))
+    for k, v in request.headers.items():
+        logging.debug("request header: {}={}".format(k, v))
+    for k, v in request.query.items():
+        logging.debug("request query: {}={}".format(k, v))
+    logging.debug("request body: {}".format(request.body.read()))
+    logging.debug("request auth: {}".format(request.auth))
+
+    # Put the headers of the request in the environment. Call the provider for
+    # this job definition to handle additional tasks and update the environment
+    # with its result.
     env = {}
     for k, v in request.headers.items():
         env["HEADER_{}".format(k.upper())] = v
+    provider = providers[jobdef.provider]
     request_env = provider.normalize(request, jobdef)
     if request_env is False:
         # Normalization method aborted the request.
