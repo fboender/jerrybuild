@@ -1,0 +1,33 @@
+Request dump of 'generic' provider for the following URL:
+
+    wget -O - --http-user=jantje --http-passwd=geh31m --post-data='{"key": "val"}' "http://localhost:5281/hook/test?key1=val1&key2=val2" > /dev/null
+
+Request:
+
+    request path: /hook/test
+    request method: POST
+    request header: Host=localhost:5281
+    request header: Accept=*/*
+    request header: User-Agent=Wget/1.15 (linux-gnu)
+    request header: Connection=Keep-Alive
+    request header: Content-Length=14
+    request header: Content-Type=application/x-www-form-urlencoded
+    request query: key2=val2
+    request query: key1=val1
+    request body: {"key": "val"}
+    request auth: None
+
+Environment sent to script:
+
+    127.0.0.1 - - [22/Nov/2016 20:42:19] "POST /hook/test?key1=val1&key2=val2 HTTP/1.1" 200 42
+
+    env: HEADER_CONTENT-TYPE=application/x-www-form-urlencoded
+    env: GIT_SSH=git-wrapper.sh
+    env: HEADER_ACCEPT=*/*
+    env: SSH_KEY=/var/lib/jerrybuild/foo/test.rsa
+    env: HEADER_CONNECTION=Keep-Alive
+    env: secret='32049780978079723078'
+    env: HEADER_CONTENT-LENGTH=14
+    env: provider=generic
+    env: HEADER_HOST=localhost:5281
+    env: HEADER_USER-AGENT=Wget/1.15 (linux-gnu)
