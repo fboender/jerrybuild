@@ -148,6 +148,33 @@ Providers inspect the webhook HTTP request and extract useful information from
 them. This information is passed on to your build script through the
 environment. The providers may also perform authentication and authorization.
 
+### Generic
+
+The generic provider is the default provider. It is independent of the remote
+Git repository used (e.g. Github). You can use it to trigger builds from
+cronjobs and unsupported build systems.
+
+The following environment variables are currently passed to scripts when using
+the Github provider:
+
+    provider=generic
+
+Additionally, the request HTTP headers are added to the environment, as well
+as any configuration `env_` settings from the main configuration or job
+definition. Example:
+
+    HEADER_CONTENT-TYPE=application/x-www-form-urlencoded
+    HEADER_ACCEPT=*/*
+    HEADER_CONNECTION=Keep-Alive
+    HEADER_CONTENT-LENGTH=14
+    HEADER_HOST=localhost:5281
+    HEADER_USER-AGENT=Wget/1.15 (linux-gnu)
+    GIT_SSH=git-wrapper.sh
+    SSH_KEY=/var/lib/jerrybuild/foo/test.rsa
+
+Since the generic provider cannot make any assumptions about the request, the
+environment depends on what the client has sent.
+
 ### Github
 
 Github is a git repository provider. The Github provider in Jerrybuild offers
