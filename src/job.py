@@ -70,6 +70,7 @@ class Job:
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
                                  env=env)
+
             # Stream output to self.output
             while True:
                 stdout = p.stdout.readline().decode('utf8')
