@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 def normalize(request, jobdef):
     env = {}
 

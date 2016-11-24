@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import hmac
 import hashlib
 import json
