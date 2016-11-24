@@ -1,6 +1,6 @@
 Request dump of 'generic' provider for the following URL:
 
-    wget -O - --http-user=jantje --http-passwd=geh31m --post-data='{"key": "val"}' "http://localhost:5281/hook/test?key1=val1&key2=val2" > /dev/null
+    wget -O - --post-data='{"key": "val"}' "http://localhost:5281/hook/test?key1=val1&key2=val2" > /dev/null
 
 Request:
 
