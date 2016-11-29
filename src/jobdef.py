@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from job import Job
+import tools
 
 
 class JobDef:
@@ -9,8 +10,10 @@ class JobDef:
     JobDef objects are generally constructed through `from_config()` by the
     JobDefManager. JobDef objects can be used to create jobs using make_job().
     """
+    # NOTE: If you change the function definition, you also have to change
+    # `from_config`!
     def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
-                 keep_jobs=0, mail_to=[], custom_params={}):
+                 keep_jobs=0, mail_to=[], pass_query=False, custom_params={}):
         self.name = name
         self.desc = desc
         self.url = url
@@ -20,6 +23,7 @@ class JobDef:
         self.work_dir = work_dir
         self.keep_jobs = keep_jobs
         self.mail_to = mail_to
+        self.pass_query = pass_query
         self.custom_params = custom_params
 
     def make_job(self, body, env, prev_id=None):
@@ -50,6 +54,7 @@ def from_config(config, section_name):
         'work_dir': None,
         'keep_jobs': 0,
         'mail_to': set(),
+        'pass_query': False,
         'custom_params': {},
     }
 
@@ -83,6 +88,8 @@ def from_config(config, section_name):
             params['keep_jobs'] = config.get(section_name, 'keep_jobs')
         elif option == 'mail_to':
             params['mail_to'].update([s.strip() for s in config.get(section_name, 'mail_to').split(',')])
+        elif option == 'pass_query':
+            params['pass_query'] = tools.to_bool(config.get(section_name, 'pass_query'))
         elif option.startswith('env_'):
             env_name = option[4:].strip()
             env_value = config.get(section_name, option).strip()

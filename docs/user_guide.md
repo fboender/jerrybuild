@@ -100,6 +100,9 @@ There are a few optional options you can use when defining a job:
   given in this `mail_to` will be combined with those given in the `[server]`
   section.
 * **`env_XXXX`**: An environment variable to pass to the command.
+* **`pass_query`**: Whether to pass webhook request URL parameters
+  (?foo=bar&..) to the script in the form of REQ_QRY_XXX variables. `true` or
+  `false`. Default is `false`.
 
 ## Running Jerrybuild
 

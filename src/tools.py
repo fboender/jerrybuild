@@ -152,6 +152,29 @@ def listdir_sorted(path, stat_key='st_mtime', reverse=False):
 
     return [fname for fprop, fname in sorted(files, reverse=reverse)]
 
+def to_bool(s):
+    """
+    Convert string `s` into a boolean. `s` can be 'true', 'True', 1, 'false',
+    'False', 0.
+
+    Examples:
+
+    >>> to_bool("true")
+    True
+    >>> to_bool("0")
+    False
+    >>> to_bool(True)
+    True
+    """
+    if isinstance(s, bool):
+        return s
+    elif s.lower() in ['true', '1']:
+        return True
+    elif s.lower() in ['false', '0']:
+        return False
+    else:
+        raise ValueError("Can't cast '%s' to bool" % (s))
+
 if __name__ == '__main__':
    import doctest
    doctest.testmod()
