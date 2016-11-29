@@ -14,6 +14,11 @@ import job
 
 
 class BuildQueue(threading.Thread):
+    """
+    The BuildQueue object manages pending and running build jobs. It also
+    handles writing the job status to disk. New jobs can be put on the queue
+    using `put()`.
+    """
     daemon = True
 
     def __init__(self, status_dir, job_changed_handler=None):
