@@ -207,6 +207,12 @@ the Github provider:
     repo_url_http = https://github.com/fboender/ansible-test.git
     repo_url_ssh = git@github.com:fboender/ansible-test.git
 
+Additionally, the request HTTP headers are added to the environment, as well
+as any configuration `env_` settings from the main configuration or job
+definition. Example:
+
+FIXME: Include example of Github request headers.
+
 ### Gogs
 
 Gogs is a lightweight Github clone written in Go.
@@ -227,6 +233,12 @@ the Gogs provider:
     ref = refs/heads/master
     commit = 1f41a02e9f47b7a9dcc66d1d559c495c7df1fd34
     mail_to = user@example.com, user2@example.com
+
+Additionally, the request HTTP headers are added to the environment, as well
+as any configuration `env_` settings from the main configuration or job
+definition. Example:
+
+FIXME: Include example of Gogs request headers.
 
 # Tools
 
