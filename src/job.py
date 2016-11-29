@@ -51,25 +51,17 @@ class Job:
         Returns -1 if the build was aborted (no error, but should continue
         building), 0 on success and 1 on failure.
         """
-        work_dir = self.work_dir
-        cmd = self.cmd
-        env = os.environ.copy()
-        env.update(self.env)
-        bin_basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
-        tools_path = os.path.join(bin_basedir, 'tools')
-        env["PATH"] = "{}:{}".format(env["PATH"], tools_path)
-
-        logging.info("Running '{}' with command '{}' in working dir '{}'".format(self, cmd, work_dir))
+        logging.info("Running '{}' with command '{}' in working dir '{}'".format(self, self.cmd, self.work_dir))
 
         self.time_start = time.time()
         try:
-            p = subprocess.Popen(cmd,
-                                 cwd=work_dir,
+            p = subprocess.Popen(self.cmd,
+                                 cwd=self.work_dir,
                                  shell=True,
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
-                                 env=env)
+                                 env=self.env)
 
             # Stream output to self.output
             while True:
@@ -132,18 +124,32 @@ def from_dict(d):
     return job
 
 def make_env(request, jobdef, providers):
-    # Put the headers of the request in the environment. Call the provider for
-    # this job definition to handle additional tasks and update the environment
-    # with its result.
     env = {}
+
+    if not jobdef.clean_env:
+        # Copy the environment from parent process (jerrybuild)
+        env.update(os.environ)
+    else:
+        # Only use the parent process' PATH
+        env["PATH"] = os.environ["PATH"]
+
+    # Add the path to the Jerrybuild shellscript tools to the PATH
+    bin_basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
+    tools_path = os.path.join(bin_basedir, 'tools')
+    env["PATH"] = "{}:{}".format(env["PATH"], tools_path)
+
     if jobdef.pass_query:
         # Add URL query (?foo=bar&baz=quux) to the environment
         for k, v in request.query.items():
             key = 'REQ_QRY_{}'.format(k)
             env[key] = v
 
+    # Add request headers to the environment
     for k, v in request.headers.items():
         env["HEADER_{}".format(k.upper())] = v
+
+    # Call the provider for this job defnition. It may also modify the
+    # environment
     provider = providers[jobdef.provider]
     request_env = provider.normalize(request, jobdef)
     if request_env is False:

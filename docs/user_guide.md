@@ -103,6 +103,10 @@ There are a few optional options you can use when defining a job:
 * **`pass_query`**: Whether to pass webhook request URL parameters
   (?foo=bar&..) to the script in the form of REQ_QRY_XXX variables. `true` or
   `false`. Default is `false`.
+* **`clean_env`**: Whether to inherit the parent process (jerrybuild)
+  environment. `true` or `false` are valid options. The default is `true`,
+  meaning the script gets a completely clean environment, except for the PATH
+  variable. Inheriting the environment is insecure.
 
 ## Running Jerrybuild
 
