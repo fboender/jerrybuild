@@ -130,3 +130,25 @@ def from_dict(d):
     job.prev_id = d['prev_id']
     job.id = d['id']
     return job
+
+def make_env(request, jobdef, providers):
+    # Put the headers of the request in the environment. Call the provider for
+    # this job definition to handle additional tasks and update the environment
+    # with its result.
+    env = {}
+    if jobdef.pass_query:
+        # Add URL query (?foo=bar&baz=quux) to the environment
+        for k, v in request.query.items():
+            key = 'REQ_QRY_{}'.format(k)
+            env[key] = v
+
+    for k, v in request.headers.items():
+        env["HEADER_{}".format(k.upper())] = v
+    provider = providers[jobdef.provider]
+    request_env = provider.normalize(request, jobdef)
+    if request_env is False:
+        # Normalization method aborted the request.
+        return
+    env.update(request_env)
+
+    return env

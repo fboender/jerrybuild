@@ -162,18 +162,7 @@ def generic_handler():
     logging.debug("request body: {}".format(request.body.read()))
     logging.debug("request auth: {}".format(request.auth))
 
-    # Put the headers of the request in the environment. Call the provider for
-    # this job definition to handle additional tasks and update the environment
-    # with its result.
-    env = {}
-    for k, v in request.headers.items():
-        env["HEADER_{}".format(k.upper())] = v
-    provider = providers[jobdef.provider]
-    request_env = provider.normalize(request, jobdef)
-    if request_env is False:
-        # Normalization method aborted the request.
-        return
-    env.update(request_env)
+    env = job.make_env(request, jobdef, providers)
 
     job_inst = jobdef.make_job(request.body.read().decode('utf8'), env)
     build_queue.put(job_inst)
