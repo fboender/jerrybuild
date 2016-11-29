@@ -114,14 +114,14 @@ def jobrun_stream_output(job_id):
     build_queue = request.deps['build_queue']
     if job_id in build_queue.running_jobs:
         # Job is running. Stream output as it's happening
-        job = build_queue.running_jobs[job_id]
+        job_inst = build_queue.running_jobs[job_id]
         pos = 0
         while True:
-            out = job.output[pos:]
+            out = job_inst.output[pos:]
             if out:
                 pos += len(out)
                 yield out
-            if job.status != 'running':
+            if job_inst.status != 'running':
                 break
             time.sleep(0.1)
     else:
@@ -175,7 +175,7 @@ def generic_handler():
         return
     env.update(request_env)
 
-    job = jobdef.make_job(request.body.read().decode('utf8'), env)
-    build_queue.put(job)
+    job_inst = jobdef.make_job(request.body.read().decode('utf8'), env)
+    build_queue.put(job_inst)
 
-    return {'id': job.id}
+    return {'id': job_inst.id}
