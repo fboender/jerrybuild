@@ -1,4 +1,4 @@
-## Main configuration file
+# Main configuration file
 
 The main configuration file is location in `/etc/jerrybuild/jerrybuild.cfg`.
 Here's an unannotated example configuration:
@@ -41,7 +41,7 @@ Available configuration options:
   set for all scripts. For example, env_SSH_DEPLOY_KEY_DIR would result in an
   environment variable SSH_DEPLOY_KEY_DIR in your scripts.
 
-## Defining jobs
+# Defining jobs
 
 Jobs are defined in either the main configuration file or in separate job
 configurations that go in `/etc/jerrybuild/jobs.d`. For example, the following
@@ -108,9 +108,9 @@ There are a few optional options you can use when defining a job:
   meaning the script gets a completely clean environment, except for the PATH
   variable. Inheriting the environment is insecure.
 
-## Running Jerrybuild
+# Running Jerrybuild
 
-### Manually
+## Manually
 
 We're now ready to run Jerrybuild. To start Jerrybuild, you must pass the
 configuration file to be used as the first parameter:
@@ -124,14 +124,14 @@ If you configure a new webhook in Github with
 `SECRET_TOKEN_HERE` as the secret token, Github will call Jerrybuild on each
 commit (or other action) and the `run_tests.sh` script will be called.
 
-### On system boot (init script)
+## On system boot (init script)
 
 If you installed Jerrybuild through the Debian or Redhat package, an init file
 will have been placed in the usual location. # FIXME location
 
 FIXME
 
-### Reloading
+## Reloading
 
 After changing the configuration file, you can reload it by sending the HUP
 signal to the Jerrybuild process:
@@ -141,7 +141,7 @@ signal to the Jerrybuild process:
     $ kill -HUP 4718
     # In log file: 2016-04-15 16:03:31,645:INFO:Reloading configuration file
 
-## Providers
+# Providers
 
 Providers are like plugins that understand how to parse webhook callbacks from
 different sources such as Github or Gogs. The currently available providers
@@ -155,7 +155,7 @@ Providers inspect the webhook HTTP request and extract useful information from
 them. This information is passed on to your build script through the
 environment. The providers may also perform authentication and authorization.
 
-### Generic
+## Generic
 
 The generic provider is the default provider. It is independent of the remote
 Git repository used (e.g. Github). You can use it to trigger builds from
@@ -182,7 +182,7 @@ definition. Example:
 Since the generic provider cannot make any assumptions about the request, the
 environment depends on what the client has sent.
 
-### Github
+## Github
 
 Github is a git repository provider. The Github provider in Jerrybuild offers
 support for handling webhook callbacks from Github. Currently, the following
@@ -217,7 +217,7 @@ definition. Example:
 
 FIXME: Include example of Github request headers.
 
-### Gogs
+## Gogs
 
 Gogs is a lightweight Github clone written in Go.
 

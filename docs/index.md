@@ -25,6 +25,7 @@ notifications and then runs scripts.
         * [On system boot (init scripts)](user_guide.md#on-system-boot-init-script)
         * [Reloading](user_guide.md#reloading)
     * [Providers](user_guide.md#providers)
+        * [Generic](user_guide.md#generic)
         * [Github](user_guide.md#github)
         * [Gogs](user_guide.md#gogs)
     * [Tools](user_guide.md#tools)
