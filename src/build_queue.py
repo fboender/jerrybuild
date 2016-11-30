@@ -60,13 +60,8 @@ class BuildQueue(threading.Thread):
         """
         logging.info("Build queue running")
         while True:
-            try:
-                job = self.queue.get()
-                self.build(job)
-            except Exception as err:
-                logging.exception(err)
-                job.set_status("internal_error")
-                self.write_job_status(job)
+            job = self.queue.get()
+            self.build(job)
 
     def build(self, job):
         self.running_jobs[job.id] = job

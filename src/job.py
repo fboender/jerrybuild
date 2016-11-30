@@ -8,6 +8,7 @@ import time
 import socket
 import copy
 import sys
+import traceback
 
 
 JOB_STATUSSES = [
@@ -15,7 +16,6 @@ JOB_STATUSSES = [
     "running",
     "aborted",
     "done",
-    "internal_error",
 ]
 
 class Job:
@@ -75,8 +75,8 @@ class Job:
         self.time_start = time.time()
         try:
             p = subprocess.Popen(self.cmd,
-                                 cwd=self.work_dir,
                                  shell=True,
+                                 cwd=self.work_dir,
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT,
@@ -91,9 +91,10 @@ class Job:
 
             p.poll()
             self.exit_code = p.returncode
-        except OSError as err:
+        except Exception as err:
+            logging.exception(err)
             self.exit_code = 127
-            self.output = str(err)
+            self.output = traceback.format_exc(err)
 
         self.time_end = time.time()
 

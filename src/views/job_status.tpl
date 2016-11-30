@@ -1,6 +1,6 @@
 <%
 reload_page = False
-if job_status.status not in ('done', 'internal_error'):
+if job_status.status != 'done':
     reload_page = True
 end
 %>
@@ -8,7 +8,7 @@ end
 % import tools
 <main id="job-result">
 
-% if job_status.status in ('done', 'internal_error'):
+% if job_status.status == 'done':
     <a href="/job/{{ job_status.id }}/rerun"><span class="action-button blue"><i class="fa fa-refresh" aria-hidden="true"></i> Rerun as new job</span></a>
 % end
 
