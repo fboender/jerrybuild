@@ -1,3 +1,7 @@
+"""
+Multithreaded WSGI-compatible server for bottle.
+"""
+
 import sys
 from wsgiref.simple_server import make_server, WSGIServer
 if sys.version_info.major > 2:

@@ -22,6 +22,13 @@ class BuildQueue(threading.Thread):
     daemon = True
 
     def __init__(self, status_dir, job_changed_handler=None):
+        """
+        Create a new BuildQueue. `status_dir` is a path to a directory that
+        will contain job statusses. `job_changed_handler` is a callback that
+        will be called when a job has changed to 'failed' or 'passed'. The
+        callback will receive two parameters: the current job (Job instance)
+        and the previous job.
+        """
         threading.Thread.__init__(self)
         self.status_dir = status_dir
         self.job_changed_handler = job_changed_handler
@@ -32,15 +39,22 @@ class BuildQueue(threading.Thread):
         self.running_jobs = {}
 
     def run(self):
+        """
+        Start the BuildQueue thread.
+        """
         self._handle_queue()
 
     def _make_status_dir(self):
+        """
+        Create required directories under the `status_dir`.
+        """
         mkdir_p(self.jobs_dir)
         mkdir_p(self.all_dir)
 
     def put(self, job):
         """
-        Put a job in the queue for building.
+        Put a job in the queue for building. This can be called from outside
+        the thread with a `Job()` instance to queue the job for building.
         """
         # Fetch the previously built job and set it on the job. This is used
         # for linking and comparing to the previous job.
@@ -64,6 +78,9 @@ class BuildQueue(threading.Thread):
             self._build(job)
 
     def _build(self, job):
+        """
+        Build a job.
+        """
         self.running_jobs[job.id] = job
 
         job.set_status('running')
@@ -134,14 +151,23 @@ class BuildQueue(threading.Thread):
                 os.unlink(job_status_link)
 
     def get_job_status_dir(self, jobdef_name):
+        """
+        Return the `status_dir` where all job statusses are kept.
+        """
         return os.path.join(self.status_dir, 'jobs', jobdef_name)
 
     def del_job_status(self, jobdef_name, job_id):
+        """
+        Delete a specific job's status.
+        """
         jobdef_dir = self.get_job_status_dir(jobdef_name)
         os.unlink(os.path.join(jobdef_dir, job_id))
         os.unlink(os.path.join(jobdef_dir, '..', '_all', job_id))
 
     def get_job_status(self, job_id):
+        """
+        Return a dict with a specific jpb's status.
+        """
         if job_id is None:
             return None
 
@@ -171,6 +197,9 @@ class BuildQueue(threading.Thread):
         return all_status
 
     def get_latest_status(self, jobdef_name):
+        """
+        Return the last non-aborted job that was run.
+        """
         all_status = self.get_all_status(jobdef_name)
         try:
             latest_status = all_status[0]
