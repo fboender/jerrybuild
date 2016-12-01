@@ -33,24 +33,24 @@ class Vacuum(threading.Thread):
         try:
             while True:
                 time.sleep(self.vacuum_interval)
-                self.do_vacuum()
+                self._do_vacuum()
         except Exception as err:
             logging.exception("Vacuum stopped unexpectantly: {}".format(err))
 
-    def do_vacuum(self):
+    def _do_vacuum(self):
         for jobdef_name, jobdef in self.jobdefs.items():
             if jobdef.keep_jobs == 0 or jobdef.keep_jobs == '0':
                 # Don't vacuum at all
                 continue
             logging.debug("Vacuuming job {}".format(jobdef_name))
             job_status_dir = self.build_queue.get_job_status_dir(jobdef_name)
-            filter_func = self.get_dir_filter(jobdef.keep_jobs)
+            filter_func = self._get_dir_filter(jobdef.keep_jobs)
             remove_job_ids = filter_func(job_status_dir, jobdef.keep_jobs)
             logging.debug("Removing {} job outputs for job '{}'".format(len(remove_job_ids), jobdef_name))
             for job_id in remove_job_ids:
                 self.build_queue.del_job_status(jobdef_name, job_id)
 
-    def get_dir_filter(self, keep_jobs):
+    def _get_dir_filter(self, keep_jobs):
         try:
             int(keep_jobs)
             return dir_filter_nr

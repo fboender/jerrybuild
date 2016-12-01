@@ -27,14 +27,14 @@ class BuildQueue(threading.Thread):
         self.job_changed_handler = job_changed_handler
         self.jobs_dir = os.path.join(self.status_dir, 'jobs')
         self.all_dir = os.path.join(self.status_dir, 'jobs', '_all')
-        self.make_status_dir()
+        self._make_status_dir()
         self.queue = Queue.Queue()
         self.running_jobs = {}
 
     def run(self):
-        self.handle_queue()
+        self._handle_queue()
 
-    def make_status_dir(self):
+    def _make_status_dir(self):
         mkdir_p(self.jobs_dir)
         mkdir_p(self.all_dir)
 
@@ -49,25 +49,25 @@ class BuildQueue(threading.Thread):
             job.set_prev_id(prev_job.id)
 
         job.set_status('queued')
-        self.write_job_status(job)
+        self._write_job_status(job)
         self.queue.put(job)
         logging.info("{}: queued".format(job))
         return job.id
 
-    def handle_queue(self):
+    def _handle_queue(self):
         """
         Continuously read the build queue for jobs and build them.
         """
         logging.info("Build queue running")
         while True:
             job = self.queue.get()
-            self.build(job)
+            self._build(job)
 
-    def build(self, job):
+    def _build(self, job):
         self.running_jobs[job.id] = job
 
         job.set_status('running')
-        self.write_job_status(job)
+        self._write_job_status(job)
         logging.info("{}: starting".format(job))
 
         for k, v in job.env.items():
@@ -82,7 +82,7 @@ class BuildQueue(threading.Thread):
             job.set_status('aborted')
             logging.info("{}: result: intentionally aborted. Exit code = {}".format(job, job.exit_code))
 
-            self.write_job_status(job, aborted=True)
+            self._write_job_status(job, aborted=True)
         else:
             job.set_status('done')
             if job.exit_code == 0:
@@ -90,7 +90,7 @@ class BuildQueue(threading.Thread):
             else:
                 logging.warn("{}: result: failed. Exit code = {}".format(job, job.exit_code))
 
-            self.write_job_status(job)
+            self._write_job_status(job)
 
             prev_job = self.get_job_status(job.prev_id)
             if (prev_job is not None and job.exit_code != prev_job.exit_code):
@@ -103,7 +103,7 @@ class BuildQueue(threading.Thread):
 
         del self.running_jobs[job.id]
 
-    def write_job_status(self, job, aborted=False):
+    def _write_job_status(self, job, aborted=False):
         """
         Write the current job status as set in this object to job status dir
         and symlink them if needed.
