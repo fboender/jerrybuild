@@ -1,6 +1,6 @@
 # Main configuration file
 
-The main configuration file is location in `/etc/jerrybuild/jerrybuild.cfg`.
+The main configuration file is located in `/etc/jerrybuild/jerrybuild.cfg`.
 Here's an unannotated example configuration:
 
     [server]
@@ -21,16 +21,17 @@ Here's an unannotated example configuration:
 Available configuration options:
 
 * **`listen`**: Address to listen on. Instead of changing this to listen on
-  external IPs, you'd be better off putting Jerrybuild behind Apache or NGinx.
-  See the Cookbook on how to easily do that.
+  external IPs, you should run Jerrybuild behind Apache or NGinx. See the
+  [Cookbook](cookbook.md) on how to easily do that.
 * **`port`**: Port to listen on
-* **`log_level`**: The logging level. Logging level. Possible values: DEBUG,
-  INFO, WARN, ERROR, FATAL
-* **`mail_to`**: Always send mail to recipients on build failure (optional).
+* **`log_level`**: The logging level. Possible values: DEBUG, INFO, WARN,
+  ERROR or FATAL
+* **`mail_to`**: Always send mail to recipients on build failure.
   Multiple addresses should be separated by a comma. You can add additional
   addresses in each job section.
 * **`status_dir`**: Directory to keep job status files and such in.
-* **`work_dir`**: Default working directory for jobs.
+* **`work_dir`**: Default working directory for jobs. This is the working dir
+  when executing script.
 * **`keep_jobs`**: The number of job results or a timespan after which to
   delete old job results. This value applies to each job seperately. The last
   job status will never be deleted. This value can be overridden on a
@@ -44,7 +45,7 @@ Available configuration options:
 # Defining jobs
 
 Jobs are defined in either the main configuration file or in separate job
-configurations that go in `/etc/jerrybuild/jobs.d`. For example, the following
+configurations that go in `/etc/jerrybuild/jobs.d/`. For example, the following
 job shows how to run the tests for the
 [Ansible-cmdb](https://github.com/fboender/ansible-cmdb) Github project:
 
@@ -60,39 +61,41 @@ job shows how to run the tests for the
 This defines a job called `ansible-cmdb-test`. Each job should have its own
 `[job:XXXXXXXX]` section.
 
-Required configuration options are:
+**Required configuration options** are:
 
 * **`url`**: The URL on which Jerrybuild's web server should listen for
   incoming webhook notifications. This option is required and has to be unique
   per job.
 * **`provider`**: The type of service that will be initiating the webhook
-  notification. Values values are: `github`, `gogs` and `generic`. Providers
+  notification. Valid values are: `github`, `gogs` and `generic`. Providers
   help with the parsing of the webhook request into environment variables that
   can be used by your build scripts. This option is required.
 * **`cmd`**: The shell command to run when the webhook is called. Depending on
   which provider you're using, several environment variables will be set with
   information regarding the webhook notification. For example, the Github
   provider will set the `commit` variable to the hash of the last commit on a
-  `push` event. The command is executed relative to the `work_dir` set in the
-  job's definition or the main configuration. If the script returns with exit
-  code 255, the build is aborted. This is useful when you want to run a
-  pre-check to see if you even want to build at all. Jerrybuild pretends the
-  build never happened. Otherwise, an exit code of 0 indicates success, > 0
-  indicates failure. This option is required.
+  `push` event. For more info on which variables are set, check the
+  [Providers](#providers) section. The command is executed relative to the
+  `work_dir` set in the job's definition or the main configuration. If the
+  script returns with exit code 255, the build is aborted. This is useful when
+  you want to run a pre-check to see if you even want to build at all. If a
+  build is aborted, Jerrybuild pretends the build never happened. Otherwise,
+  an exit code of 0 indicates success and anything > 0 indicates failure. This
+  option is required.
 
 You can specify as many build jobs as you like. They should always start with
 `job:`.
 
-There are a few optional options you can use when defining a job:
+There are a few **optional options** you can use when defining a job:
 
 * **`desc`**: A description of the build job.
 * **`secret`**: A setting specific to the Github and Gogs providers.
   The value must match the value specified in the webhook configuration on
   Github or Gogs, so that Jerrybuild can verify that Github or Gogs really
-  made the notification. This option is optional depending on the provider
-  used.
+  made the notification. This option is required when using the Github or Gogs
+  provider.
 * **`work_dir`**: The directory to which to change before running the `cmd`.
-  If not given, but one if given in the `[server]` section, that one will be
+  If not given, but one is given in the `[server]` section, that one will be
   used instead. Otherwise, it will default to the directory of the executable
   given in `cmd`.
 * **`mail_to`**: Email addresses to send job build failures to. You may
@@ -106,23 +109,23 @@ There are a few optional options you can use when defining a job:
 * **`clean_env`**: Whether to inherit the parent process (jerrybuild)
   environment. `true` or `false` are valid options. The default is `true`,
   meaning the script gets a completely clean environment, except for the PATH
-  variable. Inheriting the environment is insecure.
+  variable. Inheriting the environment can be insecure.
 
 # Running Jerrybuild
 
 ## Manually
 
-We're now ready to run Jerrybuild. To start Jerrybuild, you must pass the
-configuration file to be used as the first parameter:
+To start Jerrybuild, you must pass the configuration file to be used as the
+first parameter:
 
     $ jerrybuild /etc/jerrybuild/jerrybuild.cfg
     2016-04-25 07:36:41,014:INFO:Build queue running
     2016-04-25 07:36:41,015:INFO:Server listening on 0.0.0.0:5281
 
-If you configure a new webhook in Github with
-`http://yourhost.example.com/hook/ansible-cmdb` as the callback URL and
-`SECRET_TOKEN_HERE` as the secret token, Github will call Jerrybuild on each
-commit (or other action) and the `run_tests.sh` script will be called.
+Jerrybuild outputs log information on stdout. If you want this in a log file,
+you should redirect its stdout and stderr file descriptors:
+
+    $ jerrybuild /etc/jerrybuild/jerrybuild.cfg >> jerrybuild.log 2>&1
 
 ## On system boot (init script)
 
@@ -133,8 +136,8 @@ FIXME
 
 ## Reloading
 
-After changing the configuration file, you can reload it by sending the HUP
-signal to the Jerrybuild process:
+After changing the configuration file, you can instruct Jerrybuild to reload
+the configuration  by sending the HUP signal to the Jerrybuild process:
 
     $ pidof -x "jerrybuild"
     4718
@@ -152,14 +155,14 @@ are:
 * `gogs`: [Gogs](https://gogs.io/)
 
 Providers inspect the webhook HTTP request and extract useful information from
-them. This information is passed on to your build script through the
+it. This information is passed on to your build script through the
 environment. The providers may also perform authentication and authorization.
 
 ## Generic
 
-The generic provider is the default provider. It is independent of the remote
-Git repository used (e.g. Github). You can use it to trigger builds from
-cronjobs and unsupported build systems.
+The `generic` provider is the default provider. It is independent of the
+remote Git repository used (e.g. Github). You can use it to trigger builds
+from cronjobs and unsupported build systems.
 
 The following environment variables are currently passed to scripts when using
 the Github provider:
@@ -195,8 +198,9 @@ The Github provider requires the following additional settings in job
 configurations:
 
 * **`secret`**: A secret to be used for HMAC body verification. The secret
-should also be configured in the Webhook at Github. Github will sign the body
-using HMAC hashing using the key. Jerrybuild can then verify the signature.
+should also be configured in the Webhook configuration on Github. Github will
+sign the body using HMAC hashing using the key. Jerrybuild can then verify the
+signature.
 
 The following environment variables are currently passed to scripts when using
 the Github provider:
