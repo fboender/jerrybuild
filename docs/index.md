@@ -29,3 +29,5 @@ notifications and then runs scripts.
         * [Github](user_guide.md#github)
         * [Gogs](user_guide.md#gogs)
     * [Tools](user_guide.md#tools)
+        * [git-wrapper.sh](user_guide.md#git-wrapper.sh)
+        * [git-co-commit.sh](user_guide.md#git-co-commit.sh)
