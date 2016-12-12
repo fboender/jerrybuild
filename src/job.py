@@ -160,8 +160,9 @@ def make_env(request, jobdef, providers):
         # Copy the environment from parent process (jerrybuild)
         env.update(os.environ)
     else:
-        # Only use the parent process' PATH
-        env["PATH"] = os.environ["PATH"]
+        # Only use some specific values from the parent process.
+        for k in ("PATH", "HOME"):
+            env[k] = os.environ[k]
 
     # Add the path to the Jerrybuild shellscript tools to the PATH
     bin_basedir = os.path.dirname(os.path.realpath(sys.argv[0]))
