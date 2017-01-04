@@ -155,6 +155,7 @@ def from_dict(d):
 
 def make_env(request, jobdef, providers):
     env = {}
+    env['HOME'] = os.path.expanduser('~')  # If started from init, no HOME is set.
 
     if not jobdef.clean_env:
         # Copy the environment from parent process (jerrybuild)
