@@ -15,6 +15,18 @@ else:
     import ConfigParser
     from StringIO import StringIO
 
+
+# Timeunit mapping for duration()
+timeunit_map = [
+    ("y", 60 * 60 * 24 * 365),
+    ("w", 60 * 60 * 24 * 7),
+    ("d", 60 * 60 * 24),
+    ("h", 60 * 60),
+    ("m", 60),
+    ("s", 1),
+]
+
+
 def bin_rel_path(path):
     """
     Return the full real path to `path`, where `path` is relative to the binary
@@ -63,33 +75,64 @@ def duration(secs):
 
     Examples:
 
-    >>> duration(0)
-    '0s'
-    >>> duration(4)
-    '4s'
-    >>> duration(456)
-    '7m 36s'
-    >>> duration(4567)
-    '1h 16m'
-    >>> duration(45678)
-    '12h 41m'
-    >>> duration(456789)
-    '5d 6h'
-    >>> duration(3456789)
-    '9d 13m'
-    >>> duration(23456789)
-    '28d 11h'
-    """
+    >>> minutes = 60
+    >>> hours = minutes * 60
+    >>> days = hours * 24
+    >>> weeks = days * 7
+    >>> years = days * 365
 
-    sec = timedelta(seconds=int(secs))
-    d = datetime(1,1,1) + sec
-    k = ["%dd", "%dh", "%dm", "%ds"]
-    v = [d.day-1, d.hour, d.minute, d.second]
-    t = [k[i] % (v[i]) for i in range(len(k)) if v[i] > 0]
-    if not t:
-        return '0s'
-    else:
-        return ' '.join(t[:2])
+    >>> duration(12)
+    '12s'
+    >>> duration(minutes * 2 + 5)
+    '2m 5s'
+    >>> duration(hours * 3 + 125)
+    '3h 2m'
+    >>> duration((days * 2) + (hours * 4))
+    '2d 4h'
+    >>> duration((days * 9))
+    '1w 2d'
+    >>> duration((days * 28))
+    '1m'
+    >>> duration((days * 30))
+    '1m'
+    >>> duration((days * 31))
+    '1m'
+    >>> duration((days * 50))
+    '2m'
+    >>> duration((days * 60))
+    '2m'
+    >>> duration((days * 180))
+    '6m'
+    >>> duration((years * 1) + (days * 5))
+    '1y'
+    >>> duration((years * 1) + (days * 28))
+    '1y 1m'
+    >>> duration((years * 1) + (days * 50))
+    '1y 2m'
+    >>> duration((years * 3) + (days * 60))
+    '3y 2m'
+    """
+    res = []
+    rest = secs
+    for tu_symbol, tu_duration in timeunit_map:
+        nr_of_timeunits = rest / tu_duration
+        rest = rest % tu_duration
+
+        if int(nr_of_timeunits) > 0:
+            if tu_symbol == 'w' and nr_of_timeunits > 3:
+                # Special case for months.
+                res.append("{}m".format(int(round(nr_of_timeunits / 4.0))))
+                break
+            else:
+                res.append("{}{}".format(int(nr_of_timeunits), tu_symbol))
+
+            if tu_symbol == 'y' and rest < (60 * 60 * 24 * 28):
+                break
+
+        if len(res) == 2:
+            break
+
+    return " ".join(res)
 
 def config_load(path, case_sensitive=True):
     """
