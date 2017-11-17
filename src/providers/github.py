@@ -16,7 +16,7 @@ def normalize(request, jobdef):
     secret = bytes(jobdef.custom_params['secret'])
 
     if request.headers['X-Github-Event'] != 'push':
-        raise NotImplementedError("Only push events are currently supported")
+        raise NotImplementedError("Only push and ping events are currently supported")
 
     # Verify hash signature
     hashtype, signature = request.headers['X-Hub-Signature'].split('=', 1)
