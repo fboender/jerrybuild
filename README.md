@@ -59,20 +59,13 @@ to use Jerrybuild, you can install it on your system.
 
 ### Install system-wide
 
-Get the package for your distribution from the [Releases
-page](https://github.com/fboender/jerrybuild/releases).
-
-For Debian / Ubuntu systems:
-
-    sudo dpkg -i jerrybuild-*.deb
-
 To install from source / the Git repo:
 
     git clone https://github.com/fboender/jerrybuild.git
     cd jerrybuild
     sudo make install
 
-The packages and `make install` install Jerrybuild system-wide and:
+`make install` installs Jerrybuild system-wide and:
 
 * Creates a `jerrybuild` user which will own the configuration files and
   working space.
@@ -80,6 +73,17 @@ The packages and `make install` install Jerrybuild system-wide and:
 * Put the job configuration in `/etc/jerrybuild/jobs.d`.
 * Creates the working space for your repositories in
   `/var/lib/jerrybuild/workspace`/.
+
+## Documentation
+
+* [Full documentation](docs/index.md)
+
+The full documentation above includes:
+
+* [About](docs/about.md)
+* [Installation](docs/installation.md)
+* [Tutorial](docs/tutorial.md)
+* [User guide](docs/user_guide.md)
 
 ## Getting started
 

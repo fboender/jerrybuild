@@ -5,7 +5,7 @@ notifications and then runs scripts.
 * [About](about.md)
     * [Philosophy](about.md#philosophy)
     * [Features](about.md#features)
-* [Installation](installation.d)
+* [Installation](installation.md)
     * [Requirements](installation.md#requirements)
     * [Running directly from repo](installation.md#running-directly-from-repo)
     * [Debiian / Ubuntu](installation.md#debian-ubuntu)
