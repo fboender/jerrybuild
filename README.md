@@ -84,6 +84,7 @@ The full documentation above includes:
 * [Installation](docs/installation.md)
 * [Tutorial](docs/tutorial.md)
 * [User guide](docs/user_guide.md)
+* [Cookbook](docs/cookbook.md)
 
 ## Getting started
 
