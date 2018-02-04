@@ -2,7 +2,7 @@ jerrybuild
 ==========
 
 ![Status: Unstable](https://img.shields.io/badge/status-unstable-red.svg)
-![Build Status](http://git.electricmonk.nl/job/jerrybuild/shield)
+![Build Status](http://build.electricmonk.nl/job/jerrybuild/shield)
 ![Activity: Active development](https://img.shields.io/badge/activity-active%20development-green.svg)
 ![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)
 
