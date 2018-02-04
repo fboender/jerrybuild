@@ -64,7 +64,7 @@ release_deb: release_clean doc
 	# Fix rights
 	chmod -R g-w rel_deb/
 	chmod 700 rel_deb/var/lib/${PROG}/deploy_keys
-	chmod 650 rel_deb/etc/${PROG}/jobs.d
+	chmod 750 rel_deb/etc/${PROG}/jobs.d
 	find rel_deb/ -type f \! -executable -print0 | xargs -0 chmod 644
 	find rel_deb/ -type d -print0 | xargs -0 chmod 755
 
