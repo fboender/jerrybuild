@@ -26,7 +26,7 @@ class Vacuum(threading.Thread):
             for job in job_statusses:
                 if job.status in ['queued', 'running']:
                     job.status = 'aborted'
-                    self.build_queue.write_job_status(job, aborted=True)
+                    self.build_queue._write_job_status(job, aborted=True)
 
     def run(self):
         logging.info('Vacuum running')
