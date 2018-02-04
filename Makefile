@@ -8,6 +8,7 @@ test:
 	cd test && python test.py
 
 clean:
+	rm -rf rel_deb
 	rm -f *.rpm
 	rm -f *.deb
 	rm -f *.tar.gz
