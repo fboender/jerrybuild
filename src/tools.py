@@ -92,25 +92,25 @@ def duration(secs):
     >>> duration((days * 9))
     '1w 2d'
     >>> duration((days * 28))
-    '1m'
+    '1mo'
     >>> duration((days * 30))
-    '1m'
+    '1mo'
     >>> duration((days * 31))
-    '1m'
+    '1mo'
     >>> duration((days * 50))
-    '2m'
+    '2mo'
     >>> duration((days * 60))
-    '2m'
+    '2mo'
     >>> duration((days * 180))
-    '6m'
+    '6mo'
     >>> duration((years * 1) + (days * 5))
     '1y'
     >>> duration((years * 1) + (days * 28))
-    '1y 1m'
+    '1y 1mo'
     >>> duration((years * 1) + (days * 50))
-    '1y 2m'
+    '1y 2mo'
     >>> duration((years * 3) + (days * 60))
-    '3y 2m'
+    '3y 2mo'
     """
     res = []
     rest = secs
@@ -121,7 +121,7 @@ def duration(secs):
         if int(nr_of_timeunits) > 0:
             if tu_symbol == 'w' and nr_of_timeunits > 3:
                 # Special case for months.
-                res.append("{}m".format(int(round(nr_of_timeunits / 4.0))))
+                res.append("{}mo".format(int(round(nr_of_timeunits / 4.0))))
                 break
             else:
                 res.append("{}{}".format(int(nr_of_timeunits), tu_symbol))
