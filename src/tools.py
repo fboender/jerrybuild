@@ -19,6 +19,7 @@ else:
 # Timeunit mapping for duration()
 timeunit_map = [
     ("y", 60 * 60 * 24 * 365),
+    # months is a special case and calculated in duration()
     ("w", 60 * 60 * 24 * 7),
     ("d", 60 * 60 * 24),
     ("h", 60 * 60),
