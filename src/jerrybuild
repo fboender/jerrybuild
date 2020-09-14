@@ -109,8 +109,9 @@ def job_changed_handler_generate(smtp_server, server_url):
         logging.info("{}: Emails sent".format(cur_job))
     return job_changed_handler
 
-
 if __name__ == "__main__":
+    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s')
+
     if len(sys.argv) < 2 or '--help' in sys.argv:
         sys.stderr.write("Usage: {} <config.cfg>\n".format(sys.argv[0]))
         sys.exit(1)
@@ -125,8 +126,8 @@ if __name__ == "__main__":
             raise ValueError('Invalid log level: %s' % log_level_str)
         log_level = log_level_int
 
-    logging.basicConfig(level=log_level,
-                        format='%(asctime)s:%(levelname)s:%(message)s')
+    log_root = logging.getLogger()
+    log_root.setLevel(log_level)
 
     # Initialize the job changed handler, which will send an email when a job
     # failed. It's triggered by the job queue.

@@ -151,13 +151,15 @@ def config_load(path, case_sensitive=True):
     for match in re.findall('^%include (.*)$', base_cfg, flags=re.MULTILINE):
         files = glob.glob(os.path.join(base_path, match))
         if not files:
-            raise RuntimeError("No config files found for include '{}'".format(os.path.join(base_path, match)))
+            logging.warning("No config files found for include '{}'".format(os.path.join(base_path, match)))
 
         include_cfg = ""
         for file in files:
             if os.path.basename(file).startswith('EXAMPLE'):
                 continue
-            include_cfg += open(os.path.join(base_path, file), 'r').read()
+            path = os.path.join(base_path, file)
+            logging.info("Loading {}".format(path))
+            include_cfg += open(path, 'r').read()
         include_stmt = '^%include {}$'.format(re.escape(match))
         base_cfg = re.sub(include_stmt, include_cfg, base_cfg, flags=re.MULTILINE)
 
