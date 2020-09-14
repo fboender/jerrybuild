@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from job import Job
 import tools
 

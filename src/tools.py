@@ -8,12 +8,9 @@ from datetime import datetime, timedelta
 import re
 import glob
 import stat
-if sys.version_info.major > 2:
-    import configparser as ConfigParser
-    from io import StringIO as StringIO
-else:
-    import ConfigParser
-    from StringIO import StringIO
+import logging
+import configparser as ConfigParser
+from io import StringIO as StringIO
 
 
 # Timeunit mapping for duration()
