@@ -20,7 +20,7 @@ Features:
 * Easy to set up and configure via a simple configuration file
 * Consumes only 17 Mb of memory
 * Support for generic webhooks, Github and Gogs
-* Written in Python (v2.7+, v3+) with zero other dependencies
+* Written in Python (v3+) with zero other dependencies
 * Utilizes scripts to do the building. Any programming language can be used to
   create build scripts.
 * Pass custom environment variables to the scripts based on globally
