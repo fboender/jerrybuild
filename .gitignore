@@ -7,3 +7,5 @@ README.html
 *.tar.gz
 *.zip
 test/test.log
+example/status/*
+example/work_dir/*
