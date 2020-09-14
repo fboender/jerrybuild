@@ -38,7 +38,7 @@ class Job:
         self.body = body
         self.env = env
         self.mail_to = list(mail_to)
-        self.work_dir = work_dir
+        self.work_dir = os.path.realpath(work_dir)
         self.status = None
         self.exit_code = None
         self.output = u''
