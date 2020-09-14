@@ -79,6 +79,8 @@ def jobrun_status(job_id):
     build_queue = request.deps['build_queue']
 
     job_status = build_queue.get_job_status(job_id)
+    if job_status is None:
+        abort(404, "Not found")
     job_name = job_status.jobdef_name
     jobdef = jobdef_manager.get_jobdef(job_name)
 
