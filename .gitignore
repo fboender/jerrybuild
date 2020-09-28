@@ -1,12 +1,10 @@
-.envrc
-tags
-__pycache__
+# Python artifacts
 *.pyc
-README.html
-*.rpm
-*.deb
-*.tar.gz
-*.zip
-test/test.log
-example/status/*
-example/work_dir/*
+__pycache__
+
+# Development artifacts
+.tags
+.envrc
+
+# Runtime artifacts
+*.log

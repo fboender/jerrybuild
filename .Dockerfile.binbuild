@@ -1,0 +1,8 @@
+# This Dockerfile is used to build binary distributions. Those require a fairly
+# old Glibc version so that the binary will run in as many places as possible.
+
+FROM ubuntu:16.04
+RUN apt update && apt -y install python3-pip
+RUN pip3 install --upgrade pip
+RUN pip3 install pyinstaller
+RUN mkdir /.cache && chmod 777 /.cache

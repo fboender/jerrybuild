@@ -1,0 +1,120 @@
+/* Generic elements */
+body {
+    font-family: sans-serif;
+    color: #303030;
+}
+h1, h2, h3, h4, h5, h6, h7 {
+    font-weight: bold;
+    line-height: 1.4em;
+}
+a {
+    text-decoration: none;
+    border-bottom: 1px solid #D0D0D0;
+}
+a:visited {
+    color: #000000;
+}
+pre {
+    font-family: monospace;
+    background-color: #F8F8F8;
+    padding: 10px;
+    overflow: auto;
+}
+b {
+    font-weight: bold;
+}
+th {
+    text-align: left;
+    font-weight: bold;
+    padding-right: 12px;
+}
+
+/* UI elements */
+header h1 {
+    display: block;
+    font-size: 2.2em;
+    background-color: #1B3F39;
+    color: #FFFFFF;
+    margin-bottom: 32px;
+    height: 55px;
+}
+header .valign-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+header img {
+    vertical-align: middle;
+    margin-right: 20px;
+}
+footer {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding: 6px 0px 6px 10px;
+    background-color: #C0C0C0;
+}
+footer a {
+    font-weight: bold;
+}
+main {
+    padding-left: 16px;
+    margin-bottom: 64px; /* bottom gap */
+}
+main h2 {
+    font-size: 1.8em;
+    margin-top: 24px; margin-bottom: 24px;
+}
+h3 {
+    font-size: 1.6em;
+    color: #505050;
+    margin-top: 24px; margin-bottom: 12px;
+}
+li {
+    line-height: 1.2em;
+}
+.status-button {
+    padding: 4px 8px 4px 8px;
+    border-radius: 3px;
+    font-size: 16px;
+    line-height: 32px;
+}
+.action-button {
+    padding: 4px 8px 4px 8px;
+    border-radius: 3px;
+    font-size: 16px;
+    line-height: 32px;
+}
+
+.green { background-color: #5cb85c; color: #FFFFFF; }
+.red { background-color: #d9534f; color: #FFFFFF; }
+.gray { background-color: #505050; color: #FFFFFF; }
+.blue { background-color: #0065FF; color: #FFFFFF; }
+.light-blue { background-color: #40A5FF; color: #FFFFFF; }
+.pulse { animation: pulse 1s infinite; }
+@keyframes pulse {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Main: overview */
+main#overview table#job-status td {
+    padding-right: 20px;
+}
+
+/* Main: job results */
+main#job-result table#job-status-overview {
+    margin-top: 24px;
+}
+main#job-result pre {
+    margin-right: 16px;
+}
+
+/* Main: job specification */
+main#job-spec p.desc {
+    margin-bottom: 24px;
+}
+main#job-spec .status-history td {
+    padding-right: 12px;
+}

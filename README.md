@@ -18,7 +18,7 @@ notifications and then runs scripts.
 Features:
 
 * Easy to set up and configure via a simple configuration file
-* Consumes only 17 Mb of memory
+* Low in memory usage (17 to 30 Mb)
 * Support for generic webhooks, Github and Gogs
 * Written in Python (v3+) with zero other dependencies
 * Utilizes scripts to do the building. Any programming language can be used to
