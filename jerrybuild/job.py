@@ -1,10 +1,12 @@
+"""
+Job instance class definition and helpers to deal with jobs.
+"""
+
 import os
 import logging
 import uuid
 import subprocess
 import time
-import socket
-import copy
 import sys
 import traceback
 
@@ -15,6 +17,7 @@ JOB_STATUSSES = [
     "aborted",
     "done",
 ]
+
 
 class Job:
     """
@@ -151,6 +154,7 @@ def from_dict(d):
     job.prev_id = d['prev_id']
     job.id = d['id']
     return job
+
 
 def make_env(request, jobdef, providers):
     env = {}

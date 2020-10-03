@@ -81,10 +81,12 @@ test_lint () {
 
     # Code quality linting (flake8)
     # E402 == module level import not at top of file
-    flake8 --extend-ignore=E402 $PROG/*.py
+    # E501 == Line too long
+    flake8 --extend-ignore=E402,E501 --exclude bottle.py $PROG/*.py
 
     # Code quality linting (pylint)
-    pylint --reports=n -dR -d star-args -d no-member $PROG/*.py || true
+    # Disabled, because too many warnings for now. We'll revisit this later.
+    #pylint --reports=n -dR -d star-args -d no-member -d line-too-long --ignore-patterns=bottle.py $PROG/*.py || true
 }
 
 test_units () {

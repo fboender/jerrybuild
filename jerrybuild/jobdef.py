@@ -1,3 +1,7 @@
+"""
+Job definition objects contain all the information required to create jobs.
+"""
+
 from .job import Job
 from . import tools
 
@@ -11,8 +15,8 @@ class JobDef:
     # NOTE: If you change the function definition, you also have to change
     # `from_config`!
     def __init__(self, name, desc, url, provider, cmd, env, work_dir=None,
-                 keep_jobs=0, mail_to=[], pass_query=False, clean_env=True,
-                 custom_params={}):
+                 keep_jobs=0, mail_to=None, pass_query=False, clean_env=True,
+                 custom_params=None):
         self.name = name
         self.desc = desc
         self.url = url
@@ -21,12 +25,19 @@ class JobDef:
         self.env = env
         self.work_dir = work_dir
         self.keep_jobs = keep_jobs
-        self.mail_to = mail_to
+        self.mail_to = []
+        if mail_to is not None:
+            self.mail_to = mail_to
         self.pass_query = pass_query
         self.clean_env = clean_env
-        self.custom_params = custom_params
+        self.custom_params = {}
+        if custom_params is not None:
+            self.custom_params = custom_params
 
     def make_job(self, body, env, prev_id=None):
+        """
+        Create a new job from this job defimition.
+        """
         newenv = {}
         newenv.update(self.env.items())
         newenv.update(env.items())

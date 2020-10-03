@@ -1,11 +1,14 @@
+"""
+The BuildQueue object manages pending and running build jobs.
+"""
+
 import threading
 import os
 import logging
-import sys
 import json
 import queue as Queue
 from .tools import mkdir_p, listdir_sorted
-from . import job
+from .job import from_dict as job_from_dict
 
 
 class BuildQueue(threading.Thread):
@@ -61,7 +64,7 @@ class BuildQueue(threading.Thread):
         job.set_status('queued')
         self._write_job_status(job)
         self.queue.put(job)
-        self.log.info("{}: queued".format(job))
+        self.log.info("%s: queued", job)
         return job.id
 
     def _handle_queue(self):
@@ -81,11 +84,11 @@ class BuildQueue(threading.Thread):
 
         job.set_status('running')
         self._write_job_status(job)
-        self.log.info("{}: starting".format(job))
+        self.log.info("%s: starting", job)
 
-        for k, v in job.env.items():
-            self.log.debug('{}: env: {}={}'.format(job, k, v))
-        self.log.debug("{}: executing.".format(job))
+        for key, value in job.env.items():
+            self.log.debug('%s: env: %s=%s', job, key, value)
+        self.log.debug("%s: executing.", job)
 
         result = job.run()
         if result == -1:
@@ -93,26 +96,32 @@ class BuildQueue(threading.Thread):
             # keep the _all job status so we can inspect the output if
             # required.
             job.set_status('aborted')
-            self.log.info("{}: result: intentionally aborted. Exit code = {}".format(job, job.exit_code))
+            msg = "%s: result: intentionally aborted. Exit code = %s"
+            self.log.info(msg, job, job.exit_code)
 
             self._write_job_status(job, aborted=True)
         else:
             job.set_status('done')
             if job.exit_code == 0:
-                self.log.info("{}: result: success. Exit code = {}".format(job, job.exit_code))
+                msg = "%s: result: success. Exit code = %s"
+                self.log.info(msg, job, job.exit_code)
             else:
-                self.log.warn("{}: result: failed. Exit code = {}".format(job, job.exit_code))
+                msg = "%s: result: failed. Exit code = %s"
+                self.log.warning(msg, job, job.exit_code)
 
             self._write_job_status(job)
 
             prev_job = self.get_job_status(job.prev_id)
             if (prev_job is not None and job.exit_code != prev_job.exit_code):
-                # Job result has changed since last time. Call the `job_changed_handler`.
+                # Job result has changed since last time. Call the
+                # `job_changed_handler`.
                 if self.job_changed_handler is not None:
-                    self.log.debug("{}: status changed. Calling the 'job changed' handler".format(job.id[:8]))
+                    msg = "%s: status changed. Calling the 'job changed' handler"
+                    self.log.debug(msg, job.id[:8])
                     self.job_changed_handler(job, prev_job)
                 else:
-                    self.log.debug("{}: status changed, but no 'job changed' handler defined.".format(job.id[:8]))
+                    msg = "%s: status changed, but no 'job changed' handler defined."
+                    self.log.debug(msg, job.id[:8])
 
         del self.running_jobs[job.id]
 
@@ -133,8 +142,8 @@ class BuildQueue(threading.Thread):
 
         # Write the job status from the _all dir to the state/_all/<uuid> file
         status = job.to_dict()
-        with open(job_status_path, 'w') as f:
-            json.dump(status, f)
+        with open(job_status_path, 'w') as handle:
+            json.dump(status, handle)
 
         # Link the job status from the _all dir to the state/<job_name>/<uuid>
         # file, unless the build was aborted.
@@ -169,9 +178,9 @@ class BuildQueue(threading.Thread):
 
         job_status_path = os.path.join(self.all_dir, job_id)
         try:
-            with open(job_status_path, 'r') as f:
-                status = json.load(f)
-            return job.from_dict(status)
+            with open(job_status_path, 'r') as handle:
+                status = json.load(handle)
+            return job_from_dict(status)
         except IOError:
             return None
 

@@ -1,3 +1,7 @@
+"""
+JobDefManager handles the loading of Job definitions from config file.
+"""
+
 import sys
 import os
 import logging
@@ -66,7 +70,7 @@ class JobDefManager:
         """
         Return the Job definition (JobDef object) that listens to `url`.
         """
-        for name, jobdef_inst in self.jobdefs.items():
+        for jobdef_inst in self.jobdefs.values():
             if jobdef_inst.url.rstrip('/') == url.rstrip('/'):
                 return jobdef_inst
         return None

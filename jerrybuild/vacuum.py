@@ -1,7 +1,6 @@
 import threading
 import os
 import logging
-import sys
 import time
 
 
@@ -56,6 +55,7 @@ class Vacuum(threading.Thread):
         except ValueError:
             return dir_filter_days
 
+
 def dir_filter_nr(job_status_dir, keep_jobs):
     """
     Return a list of job ID's that should be removed from the job status
@@ -68,12 +68,12 @@ def dir_filter_nr(job_status_dir, keep_jobs):
         if len(fname) != 32:
             # Skip any files that are not UUIDs.
             continue
-        try:
-            ftime = os.stat(os.path.join(job_status_dir, fname)).st_mtime
-            file_mtimes.append( (ftime, fname) )
-        except OSError as err:
-            self.log.exception(err)
+
+        ftime = os.stat(os.path.join(job_status_dir, fname)).st_mtime
+        file_mtimes.append((ftime, fname))
+
     return [file_mtime[1] for file_mtime in sorted(file_mtimes)[:-keep_nr]]
+
 
 def dir_filter_days(job_status_dir, keep_jobs):
     """
@@ -89,10 +89,9 @@ def dir_filter_days(job_status_dir, keep_jobs):
         if len(fname) == 32:
             # Skip any files that are not UUIDs.
             continue
-        try:
-            ftime = os.stat(os.path.join(job_status_dir, fname)).st_mtime
-            if ((now - ftime) / 86400) > keep_days:
-                files.append(fname)
-        except OSError as err:
-            self.log.exception(err)
+
+        ftime = os.stat(os.path.join(job_status_dir, fname)).st_mtime
+        if ((now - ftime) / 86400) > keep_days:
+            files.append(fname)
+
     return files

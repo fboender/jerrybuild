@@ -5,8 +5,6 @@ Jerrybuild main
 
 import argparse
 import logging
-import os
-import sys
 import signal
 import socket
 
@@ -17,9 +15,8 @@ from . import wsgi_server
 from . import tools
 from . import vacuum
 from . import build_queue as bq
+from . import routes  # noqa: F401
 from .jobdef_manager import JobDefManager
-from . import jobdef_manager
-from . import routes
 from . import providers
 
 
@@ -55,7 +52,7 @@ def sig_hup_handler_generate(jobdef_manager):
     return sig_hup_handler
 
 
-def job_changed_handler_generate(smtp_server, server_url):
+def job_changed_handler_generate(smtp_server, server_url, log):
     """
     Closure that returns a Job Changed handler. The Job Changed handler is
     called by the build queue whenever the job exit code changes from the
@@ -74,8 +71,13 @@ def job_changed_handler_generate(smtp_server, server_url):
             subject = "Build job '{}' (id={}..) failed with exit code {}".format(cur_job.jobdef_name.encode('utf8'),
                                                                                  cur_job.id[:8],
                                                                                  cur_job.exit_code)
-        elif cur_job.exit_code == 0 and \
-             (prev_job is not None and cur_job.exit_code != prev_job.exit_code):
+        elif (
+            cur_job.exit_code == 0 and
+            (
+                prev_job is not None and
+                cur_job.exit_code != prev_job.exit_code
+            )
+        ):
             # Job succeeded where it failed the previous time.
             log.info("{}: recovered. Sending emails to {}".format(cur_job, ', '.join(cur_job.mail_to)))
             subject = "Build job '{}' (id={}..) recovered".format(cur_job.jobdef_name.encode('utf8'),
@@ -95,6 +97,7 @@ def job_changed_handler_generate(smtp_server, server_url):
         tools.mail(cur_job.mail_to, subject, msg, smtp_server=smtp_server)
         log.info("{}: Emails sent".format(cur_job))
     return job_changed_handler
+
 
 def main():
     """
@@ -143,7 +146,7 @@ def main():
     server_url = 'http://' + socket.getfqdn()
     if config.has_option('server', 'server_url'):
         server_url = config.get('server', 'server_url')
-    job_changed_handler = job_changed_handler_generate(smtp_server, server_url)
+    job_changed_handler = job_changed_handler_generate(smtp_server, server_url, log)
 
     log.info("Initializing build queue")
     build_queue = bq.BuildQueue(status_dir, job_changed_handler)
@@ -168,7 +171,6 @@ def main():
     dep_inject.add_dep('config', config)
     dep_inject.add_dep('providers', providers.providers)
 
-    print(tools.data_path('views'))
     bottle.TEMPLATE_PATH.insert(0, tools.data_path('views'))
     wsgiapp = bottle.default_app()
     wsgiapp.install(dep_inject)
@@ -185,6 +187,7 @@ def main():
     httpd = wsgi_server.WSGIServer(wsgiapp, listen=httpd_listen, port=httpd_port)
     log.info("Server listening on {}:{}".format(httpd_listen, httpd_port))
     httpd.serve_forever()
+
 
 if __name__ == '__main__':
     main()

@@ -4,10 +4,8 @@ import errno
 import smtplib
 import getpass
 import socket
-from datetime import datetime, timedelta
 import re
 import glob
-import stat
 import logging
 import configparser as ConfigParser
 from io import StringIO as StringIO
@@ -60,6 +58,7 @@ def data_path(path=None):
     else:
         return data_dir
 
+
 def mail(to, subject, msg, smtp_server="localhost"):
     """
     Email sender helper.
@@ -76,6 +75,7 @@ Subject: {}
     smtpObj = smtplib.SMTP(smtp_server)
     smtpObj.sendmail(from_, to, message)
 
+
 def mkdir_p(path):
     """Create directories and their parent directories if required. (mkdir -p).
     Unlike os.makedirs, this doesn't raise an exception if the path already
@@ -87,6 +87,7 @@ def mkdir_p(path):
             pass
         else:
             raise
+
 
 def duration(secs):
     """
@@ -153,6 +154,7 @@ def duration(secs):
 
     return " ".join(res)
 
+
 def config_load(path, case_sensitive=True):
     """
     ConfigParser wrapper with support for includes.
@@ -192,6 +194,7 @@ def config_load(path, case_sensitive=True):
 
     return conf
 
+
 def listdir_sorted(path, stat_key='st_mtime', reverse=False):
     """
     Return a list of file / dir names in `path`, sorted by `stat_key`. If
@@ -216,6 +219,7 @@ def listdir_sorted(path, stat_key='st_mtime', reverse=False):
 
     return [fname for fprop, fname in sorted(files, reverse=reverse)]
 
+
 def to_bool(s):
     """
     Convert string `s` into a boolean. `s` can be 'true', 'True', 1, 'false',
@@ -239,6 +243,7 @@ def to_bool(s):
     else:
         raise ValueError("Can't cast '%s' to bool" % (s))
 
+
 if __name__ == '__main__':
-   import doctest
-   doctest.testmod()
+    import doctest
+    doctest.testmod()

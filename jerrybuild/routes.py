@@ -1,7 +1,7 @@
 import logging
 import time
 
-from .bottle import route, request, response, abort, template, static_file, redirect
+from .bottle import route, request, abort, template, static_file, redirect
 from . import tools
 from . import job
 
@@ -14,6 +14,7 @@ def send_static(filename):
     Serve static files.
     """
     return static_file(filename, root=tools.data_path('static/'))
+
 
 @route('/')
 def index():
@@ -31,6 +32,7 @@ def index():
 
     return template('index.tpl', job_statusses=job_statusses)
 
+
 @route('/job/<job_name>/definition')
 def job_definition(job_name):
     """
@@ -43,15 +45,15 @@ def job_definition(job_name):
     job_status = build_queue.get_latest_status(job_name)
     job_all_statusses = build_queue.get_all_status(job_name)
 
-    return template('job_definition.tpl',jobdef=jobdef, job_status=job_status,
+    return template('job_definition.tpl', jobdef=jobdef, job_status=job_status,
                     job_all_statusses=job_all_statusses)
+
 
 @route('/job/<job_name>/shield')
 def job_shield(job_name):
     """
     Show a build shield (http://shields.io/) for this job's latest build.
     """
-    jobdef_manager = request.deps['jobdef_manager']
     build_queue = request.deps['build_queue']
     job_status = build_queue.get_latest_status(job_name)
 
@@ -73,6 +75,7 @@ def job_shield(job_name):
 
     redirect('https://img.shields.io/badge/{}-{}-{}.svg'.format(label, status, color))
 
+
 @route('/job/<job_id>/status')
 def jobrun_status(job_id):
     """
@@ -88,6 +91,7 @@ def jobrun_status(job_id):
     jobdef = jobdef_manager.get_jobdef(job_name)
 
     return template('job_status.tpl', jobdef=jobdef, job_status=job_status)
+
 
 @route('/job/<job_id>/rerun')
 def jobrun_rerun(job_id):
@@ -106,6 +110,7 @@ def jobrun_rerun(job_id):
 
     new_job_id = build_queue.put(job)
     redirect("/job/{}/status".format(new_job_id))
+
 
 @route('/job/<job_id>/stream_output')
 def jobrun_stream_output(job_id):
@@ -147,7 +152,6 @@ def generic_handler():
     """
     jobdef_manager = request.deps['jobdef_manager']
     build_queue = request.deps['build_queue']
-    config = request.deps['config']
     providers = request.deps['providers']
 
     jobdef = jobdef_manager.get_jobdef_from_url(request.path)
