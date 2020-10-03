@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Show all commands being executed
-set -x
-
 # Setup environment so we can clone and pull
 export PROJECT_NAME="jerrybuild"
 export REPO="git@github.com:fboender/$PROJECT_NAME.git"
@@ -33,4 +30,12 @@ else
 fi
 
 # You'll want to do some building or testing here
+echo "-----------------------------------------------------------------"
+echo "Environment:"
+echo "-----------------------------------------------------------------"
+env
+
+echo "-----------------------------------------------------------------"
+echo "Directory listing:"
+echo "-----------------------------------------------------------------"
 ls -l 
