@@ -18,9 +18,10 @@ notifications and then runs scripts.
 Features:
 
 * Easy to set up and configure via a simple configuration file
-* Low in memory usage (17 to 30 Mb)
+* Low in resident memory usage (17 to 30 Mb)
 * Support for generic webhooks, Github and Gogs
-* Written in Python (v3+) with zero other dependencies
+* Written in Python (v3+) with zero other dependencies. A stand-alone binary
+  is available, which doesn't require Python at all.
 * Utilizes scripts to do the building. Any programming language can be used to
   create build scripts.
 * Pass custom environment variables to the scripts based on globally
@@ -48,31 +49,27 @@ features found in other CI servers:
   - Doesn't support SSL. Put Apache or Nginx in front of it. See the Cookbook
     for a How-to.
 
+## Documentation
 
-## Installation
+See the [Documentation](https://jerrybuild.readthedocs.io/en/latest/) for
+installation, configuration and usage instructions.
+
 
 ### Run from repo
 
 If you just want to evaluate Jerrybuild, it's possible to run Jerrybuild
-directly from the git reposiroty. When you're satisfied that you really wish
+directly from the git repository. When you're satisfied that you really wish
 to use Jerrybuild, you can install it on your system.
 
-### Install system-wide
+To run from the repo:
 
-To install from source / the Git repo:
+    $ python3 ./jerrybuild.py example/jerrybuild.cfg
 
-    git clone https://github.com/fboender/jerrybuild.git
-    cd jerrybuild
-    sudo make install
+### Install with pip
 
-`make install` installs Jerrybuild system-wide and:
+Install with pip:
 
-* Creates a `jerrybuild` user which will own the configuration files and
-  working space.
-* Put the global configuration in `/etc/jerrybuild/jerrybuild.cfg`.
-* Put the job configuration in `/etc/jerrybuild/jobs.d`.
-* Creates the working space for your repositories in
-  `/var/lib/jerrybuild/workspace`/.
+    $ sudo pip install --upgrade jerrybuild
 
 ## Documentation
 
