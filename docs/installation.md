@@ -1,22 +1,10 @@
-Jerrybuild is packaged for various Operating Systems:
-
-* Debian / Ubuntu
-* Redhat / CentOS
-* Manual install
-
-# Requirements
-
-Jerrybuild requires:
-
-* Python v2.7+ / v3+ (Available by default on nearly every Linux distribution)
-
 # Running directly from repo
 
 You can run Jerrybuild directly from a git clone of the repository:
 
-    git clone git@github.com:fboender/jerrybuild.git
-    cd jerrybuild/src
-    ./jerrybuild ../contrib/jerrybuild.cfg
+    $ git clone git@github.com:fboender/jerrybuild.git
+    $ cd jerrybuild/
+    $ python3 ./jerrybuild.py example/jerrybuild.cfg
 
 This is mostly useful for evaluating Jerrybuild. If you're satisfied that
 Jerrybuild suits your needs, you should do a real install.
@@ -24,47 +12,28 @@ Jerrybuild suits your needs, you should do a real install.
 # Pip
 
 If Pip (the Python package manager) is available on your system, you can
-install Jerrybuild using Pip:
+install Jerrybuild using Pip. This requires Python v3.
 
-    pip install jerrybuild
+See the [Python Packaging User
+Guide](https://packaging.python.org/guides/installing-using-linux-tools/#installing-pip-setuptools-wheel-with-linux-package-managers)
+for information on how to install Pip on your OS.
 
-# Debian / Ubuntu
+You can install Jerrybuild system-wide:
 
-Get the latest .deb package for your distribution from the
-[Releases page](https://github.com/fboender/jerrybuild/releases)
+    $ sudo pip install jerrybuild
 
-Install the package:
+Or you can install it in your home dir's `~/.local/` dir:
 
-    sudo dpkg -i jerrybuild-*.deb
+    $ pip install jerrybuild
 
-That's it, you're done. You can find the Jerrybuild configuration in
-`/etc/jerrybuild`. You can create new jobs in `/etc/jerrybuild/jobs.d`. The
-workspace for building your projects can be found in
-`/var/lib/jerrybuild/workspace`.
+Jerrybuild can also be installed to any Python virtualenv:
 
-# Redhat / CentOS
+    $ /opt/pythonenv/bin/pip install jerrybuild
 
-Get the latest .deb package for your distribution from the
-[Releases page](https://github.com/fboender/jerrybuild/releases)
+# Stand-alone binary
 
-Install the package:
+A stand-alone binary is offered that doesn't require you to have Python
+installed at all. You can get the binary from the [Github Releases
+page](https://github.com/fboender/jerrybuild/releases/). Search for a
+`jerrybuild-X.Y-bin64.tar.gz` file.
 
-    sudo dpkg -i jerrybuild-*.deb
-
-That's it, you're done. You can find the Jerrybuild configuration in
-`/etc/jerrybuild`. You can create new jobs in `/etc/jerrybuild/jobs.d`. The
-workspace for building your projects can be found in
-`/var/lib/jerrybuild/workspace`.
-
-# Other
-
-Other Operating Systems can install Jerrybuild using the Makefile in the
-repository:
-
-    git clone git@github.com:fboender/jerrybuild.git
-    cd jerrybuild/src
-    sudo make install
-
-You can find the Jerrybuild configuration in `/etc/jerrybuild`. You can create
-new jobs in `/etc/jerrybuild/jobs.d`. The workspace for building your projects
-can be found in `/var/lib/jerrybuild/workspace`.

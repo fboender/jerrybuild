@@ -1,9 +1,10 @@
 site_name: Jerrybuild
 theme: readthedocs
-pages:
-  - index.md
-  - about.md
-  - installation.md
-  - tutorial.md
-  - user_guide.md
-  - cookbook.md
+nav:
+  - About: index.md
+  - Installation: installation.md
+  - Tutorial: tutorial.md
+  - Providers: providers.md
+  - Cookbook: cookbook.md
+extra_css:
+  - css/extra.css

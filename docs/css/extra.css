@@ -1,0 +1,6 @@
+.toctree-l3 { margin-left: 16px; }
+.wy-breadcrumbs li:nth-child(1) { display: None; }
+.wy-breadcrumbs li:nth-child(2) { font-family: "Roboto Slab","ff-tisa-web-pro","Georgia",Arial,sans-serif; font-size: 200%; font-weight: bold; color: #606060; }
+blockquote { border-left: 3px solid #CCC; padding-left: 16px; }
+.section ol li ul { margin-bottom: 24px !important; }
+.section ul li ul { margin-bottom: 24px !important; }
