@@ -39,7 +39,8 @@ clean () {
     find ./ -name "*.log" -delete
 
     # Remove generated test and example files
-    rm -rf example/status/
+    rm -rf example/status/jobs/_all/*
+    rm -rf example/status/jobs/example/*
     rm -rf example/work_dir/jerrybuild
 
     # Remove release stuff
