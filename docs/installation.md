@@ -9,31 +9,53 @@ You can run Jerrybuild directly from a git clone of the repository:
 This is mostly useful for evaluating Jerrybuild. If you're satisfied that
 Jerrybuild suits your needs, you should do a real install.
 
-# Pip
+# System installation
 
-If Pip (the Python package manager) is available on your system, you can
-install Jerrybuild using Pip. This requires Python v3.
+The follow commands install Jerrybuild for production usage.
 
-See the [Python Packaging User
-Guide](https://packaging.python.org/guides/installing-using-linux-tools/#installing-pip-setuptools-wheel-with-linux-package-managers)
-for information on how to install Pip on your OS.
+Create a user:
 
-You can install Jerrybuild system-wide:
+    sudo adduser --system --group --home /var/lib/jerrybuild --disabled-password --disabled-login jerrybuild
 
-    $ sudo pip install jerrybuild
+Create the required directory structure:
 
-Or you can install it in your home dir's `~/.local/` dir:
+    sudo mkdir -p /etc/jerrybuild/jobs.d /var/lib/jerrybuild/status/jobs/_all
+    sudo chown -R jerrybuild:jerrybuild /etc/jerrybuild/ /var/lib/jerrybuild/
+    sudo chmod 750 /etc/jerrybuild/ /var/lib/jerrybuild/
 
-    $ pip install jerrybuild
+Now we should install Jerrybuild itself. You've got the choice between using
+`pip` to install Jerrybuild, or install it using the standalone binary x86-64.
 
-Jerrybuild can also be installed to any Python virtualenv:
+With pip:
 
-    $ /opt/pythonenv/bin/pip install jerrybuild
+    sudo pip install jerrybuild
 
-# Stand-alone binary
+With the standalone binary, first download a binary release from the [Releases
+Github page](https://github.com/fboender/jerrybuild/releases). Then install
+it:
+    
+    sudo tar -xvf jerrybuild-*-bin64.tar.gz --strip-components=1 -C /usr/local/
+    
+Next configure Jerrybuild and install the systemd service file so it starts at
+boot time:
 
-A stand-alone binary is offered that doesn't require you to have Python
-installed at all. You can get the binary from the [Github Releases
-page](https://github.com/fboender/jerrybuild/releases/). Search for a
-`jerrybuild-X.Y-bin64.tar.gz` file.
+    sudo cp /usr/local/lib/jerrybuild/jerrybuild.cfg.dist /etc/jerrybuild//jerrybuild.cfg
+    sudo cp /usr/local/lib/jerrybuild/jerrybuild.service.dist /etc/systemd/system/jerrybuild.service
+    sudo systemctl daemon-reload
 
+You can now start Jerrybuild:
+
+    sudo systemctl start jerrybuild
+
+Check the logs to see if everything starter properly:
+
+    sudo journalctl -u jerrybuild
+
+You can now start creating jobs! Check the
+[tutorial](https://jerrybuild.readthedocs.io/en/latest/tutorial) for how to do
+that.
+
+It is highly recommended to run Jerrybuild behind a webserver that can provide
+SSL and authentication. See the
+[Cookbook](https://jerrybuild.readthedocs.io/en/latest/cookbook) for
+information on how to do that.

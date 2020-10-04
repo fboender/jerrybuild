@@ -27,6 +27,7 @@ See the [Example build
 script](https://github.com/fboender/jerrybuild/blob/master/example/work_dir/example.sh)
 for a full example on how to clone your repos.
 
+
 # Scheduled builds
 
 You can schedule builds (e.g. nightly builds) using a cron job. For this we'll
@@ -52,6 +53,7 @@ hook triggers.
 Instead you'll have to set up a separate build job with the `generic`
 provider.
 
+
 # Link to a job's Shield
 
 Jerrybuild has support for [Shields](https://www.shields.io/). You can create
@@ -71,6 +73,7 @@ Now you create an image anywhere that points the job's shield:
 
     <img src="https://example.org/job/foomatic-nightly/shield" alt="build
     status" />
+
 
 # Serving Jerrybuild behind a webserver
 
