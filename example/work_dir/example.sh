@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Exit on any failed command
+set -e
+
 # Setup environment so we can clone and pull
 export PROJECT_NAME="jerrybuild"
 export REPO="git@github.com:fboender/$PROJECT_NAME.git"
