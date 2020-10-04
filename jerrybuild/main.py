@@ -63,6 +63,10 @@ def job_changed_handler_generate(smtp_server, server_url, log):
         Send email if a job fails the first time or when it recovers (builds
         succesfully again).
         """
+        if not cur_job.mail_to:
+            log.info("Job %s status changed, but no emails configured. Not sending email", cur_job)
+            return
+
         if cur_job.exit_code != 0 and \
            (prev_job is None or cur_job.exit_code != prev_job.exit_code):
             # Job failed and this is either the first time we've ran this job,
