@@ -1,10 +1,11 @@
-# Python artifacts
+# Runtime artifacts
 *.pyc
 __pycache__
+*.log
 
 # Development artifacts
 .tags
 .envrc
 
-# Runtime artifacts
-*.log
+# Build artifacts
+dist/
