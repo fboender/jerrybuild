@@ -1,0 +1,12 @@
+[Unit]
+Description=Jerrybuild
+After=network.target
+
+[Service]
+Environment=CONFIG=/etc/jerrybuild/jerrybuild.cfg
+ExecStart=/usr/local/bin/jerrybuild ${CONFIG}
+Type=exec
+PIDFile=/var/run/jerrybuild.pid
+
+[Install]
+WantedBy=default.target

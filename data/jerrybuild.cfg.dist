@@ -1,0 +1,50 @@
+[server]
+
+# Address to listen on. Instead of changing this to listen on external IPs,
+# you'd be better off putting Jerrybuild behind Apache or NGinx. See the
+# Cookbook on how to easily do that.
+listen = 127.0.0.1
+
+# Port to listen on
+port = 5281
+
+# Server URL, optional
+#server_url = http://localhost
+
+# Logging level. Possible values: DEBUG, INFO, WARN, ERROR,
+# FATAL
+log_level = INFO
+
+# Always send mail to recipients on build failure (optional). Multiple
+# addresses should be separated by a comma. You can add additional addresses in
+# each job section.
+#mail_to = dev@example.com, testteam@example.com
+
+# Directory to keep job status files and such in.
+status_dir = /var/lib/jerrybuild/status/
+
+# Default working directory for jobs.
+work_dir = /var/lib/jerrybuild/work_dir
+
+# The number of job results s or a timespan after which to delete old job
+# results. This value applies to each job seperately. The last job status will
+# never be deleted. This value can be overridden on a job-by-job basis in the
+# job's configuration section.
+#
+# Examples:
+#   keep_jobs = 0   # Keep an infinite number of jobs
+#   keep_jobs = 10  # Keep the last 10 job results
+#   keep_jobs = 4d  # Remove job results older than 4 days
+keep_jobs = 40
+
+# You can define global environment variables that will be set for all scripts.
+#env_GIT_SSH_COMMAND=ssh -i /var/lib/jerrybuild/.ssh/deploy_key_ed25519 -o IdentitiesOnly=yes
+
+#
+# Include jobs from a directory
+#
+%include jobs.d/*.cfg
+
+# Put your jobs in the jobs.d/ directory. The files need to end with '.cfg' and
+# should contain a `[job:....]` definition. Take a look at the `EXAMPLE.cfg`
+# job.
