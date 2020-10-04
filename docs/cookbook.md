@@ -1,5 +1,26 @@
 The Cookbook contains examples on how to achieve certain common scenarios.
 
+# Managing jerrybuild
+
+This assumes you've installed Jerrybuild system-wide.
+
+Starting jerrybuild:
+
+    sudo systemctl start jerrybuild
+
+Stopping jerrybuild:
+
+    sudo systemctl stop jerrybuild
+
+When you create new job configurations, you'll need to reload Jerrybuild to
+make it aware of the new job:
+
+    sudo systemctl reload jerrybuild
+
+View the log output:
+
+    sudo journalctl -u jerrybuild
+
 # Clone a repo with a custom private key
 
 If you want to clone a repo with a custom private key, such as when calling it
