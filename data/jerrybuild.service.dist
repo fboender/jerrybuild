@@ -3,10 +3,12 @@ Description=Jerrybuild
 After=network.target
 
 [Service]
+User=jerrybuild
+Group=jerrybuild
 Environment=CONFIG=/etc/jerrybuild/jerrybuild.cfg
 ExecStart=/usr/local/bin/jerrybuild ${CONFIG}
+ExecReload=/bin/kill -HUP $MAINPID
 Type=exec
-PIDFile=/var/run/jerrybuild.pid
 
 [Install]
 WantedBy=default.target
