@@ -190,7 +190,7 @@ def config_load(path, case_sensitive=True):
     conf = ConfigParser.ConfigParser()
     if not case_sensitive:
         conf.optionxform = str
-    conf.readfp(config_fp)
+    conf.read_file(config_fp)
 
     return conf
 
