@@ -52,28 +52,7 @@ clean () {
 test () {
     # All tests
     test_lint
-    test_build
     test_units
-}
-
-test_build () {
-    # Test running myexample from git repo and installed version
-    clean
-    pip -q uninstall -y ${PROG}
-
-    # Run from repo
-    ./myexample.py a b
-
-    # Run from package
-    ./setup.py -q bdist_wheel
-    pip -q install dist/*.whl
-    ${PROG} a b
-    pip -q uninstall -y ${PROG}
-
-    # Clean up
-    rm -rf *.egg-info
-    rm -rf build
-    rm -rf dist
 }
 
 test_lint () {
@@ -91,7 +70,9 @@ test_lint () {
 
 test_units () {
     # Unit tests
-    python tests/tests.py
+    cd tests
+    export PYTHONPATH="$PYTHONPATH:.."
+    python tests.py
 }
 
 _release_check() {
