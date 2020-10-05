@@ -4,8 +4,7 @@ import logging
 import sys
 import unittest
 
-sys.path.insert(0, '../src')
-from jobdef_manager import JobDefManager
+from jerrybuild.jobdef_manager import JobDefManager
 
 class ConfigTestCase(unittest.TestCase):
     """
@@ -32,7 +31,7 @@ class ConfigTestCase(unittest.TestCase):
         jobdef_manager = JobDefManager('test.cfg')
         jobdef = jobdef_manager.get_jobdef('test')
         job = jobdef.make_job('', {})
-        self.assertEquals(job.work_dir, '/var/lib/jerrybuild/workspace')
+        self.assertEqual(job.work_dir, '/var/lib/jerrybuild/workspace')
 
     def testJobdefLocalWorkdir(self):
         """
@@ -41,7 +40,7 @@ class ConfigTestCase(unittest.TestCase):
         jobdef_manager = JobDefManager('test.cfg')
         jobdef = jobdef_manager.get_jobdef('test_local_workdir')
         job = jobdef.make_job('', {})
-        self.assertEquals(job.work_dir, '/opt/build')
+        self.assertEqual(job.work_dir, '/opt/build')
 
 
 if __name__ == '__main__':
