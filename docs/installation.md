@@ -8,6 +8,9 @@ You can run Jerrybuild directly from a git clone of the repository:
 
     python3 ./jerrybuild.py example/jerrybuild.cfg
 
+    # Run the example webhook
+    curl http://127.0.0.1:5281/hook/example
+
 This is mostly useful for evaluating Jerrybuild. If you're satisfied that
 Jerrybuild suits your needs, you should do a real install.
 
