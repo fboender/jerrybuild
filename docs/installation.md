@@ -71,6 +71,8 @@ boot time:
 
     sudo cp /usr/local/lib/jerrybuild/jerrybuild.service.dist /etc/systemd/system/jerrybuild.service
 
+    sudo systemctl enable jerrybuild
+
     sudo systemctl daemon-reload
 
 
