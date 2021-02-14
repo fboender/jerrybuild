@@ -85,8 +85,7 @@ def job_changed_handler_generate(smtp_server, server_url, log):
             # Job succeeded where it failed the previous time.
             log.info("{}: recovered. Sending emails to {}".format(cur_job, ', '.join(cur_job.mail_to)))
             subject = "Build job '{}' (id={}..) recovered".format(cur_job.jobdef_name.encode('utf8'),
-                                                                  cur_job.id[:8],
-                                                                  cur_job.exit_code)
+                                                                  cur_job.id[:8])
         else:
             return
 
